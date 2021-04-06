@@ -5,4 +5,6 @@ object RetrofitConstrain {
     private const val IP: String = "192.168.1.199"
     private const val IP_URL = "$PORT:$IP"
     const val BASE_URL = "$IP_URL/"
+    const val EMAIL_PASS="email_pass"
+    const val GOOGLE_SIGN_IN = "google_sign_in"
 }
