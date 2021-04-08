@@ -9,7 +9,7 @@ data class UserWithNotes(
     @Embedded val user: User,
     @Relation(
         parentColumn = "note_id",
-        entityColumn = ""
+        entityColumn = "note_id"
     )
     val notes: List<Note>
 )

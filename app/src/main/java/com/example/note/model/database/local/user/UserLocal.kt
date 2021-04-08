@@ -8,9 +8,9 @@ import javax.inject.Singleton
 interface UserLocal {
     fun findUsers(): Single<List<User>>
 
-    fun insertUsers(vararg user: User): Int
+    fun insertUsers(vararg users: User): Int
 
-    fun updateUsers(vararg user: User): Int
+    fun updateUsers(vararg users: User): Int
 
-    fun deleteUsers(vararg user: User): Int
+    fun deleteUsers(vararg users: User): Int
 }

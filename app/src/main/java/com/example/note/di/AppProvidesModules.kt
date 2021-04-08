@@ -46,8 +46,12 @@ object AppProvidesModules {
     //retrofit
     @Provides
     @Singleton
-    fun providerGsonConverterFactory(): GsonConverterFactory =
-        GsonConverterFactory.create(GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create())
+    fun providerGson(): Gson = GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create()
+
+    @Provides
+    @Singleton
+    fun providerGsonConverterFactory(gson: Gson): GsonConverterFactory =
+        GsonConverterFactory.create(gson)
 
     @Provides
     @Singleton

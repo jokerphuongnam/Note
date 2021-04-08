@@ -79,6 +79,7 @@ dependencies {
     rxjava()
 
     room()
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.31"
 }
 private void ktx(){
     //ktx
@@ -128,8 +129,7 @@ private void retrofit(){
 private void room(){
     //room
     def room_version = "2.3.0-alpha04"
-    def rxjava_version = "3.0.0"
     dependencies.implementation "androidx.room:room-runtime:$room_version"
     dependencies.kapt "androidx.room:room-compiler:$room_version"
-    dependencies.implementation "androidx.room:room-rxjava3:$rxjava_version"
+    dependencies.implementation "androidx.room:room-rxjava3:$room_version"
 }
