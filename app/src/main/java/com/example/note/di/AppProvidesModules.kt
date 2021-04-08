@@ -1,16 +1,18 @@
 package com.example.note.di
 
 import android.content.Context
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
+import androidx.datastore.rxjava3.RxDataStore
+import androidx.paging.PagingConfig
 import androidx.room.Room
 import com.example.note.model.database.local.AppDatabase
-import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.local.note.RoomNoteImpl
 import com.example.note.model.database.local.user.RoomUserImpl
-import com.example.note.model.database.local.user.UserLocal
-import com.example.note.model.database.network.note.NoteNetwork
+import com.example.note.model.database.network.NetworkConnectionInterceptor
 import com.example.note.model.database.network.note.NoteRetrofitServiceImpl
-import com.example.note.model.database.network.user.UserNetwork
 import com.example.note.model.database.network.user.UserRetrofitServiceImpl
+import com.example.note.utils.DataStoreUtil.DATA_STORE_NAME
 import com.example.note.utils.RetrofitConstrain.BASE_URL
 import com.example.note.utils.RoomConstrain.DB_NAME
 import com.google.gson.Gson
@@ -29,6 +31,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppProvidesModules {
+    //data store
+    @Provides
+    @Singleton
+    fun providerDataStore(@ApplicationContext context: Context): RxDataStore<Preferences> =
+        RxPreferenceDataStoreBuilder(context, DATA_STORE_NAME).build()
+
     //room
     @Provides
     @Singleton
@@ -60,7 +68,8 @@ object AppProvidesModules {
 
     @Provides
     @Singleton
-    fun providerOkHttp(): OkHttpClient = OkHttpClient.Builder().build()
+    fun providerOkHttp(interceptor: NetworkConnectionInterceptor): OkHttpClient =
+        OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     @Provides
     @Singleton

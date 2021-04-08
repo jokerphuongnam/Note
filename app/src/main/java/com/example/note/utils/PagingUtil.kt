@@ -6,10 +6,10 @@ object PagingUtil {
     fun pageToItem(page: Int): Pair<Int, Int> {
         return when (page) {
             1 -> {
-                0 to 4
+                0 to START - 1
             }
             else -> {
-                4 + 2 * (page - 1) to 4 + 2 * page
+                START + LOOP * (page - 2) to START + LOOP * (page -1) - 1
             }
         }
     }

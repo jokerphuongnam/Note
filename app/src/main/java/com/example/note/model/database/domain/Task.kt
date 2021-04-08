@@ -2,9 +2,20 @@ package com.example.note.model.database.domain
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tasks")
+@Entity(
+    tableName = "tasks",
+    foreignKeys = [ForeignKey(
+        entity = Note::class,
+        parentColumns = arrayOf("note_id"),
+        childColumns = arrayOf("note_id"),
+        onDelete = CASCADE,
+        onUpdate = CASCADE
+    )]
+)
 data class Task(
     @ColumnInfo(name = "is_finish") var isFinish: Boolean,
     @ColumnInfo(name = "detail") var detail: String,

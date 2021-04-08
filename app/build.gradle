@@ -39,6 +39,9 @@ android {
     dataBinding {
         enabled = true
     }
+    defaultConfig {
+        multiDexEnabled true
+    }
 }
 
 private void glide(){
@@ -67,6 +70,7 @@ dependencies {
     // Optional -- Mockito framework
     testImplementation 'org.mockito:mockito-core:1.10.19'
     testImplementation 'org.mockito:mockito-android:2.7.22'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.31"
 
     ktx()
 
@@ -79,7 +83,8 @@ dependencies {
     rxjava()
 
     room()
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.31"
+
+    dataStore()
 }
 private void ktx(){
     //ktx
@@ -132,4 +137,11 @@ private void room(){
     dependencies.implementation "androidx.room:room-runtime:$room_version"
     dependencies.kapt "androidx.room:room-compiler:$room_version"
     dependencies.implementation "androidx.room:room-rxjava3:$room_version"
+}
+
+private void dataStore(){
+    def data_store_version ="1.0.0-alpha08"
+    dependencies.implementation "androidx.datastore:datastore-preferences:$data_store_version"
+    // optional - RxJava3 support
+    dependencies.implementation "androidx.datastore:datastore-preferences-rxjava3:$data_store_version"
 }

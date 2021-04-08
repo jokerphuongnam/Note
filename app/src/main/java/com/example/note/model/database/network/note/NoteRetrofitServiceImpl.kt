@@ -25,7 +25,7 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         note.tasks,
         images,
         sounds,
-        note.noticeTimes
+        note.noticeTimes?: emptyList()
     )
 
     override fun updateNote(
@@ -43,10 +43,10 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         note.tags,
         note.tasks,
         images,
-        note.images,
+        note.images?: emptyList(),
         sounds,
-        note.sounds,
-        note.noticeTimes
+        note.sounds?: emptyList(),
+        note.noticeTimes?: emptyList()
     )
 
     override fun deleteNote(uid: Long, nid: Long): Single<Response<Response<Note>>> =
@@ -61,6 +61,8 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         start,
         amount
     )
+
+    override fun fetchCount(uid: Long): Single<Response<Long>> = service.fetchCount(uid)
 
     interface Service {
 
@@ -106,5 +108,8 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Query("start") start: Int,
             @Query("amount")amount: Int
         ): Single<Response<MutableList<Note>>>
+
+        @GET("nodecount")
+        fun fetchCount(@Query("uid") uid: Long): Single<Response<Long>>
     }
 }
