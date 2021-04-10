@@ -13,6 +13,7 @@ import com.example.note.model.database.network.note.NoteNetwork
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Function
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -50,8 +51,13 @@ class DefaultNoteRepositoryImpl @Inject constructor(
 
     override fun deleteTask(vararg tasks: Task): Single<Int> = Single.just(0)
 
-    override fun getNotes(start: Int, amount: Int): Flowable<PagingData<Note>> =
-        currentUser.uid.toFlowable().flatMap { uid ->
+    override fun getNotes(): Flowable<PagingData<Note>> =
+        currentUser.uid.flatMap { uid ->
+            network.fetchCount(uid!!).map { count ->
+                uid to count.body()!!
+            }
+        }.toFlowable().flatMap { uidToCount ->
+            val (uid, count) = uidToCount
             Pager(
                 config = PagingConfig(
                     pageSize = 5,
@@ -60,9 +66,11 @@ class DefaultNoteRepositoryImpl @Inject constructor(
                     prefetchDistance = 5,
                     initialLoadSize = 10
                 ),
-                remoteMediator = mediator,
+                remoteMediator = mediator.apply {
+                    maxCount = count
+                },
                 pagingSourceFactory = {
-                    local.findNotes(uid!!)
+                    local.findNotes(uid)
                 }
             ).flowable
         }

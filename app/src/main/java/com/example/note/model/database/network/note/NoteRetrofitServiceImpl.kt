@@ -99,7 +99,7 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("noticeTimes")noticeTimes: List<Date>
         ): Single<Response<Response<Note>>>
 
-        @DELETE("/delete/{uid}/{nid}")
+        @DELETE("delete/{uid}/{nid}")
         fun deleteNote(@Path("uid") uid: Long,@Path("nid") nid: Long): Single<Response<Response<Note>>>
 
         @GET("notes")

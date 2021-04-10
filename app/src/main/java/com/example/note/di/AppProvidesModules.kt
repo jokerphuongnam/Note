@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import androidx.datastore.rxjava3.RxDataStore
-import androidx.paging.PagingConfig
 import androidx.room.Room
 import com.example.note.model.database.local.AppDatabase
 import com.example.note.model.database.local.note.RoomNoteImpl
@@ -12,7 +11,7 @@ import com.example.note.model.database.local.user.RoomUserImpl
 import com.example.note.model.database.network.NetworkConnectionInterceptor
 import com.example.note.model.database.network.note.NoteRetrofitServiceImpl
 import com.example.note.model.database.network.user.UserRetrofitServiceImpl
-import com.example.note.utils.DataStoreUtil.DATA_STORE_NAME
+import com.example.note.utils.DataStoreConstrain.DATA_STORE_NAME
 import com.example.note.utils.RetrofitConstrain.BASE_URL
 import com.example.note.utils.RoomConstrain.DB_NAME
 import com.google.gson.Gson

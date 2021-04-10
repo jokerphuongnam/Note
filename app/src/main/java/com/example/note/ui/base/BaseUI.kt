@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 
 interface BaseUI<BD : ViewDataBinding, VM : ViewModel> {
     val layoutRes: Int
@@ -14,7 +15,7 @@ interface BaseUI<BD : ViewDataBinding, VM : ViewModel> {
     val binding: BD
     val viewModel: VM
 
-    fun <T> LiveData<T>.observer(observer: Observer<T>) {
+    fun <T> LiveData<T>.observe(observer: Observer<T>) {
         type({
             observe(viewLifecycleOwner, observer)
         }) {
@@ -44,5 +45,9 @@ interface BaseUI<BD : ViewDataBinding, VM : ViewModel> {
                 activity()
             }
         }
+    }
+
+    fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.setSource(){
+
     }
 }

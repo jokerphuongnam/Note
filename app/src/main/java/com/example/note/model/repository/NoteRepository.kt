@@ -48,5 +48,5 @@ interface NoteRepository {
         vararg tasks: Task
     ): Single<Int>
 
-    fun getNotes(start: Int, amount: Int): Flowable<PagingData<Note>>
+    fun getNotes(): Flowable<PagingData<Note>>
 }
