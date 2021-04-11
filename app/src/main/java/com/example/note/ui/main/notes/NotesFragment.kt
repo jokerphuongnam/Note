@@ -9,10 +9,11 @@ import com.example.note.databinding.FragmentNotesBinding
 import com.example.note.model.database.domain.Note
 import com.example.note.ui.adapter.NotesAdapter
 import com.example.note.ui.base.BaseFragment
+import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NotesFragment: BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layout.fragment_notes) {
+class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layout.fragment_notes) {
 
     private val notesAdapter: NotesAdapter by lazy {
         NotesAdapter()
@@ -20,8 +21,18 @@ class NotesFragment: BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layout
 
     override fun action() {
         binding.notesRecycler.adapter = notesAdapter
-        viewModel.noteLiveData.observe {notes->
-            notesAdapter.submitData(lifecycle, notes)
+        viewModel.noteLiveData.observe { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success -> {
+                    notesAdapter.submitData(lifecycle, resource.data!!)
+                }
+                is Resource.Error -> {
+
+                }
+            }
         }
     }
 

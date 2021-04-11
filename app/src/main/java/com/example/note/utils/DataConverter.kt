@@ -6,7 +6,12 @@ import com.google.gson.reflect.TypeToken
 import java.util.Date
 import javax.inject.Inject
 
-
+/**
+ * for field have type not support for room, need class data converter
+ * here set up type:
+ * - to json (String) when save room
+ * - to object when find from room
+ * */
 class DataConverter {
     @Inject
     lateinit var gson: Gson

@@ -11,10 +11,9 @@ interface UserNetwork {
     fun login(username: String, password: String, type: String): Single<Response<User>>
 
     fun register(
-        username: String,
+        user: User,
         password: String,
         type: String,
-        user: User,
         avatar: MultipartBody.Part? = null
     ): Single<Response<User>>
 

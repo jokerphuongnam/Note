@@ -14,14 +14,13 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         service.login(username, password, type)
 
     override fun register(
-        username: String,
+        user: User,
         password: String,
         type: String,
-        user: User,
         avatar: MultipartBody.Part?
     ): Single<Response<User>> = if (avatar != null) {
         service.register(
-            username,
+            user.username,
             password,
             type,
             avatar,
@@ -32,7 +31,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
     } else {
         if(user.avatar != null){
             service.register(
-                username,
+                user.username,
                 password,
                 type,
                 user.avatar!!,
@@ -42,7 +41,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             )
         }else{
             service.register(
-                username,
+                user.username,
                 password,
                 type,
                 user.fname,

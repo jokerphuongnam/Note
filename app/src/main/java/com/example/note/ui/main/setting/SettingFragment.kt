@@ -7,7 +7,8 @@ import com.example.note.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SettingFragment: BaseFragment<FragmentSettingBinding, SettingViewModel>(R.layout.fragment_setting) {
+class SettingFragment :
+    BaseFragment<FragmentSettingBinding, SettingViewModel>(R.layout.fragment_setting) {
     override fun action() {
 
     }

@@ -14,4 +14,6 @@ interface UserLocal {
     fun updateUsers(vararg users: User): Single<Int>
 
     fun deleteUsers(vararg users: User): Single<Int>
+
+    fun deleteUser(uid: Long): Single<Int>
 }

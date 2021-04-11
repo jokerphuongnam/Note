@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Note</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="login">Login</string>
+    <string name="mess_when_click_back_btn">Press again to exit</string>
 </resources>

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-    </data>
+
+    <data></data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -41,12 +42,14 @@
                         android:layout_height="@dimen/circle_background_size"
                         android:layout_margin="8dp"
                         android:background="@drawable/circle_background"
-                        app:srcCompat="@drawable/ic_search"/>
+                        android:tint="?attr/tintColor"
+                        app:srcCompat="@drawable/ic_search" />
 
                     <ImageButton
                         android:layout_width="@dimen/circle_background_size"
                         android:layout_height="@dimen/circle_background_size"
                         android:layout_margin="8dp"
+                        android:tint="?attr/tintColor"
                         android:background="@drawable/circle_background" />
                 </LinearLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -75,12 +78,14 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/main_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
         </androidx.core.widget.NestedScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

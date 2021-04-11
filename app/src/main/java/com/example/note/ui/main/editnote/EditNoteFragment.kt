@@ -7,7 +7,8 @@ import com.example.note.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditNoteFragment: BaseFragment<FragmentEditNoteBinding, EditNoteViewModel>(R.layout.fragment_edit_note) {
+class EditNoteFragment :
+    BaseFragment<FragmentEditNoteBinding, EditNoteViewModel>(R.layout.fragment_edit_note) {
     override val viewModel: EditNoteViewModel by viewModels()
 
     override fun action() {

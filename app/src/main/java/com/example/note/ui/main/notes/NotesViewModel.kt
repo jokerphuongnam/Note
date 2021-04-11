@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
 import com.example.note.model.usecase.NotesUseCase
+import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -21,28 +22,37 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Vi
     private var noteDisable: Disposable? = null
     private val observerNotes: Consumer<PagingData<Note>> by lazy {
         Consumer<PagingData<Note>> { notes ->
-            _noteLiveData.postValue(notes)
+            _noteLiveData.postValue(Resource.Success(notes))
         }
     }
 
-    private val _noteLiveData: MutableLiveData<PagingData<Note>> by lazy {
-        MutableLiveData<PagingData<Note>>()
+    private val _noteLiveData: MutableLiveData<Resource<PagingData<Note>>> by lazy {
+        MutableLiveData<Resource<PagingData<Note>>>()
     }
 
-    val noteLiveData: MutableLiveData<PagingData<Note>>
+    /**
+     * first time loading
+     * check null noteDisable if (noteDisable != null) remove in composite and dispose this
+     * handle it have data and error
+     * add noteDisable to composite
+     * */
+    val noteLiveData: MutableLiveData<Resource<PagingData<Note>>>
         get() {
+            _noteLiveData.postValue(Resource.Loading())
             noteDisable?.let {
                 composite.remove(it)
                 it.dispose()
             }
-            noteDisable = useCase.noteRepository.getNotes().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observerNotes, this::onNotesError)
+            noteDisable =
+                useCase.noteRepository.getNotes().observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observerNotes, this::onNotesError)
             composite.add(noteDisable)
             return _noteLiveData
         }
 
-    private fun onNotesError(error : Throwable){
+    private fun onNotesError(error: Throwable) {
         error.printStackTrace()
+        _noteLiveData.postValue(Resource.Error(error.message!!))
     }
 
     override fun onCleared() {

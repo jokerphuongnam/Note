@@ -54,8 +54,8 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
 
     override fun fetchNotes(
         uid: Long,
-        start: Int,
-        amount: Int
+        start: Long,
+        amount: Long
     ): Single<Response<MutableList<Note>>> = service.fetchNotes(
         uid,
         start,
@@ -105,8 +105,8 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         @GET("notes")
         fun fetchNotes(
             @Query("uid") uid: Long,
-            @Query("start") start: Int,
-            @Query("amount")amount: Int
+            @Query("start") start: Long,
+            @Query("amount")amount: Long
         ): Single<Response<MutableList<Note>>>
 
         @GET("nodecount")

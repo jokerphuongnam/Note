@@ -29,7 +29,7 @@ interface NoteNetwork {
         nid: Long
     ): Single<Response<Response<Note>>>
 
-    fun fetchNotes(uid: Long, start: Int, amount: Int): Single<Response<MutableList<Note>>>
+    fun fetchNotes(uid: Long, start: Long, amount: Long): Single<Response<MutableList<Note>>>
 
     fun fetchCount(uid: Long): Single<Response<Long>>
 }

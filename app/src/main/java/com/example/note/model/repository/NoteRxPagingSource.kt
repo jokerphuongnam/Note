@@ -11,6 +11,10 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * paging source if don't use room
+ * if use room will use mediator
+ * */
 @Singleton
 class NoteRxPagingSource @Inject constructor(
     private val network: NoteNetwork,

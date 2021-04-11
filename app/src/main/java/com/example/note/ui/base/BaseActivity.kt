@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModel
+import com.example.note.R
 
 abstract class BaseActivity<BD : ViewDataBinding, VM : ViewModel>(
     @LayoutRes override val layoutRes: Int
@@ -45,6 +46,22 @@ abstract class BaseActivity<BD : ViewDataBinding, VM : ViewModel>(
                 setCustomAnimations(start, end)
             }
             replace(resFragment, fragment, tag)
+        }
+    }
+
+    protected val isEmptyFragmentBackStack: Boolean
+        get() = supportFragmentManager.backStackEntryCount == 0
+
+    private var clickFirstTime: Long = 0
+
+    protected fun twiceTimeToExit() {
+        if (clickFirstTime == 0L) {
+            clickFirstTime = System.currentTimeMillis()
+            showToast(getString(R.string.mess_when_click_back_btn))
+        } else {
+            if (System.currentTimeMillis() - clickFirstTime < 2000L) {
+                finishAffinity()
+            }
         }
     }
 }

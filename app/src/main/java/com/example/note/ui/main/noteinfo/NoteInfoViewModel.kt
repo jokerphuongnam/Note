@@ -6,6 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase): ViewModel() {
+class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase) : ViewModel() {
 
 }

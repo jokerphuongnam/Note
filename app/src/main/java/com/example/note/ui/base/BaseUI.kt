@@ -37,17 +37,17 @@ interface BaseUI<BD : ViewDataBinding, VM : ViewModel> {
     ) {
         when (this) {
             is Fragment -> {
-                fragment?: return
+                fragment ?: return
                 fragment()
             }
             is AppCompatActivity -> {
-                activity?: return
+                activity ?: return
                 activity()
             }
         }
     }
 
-    fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.setSource(){
+    fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.setSource() {
 
     }
 }

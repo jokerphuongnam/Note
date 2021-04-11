@@ -4,10 +4,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class MainFragmentAdapter(fragmentActivity: FragmentActivity,private val fragments: MutableList<Fragment> = mutableListOf()) :
+class MainFragmentAdapter(
+    fragmentActivity: FragmentActivity,
+    private val fragments: MutableList<Fragment> = mutableListOf()
+) :
     FragmentStateAdapter(fragmentActivity) {
 
-    fun addFragment(fragment: Fragment){
+    fun addFragment(fragment: Fragment) {
         fragments.add(fragment)
     }
 

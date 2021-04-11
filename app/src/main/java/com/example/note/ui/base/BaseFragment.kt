@@ -1,6 +1,7 @@
 package com.example.note.ui.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +46,7 @@ abstract class BaseFragment<BD : ViewDataBinding, VM : ViewModel>(
         tag: String,
         @AnimRes start: Int? = null,
         @AnimRes end: Int? = null
-    ){
+    ) {
         val supportFragmentManager: FragmentManager = childFragmentManager
         val fragment: Fragment =
             supportFragmentManager.findFragmentByTag(tag) ?: F::class.constructors.find {
@@ -67,7 +68,7 @@ abstract class BaseFragment<BD : ViewDataBinding, VM : ViewModel>(
         tag: String,
         @AnimRes start: Int? = null,
         @AnimRes end: Int? = null
-    ){
+    ) {
         val supportFragmentManager: FragmentManager = parentFragmentManager
         val fragment: Fragment =
             supportFragmentManager.findFragmentByTag(tag) ?: F::class.constructors.find {

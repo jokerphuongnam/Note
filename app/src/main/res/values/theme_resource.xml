@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="backgroundCircle"/>
+    <attr name="greyColor"/>
+    <attr name="textColor"/>
+    <attr name="tintColor"/>
+    <attr name="backgroundColors"/>
 </resources>

@@ -14,6 +14,10 @@ import javax.inject.Inject
 class DataStoreCurrentUserImpl @Inject constructor(private val dataStore: RxDataStore<Preferences>) :
     CurrentUser {
 
+    /**
+     * get id with Flowable
+     * get first if first time is complete will return error
+     * */
     override val uid: Single<Long?>
         get() {
             return dataStore.data().map { ref ->
@@ -21,6 +25,9 @@ class DataStoreCurrentUserImpl @Inject constructor(private val dataStore: RxData
             }.firstOrError()
         }
 
+    /**
+     * after get sign in will change current id of user in data store
+     * */
     override fun changeCurrentUser(uid: Long): Completable = dataStore.updateDataAsync { prefsIn ->
         val mutablePreferences: MutablePreferences = prefsIn.toMutablePreferences()
         mutablePreferences[DataStoreConstrain.CURRENT_UID] = uid
@@ -29,6 +36,9 @@ class DataStoreCurrentUserImpl @Inject constructor(private val dataStore: RxData
         Completable.complete()
     }
 
+    /**
+     * sign out will set null for current id of user in data store
+     * */
     override fun signOut(): Completable = dataStore.updateDataAsync { prefsIn ->
         val mutablePreferences: MutablePreferences = prefsIn.toMutablePreferences()
         mutablePreferences.remove(DataStoreConstrain.CURRENT_UID)

@@ -7,7 +7,8 @@ import com.example.note.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NoteInfoFragment: BaseFragment<FragmentNoteInfoBinding, NoteInfoViewModel>(R.layout.fragment_note_info){
+class NoteInfoFragment :
+    BaseFragment<FragmentNoteInfoBinding, NoteInfoViewModel>(R.layout.fragment_note_info) {
     override fun action() {
 
     }

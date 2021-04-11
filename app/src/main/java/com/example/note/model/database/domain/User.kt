@@ -12,4 +12,6 @@ data class User(
     @ColumnInfo(name = "last_name") var lname: String,
     @ColumnInfo(name = "avatar") var avatar: String?,
     @ColumnInfo(name = "birth_day") var birthDay: Date
-)
+){
+    @ColumnInfo(name = "username") var username:String = ""
+}
