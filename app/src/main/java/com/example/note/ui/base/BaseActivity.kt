@@ -12,7 +12,7 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModel
 import com.example.note.R
 
-abstract class BaseActivity<BD : ViewDataBinding, VM : ViewModel>(
+abstract class BaseActivity<BD : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes override val layoutRes: Int
 ) : AppCompatActivity(), BaseUI<BD, VM> {
 

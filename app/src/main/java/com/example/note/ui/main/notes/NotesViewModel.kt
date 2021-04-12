@@ -1,10 +1,10 @@
 package com.example.note.ui.main.notes
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
 import com.example.note.model.usecase.NotesUseCase
+import com.example.note.ui.base.BaseViewModel
 import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.functions.Consumer
 import javax.inject.Inject
 
 @HiltViewModel
-class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : ViewModel() {
+class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : BaseViewModel() {
     private val composite: CompositeDisposable by lazy {
         CompositeDisposable()
     }

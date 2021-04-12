@@ -53,7 +53,7 @@ object AppProvidesModules {
     //retrofit
     @Provides
     @Singleton
-    fun providerGson(): Gson = GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create()
+    fun providerGson(): Gson = GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create()
 
     @Provides
     @Singleton

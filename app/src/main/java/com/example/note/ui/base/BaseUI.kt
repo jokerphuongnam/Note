@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 
-interface BaseUI<BD : ViewDataBinding, VM : ViewModel> {
+interface BaseUI<BD : ViewDataBinding, VM : BaseViewModel> {
     val layoutRes: Int
     fun action()
     val binding: BD
@@ -49,5 +49,14 @@ interface BaseUI<BD : ViewDataBinding, VM : ViewModel> {
 
     fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.setSource() {
 
+    }
+
+    /**
+     * observer internet error if Activity or Fragment need this case will call this func
+     * */
+    fun noInternetError(){
+        viewModel.internetError.observe{
+            showToast("không có internet")
+        }
     }
 }

@@ -39,7 +39,7 @@ class NoteRxPagingSource @Inject constructor(
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, Note>> {
         val currentPageNumber: Int = params.key ?: 1
         val (start, end) = PagingUtil.pageToItem(currentPageNumber)
-        return currentCurrentUser.uid.flatMap { uid ->
+        return currentCurrentUser.uid.firstOrError().flatMap { uid ->
             network.fetchNotes(uid!!, start, end).map {  response ->
                 toLoadResult(response.body() ?: mutableListOf(), currentPageNumber)
             }.onErrorReturn {

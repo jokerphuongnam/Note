@@ -70,4 +70,7 @@ abstract class AppBindsModules {
 
     @Binds
     abstract fun getNotesUseCase(useCase: DefaultNotesUseCaseImpl): NotesUseCase
+
+    @Binds
+    abstract fun getSettingUseCase(useCase: DefaultSettingUseCaseImpl): SettingUseCase
 }

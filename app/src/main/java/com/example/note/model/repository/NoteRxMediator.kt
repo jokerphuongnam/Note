@@ -115,9 +115,10 @@ class NoteRxMediator @Inject constructor(
                 APPEND, PREPEND -> {
                     local.insertNotes(*data.toTypedArray())
                 }
-            }
-            data.forEach { note ->
-                local.insertTasks(*note.tasks.toTypedArray())
+            }.andThen {
+                data.forEach { note ->
+                    local.insertTasks(*note.tasks.toTypedArray())
+                }
             }
         }
         return data

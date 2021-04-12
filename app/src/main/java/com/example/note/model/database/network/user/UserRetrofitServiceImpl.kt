@@ -29,7 +29,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             user.birthDay
         )
     } else {
-        if(user.avatar != null){
+        if (user.avatar != null) {
             service.register(
                 user.username,
                 password,
@@ -39,7 +39,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
                 user.lname,
                 user.birthDay
             )
-        }else{
+        } else {
             service.register(
                 user.username,
                 password,
@@ -61,7 +61,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
                 user.birthDay
             )
         } else {
-            if(user.avatar != null){
+            if (user.avatar != null) {
                 service.editProfile(
                     user.uid,
                     user.avatar!!,
@@ -69,7 +69,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
                     user.lname,
                     user.birthDay
                 )
-            }else{
+            } else {
                 service.editProfile(
                     user.uid,
                     user.fname,
@@ -94,15 +94,19 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
 
     interface Service {
         @GET("login")
-        fun login(@Query("username") username: String, @Query("password") password: String,@Query("type") type: String): Single<Response<User>>
+        fun login(
+            @Query("username") username: String,
+            @Query("password") password: String,
+            @Query("type") type: String
+        ): Single<Response<User>>
 
         @Multipart
         @FormUrlEncoded
         @POST("register")
         fun register(
             @Field("username") username: String,
-            @Field("password")password: String,
-            @Field("type")type: String,
+            @Field("password") password: String,
+            @Field("type") type: String,
             @Part("avatar") avatar: MultipartBody.Part,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
@@ -113,8 +117,8 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         @POST("register")
         fun register(
             @Field("username") username: String,
-            @Field("password")password: String,
-            @Field("type")type: String,
+            @Field("password") password: String,
+            @Field("type") type: String,
             @Field("avatar") avatar: String,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
@@ -125,8 +129,8 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         @POST("register")
         fun register(
             @Field("username") username: String,
-            @Field("password")password: String,
-            @Field("type")type: String,
+            @Field("password") password: String,
+            @Field("type") type: String,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
             @Field("birthDay") birthDay: Date
@@ -138,7 +142,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         fun editProfile(
             @Field("uid") uid: Long,
             @Part("avatar") avatar: MultipartBody.Part,
-            @Field("fname")firstName: String,
+            @Field("fname") firstName: String,
             @Field("lname") lastName: String,
             @Field("birthDay") birthDay: Date
         ): Single<Response<User>>
@@ -146,20 +150,20 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         @FormUrlEncoded
         @PUT("register")
         fun editProfile(
-            @Field("uid")uid: Long,
+            @Field("uid") uid: Long,
             @Field("avatar") avatar: String,
-            @Field("fname")firstName: String,
-            @Field("lname")lastName: String,
-            @Field("birthDay")birthDay: Date
+            @Field("fname") firstName: String,
+            @Field("lname") lastName: String,
+            @Field("birthDay") birthDay: Date
         ): Single<Response<User>>
 
         @FormUrlEncoded
         @PUT("register")
         fun editProfile(
-            @Field("uid")uid: Long,
-            @Field("fname")firstName: String,
-            @Field("lname")lastName: String,
-            @Field("birthDay")birthDay: Date
+            @Field("uid") uid: Long,
+            @Field("fname") firstName: String,
+            @Field("lname") lastName: String,
+            @Field("birthDay") birthDay: Date
         ): Single<Response<User>>
 
         @FormUrlEncoded

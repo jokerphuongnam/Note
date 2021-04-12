@@ -11,7 +11,12 @@ import java.util.Date
         childColumns = arrayOf("user_id"),
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [
+        Index(
+            value = ["note_id"],
+            unique = true)
+    ]
 )
 data class Note(
     @PrimaryKey @ColumnInfo(name = "note_id") var nid: Long,

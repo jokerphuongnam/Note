@@ -1,5 +1,6 @@
 package com.example.note.model.repository
 
+import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
 import com.example.note.model.database.local.user.CurrentUser
 import com.example.note.model.database.local.user.UserLocal
@@ -8,7 +9,7 @@ import com.example.note.throwable.NotFoundException
 import com.example.note.throwable.WrongException
 import com.example.note.utils.RetrofitConstrain.CONFLICT
 import com.example.note.utils.RetrofitConstrain.NOT_FOUND
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -18,26 +19,31 @@ class DefaultUserRepositoryImpl @Inject constructor(
     override val network: UserNetwork,
     override val currentUser: CurrentUser
 ) : UserRepository {
-    override fun currentUser(): Single<Long> = currentUser.uid.map { uid->
+    override fun currentUser(): Flowable<Long> = currentUser.uid.map { uid->
         uid ?: throw NotFoundException()
     }
 
+    /**
+     * when send login will receive 1 repose body if request code == 404 wrong username or password
+     * add username for user and save for currentUser (data store) and room (save cache)
+     * */
     override fun login(username: String, password: String, type: String): Single<User> =
         network.login(username, password, type).map {
             if (it.code().equals(NOT_FOUND)) {
                 throw NotFoundException()
             } else {
-                it.body()
+                it.body()!!
             }
-        }.map { user ->
-            if (user != null) {
-                currentUser.changeCurrentUser(user.uid)
+        }.flatMap { user ->
+            user.username = username
+            currentUser.changeCurrentUser(user.uid).flatMap {
                 local.insertUsers(user)
+            }.map {
+                user
             }
-            user
         }
 
-    override fun logout(): Completable = currentUser.signOut()
+    override fun logout():  Single<Preferences> = currentUser.signOut()
 
     override fun deleteUser(uid: Long): Single<Int> = local.deleteUser(uid)
 

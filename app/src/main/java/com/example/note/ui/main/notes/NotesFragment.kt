@@ -1,12 +1,9 @@
 package com.example.note.ui.main.notes
 
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.paging.PagingData
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.note.R
-import com.example.note.databinding.FragmentNoteInfoBinding
 import com.example.note.databinding.FragmentNotesBinding
-import com.example.note.model.database.domain.Note
 import com.example.note.ui.adapter.NotesAdapter
 import com.example.note.ui.base.BaseFragment
 import com.example.note.utils.Resource
@@ -20,7 +17,10 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
     }
 
     override fun action() {
-        binding.notesRecycler.adapter = notesAdapter
+        binding.notesRecycler.apply {
+            adapter = notesAdapter
+            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
+        }
         viewModel.noteLiveData.observe { resource ->
             when (resource) {
                 is Resource.Loading -> {

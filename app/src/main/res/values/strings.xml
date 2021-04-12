@@ -4,4 +4,9 @@
     <string name="password">password</string>
     <string name="login">Login</string>
     <string name="mess_when_click_back_btn">Press again to exit</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="note">note</string>
+    <string name="or">or</string>
+    <string name="register">Register</string>
+    <string name="log_out">Log out</string>
 </resources>

@@ -10,8 +10,12 @@ class MainFragmentAdapter(
 ) :
     FragmentStateAdapter(fragmentActivity) {
 
-    fun addFragment(fragment: Fragment) {
+    /**
+     * fragment add fragment and configure for this fragment by fragment will action 1 time
+     * */
+    fun <Frag : Fragment> addFragment(fragment: Frag, config: (Frag.() -> Unit)? = null) {
         fragments.add(fragment)
+        config?.invoke(fragment)
     }
 
     override fun getItemCount(): Int = fragments.size

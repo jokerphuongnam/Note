@@ -13,8 +13,7 @@ import javax.inject.Inject
  * - to object when find from room
  * */
 class DataConverter {
-    @Inject
-    lateinit var gson: Gson
+    private var gson: Gson = Gson()
 
     @TypeConverter
     fun fromStrings(strings: List<String>): String = gson.toJson(strings, object : TypeToken<List<String>>() {}.type)

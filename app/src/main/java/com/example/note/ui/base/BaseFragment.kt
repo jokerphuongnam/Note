@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModel
 
-abstract class BaseFragment<BD : ViewDataBinding, VM : ViewModel>(
+abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes override val layoutRes: Int
 ) : Fragment(), BaseUI<BD, VM> {
 

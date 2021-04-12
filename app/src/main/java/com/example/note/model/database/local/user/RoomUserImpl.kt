@@ -11,7 +11,7 @@ class RoomUserImpl @Inject constructor(private val dao: UserDao): UserLocal {
 
     override fun findUsers(): Single<List<User>> = dao.findUsers()
 
-    override fun insertUsers(vararg users: User):Completable = dao.insertUsers(*users)
+    override fun insertUsers(users: User): Single<Long> = dao.insertUsers(users)
 
     override fun updateUsers(vararg users: User): Single<Int> = dao.updateUsers(*users)
 
@@ -25,7 +25,7 @@ class RoomUserImpl @Inject constructor(private val dao: UserDao): UserLocal {
         fun findUsers(): Single<List<User>>
 
         @Insert(onConflict = REPLACE)
-        fun insertUsers(vararg users: User):Completable
+        fun insertUsers(users: User): Single<Long>
 
         @Update
         fun updateUsers(vararg users: User): Single<Int>

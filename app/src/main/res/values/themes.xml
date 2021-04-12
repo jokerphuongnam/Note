@@ -13,6 +13,7 @@
         <item name="greyColor">@color/light_grey</item>
         <item name="textColor">#FFF</item>
         <item name="tintColor">@color/dark_grey</item>
+        <item name="blackLightBlackWhiteColor">#000</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

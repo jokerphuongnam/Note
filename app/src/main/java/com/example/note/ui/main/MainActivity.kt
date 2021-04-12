@@ -22,30 +22,37 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     private val mainAdapter: MainFragmentAdapter by lazy {
         MainFragmentAdapter(this@MainActivity).apply {
             addFragment(NotesFragment())
-            addFragment(SettingFragment())
+            addFragment(SettingFragment()) {
+                logoutSubscription().subscribe {
+                    logout()
+                }
+            }
         }
     }
 
-    private val loginContent: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { uri ->
-        // Handle the returned Uri
-    }
+    private val loginContent: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> }
 
     private val loginIntent by lazy {
-        Intent(this,LoginActivity::class.java)
+        Intent(this, LoginActivity::class.java)
     }
 
     override fun action() {
-        viewModel.uidLiveData.observe{ resource->
-            when(resource){
+        viewModel.uidLiveData.observe { resource ->
+            when (resource) {
                 is Resource.Loading -> {
 
                 }
                 is Resource.Success -> {
+                    /**
+                     * if have data will set event to link pager with tabs
+                     * */
                     binding.apply {
                         mainViewPager.apply {
                             currentItem = 0
                             adapter = mainAdapter
-                            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                            registerOnPageChangeCallback(object :
+                                ViewPager2.OnPageChangeCallback() {
                                 override fun onPageSelected(position: Int) {
                                     binding.tabs.selectTab(binding.tabs.getTabAt(position))
                                     if (position != 0) {
@@ -69,10 +76,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                     }
                 }
                 is Resource.Error -> {
-                    loginContent.launch(loginIntent)
+                    logout()
                 }
             }
         }
+    }
+
+    private fun logout() {
+        loginContent.launch(loginIntent)
     }
 
     override val viewModel: MainViewModel by viewModels()

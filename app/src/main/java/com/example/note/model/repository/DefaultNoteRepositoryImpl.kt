@@ -15,8 +15,6 @@ import com.example.note.utils.PagingUtil.PREFECT_DISTANCE
 import com.example.note.utils.PagingUtil.START
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.functions.Function
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -64,24 +62,40 @@ class DefaultNoteRepositoryImpl @Inject constructor(
         currentUser.uid.flatMap { uid ->
             network.fetchCount(uid!!).map { count ->
                 uid to count.body()!!
-            }
-        }.toFlowable().flatMap { uidToCount ->
+            }.toFlowable()
+        }.flatMap { uidToCount ->
             val (uid, count) = uidToCount
-            Pager(
-                config = PagingConfig(
-                    pageSize = LOOP,
-                    enablePlaceholders = true,
-                    maxSize = count.toInt(),
-                    prefetchDistance = PREFECT_DISTANCE,
-                    initialLoadSize = START
-                ),
-                remoteMediator = mediator.apply {
-                    maxCount = count
-                    this.uid = uid
-                },
-                pagingSourceFactory = {
-                    local.findNotes(uid)
-                }
-            ).flowable
+            val remoteMediator = mediator.apply {
+                maxCount = count
+                this.uid = uid
+            }
+            val pagingSourceFactory = {
+                local.findNotes(uid)
+            }
+            if(count < START){
+                Pager(
+                    config = PagingConfig(
+                        pageSize = LOOP,
+                        enablePlaceholders = true,
+                        maxSize = count.toInt(),
+                        prefetchDistance = PREFECT_DISTANCE,
+                        initialLoadSize = START
+                    ),
+                    remoteMediator = remoteMediator,
+                    pagingSourceFactory = pagingSourceFactory
+                )
+            }else{
+                Pager(
+                    config = PagingConfig(
+                        pageSize = LOOP,
+                        enablePlaceholders = true,
+                        prefetchDistance = PREFECT_DISTANCE,
+                        initialLoadSize = START
+                    ),
+                    remoteMediator = remoteMediator,
+                    pagingSourceFactory = pagingSourceFactory
+                )
+            }.flowable
+
         }
 }

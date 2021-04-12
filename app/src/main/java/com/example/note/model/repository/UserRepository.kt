@@ -1,10 +1,11 @@
 package com.example.note.model.repository
 
+import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
 import com.example.note.model.database.local.user.CurrentUser
 import com.example.note.model.database.local.user.UserLocal
 import com.example.note.model.database.network.user.UserNetwork
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import javax.inject.Singleton
@@ -15,11 +16,11 @@ interface UserRepository {
     val network: UserNetwork
     val currentUser: CurrentUser
 
-    fun currentUser(): Single<Long>
+    fun currentUser(): Flowable<Long>
 
     fun login(username: String, password: String, type: String): Single<User>
 
-    fun logout(): Completable
+    fun logout(): Single<Preferences>
 
     fun deleteUser(uid: Long): Single<Int>
 
