@@ -5,4 +5,5 @@
     <attr name="tintColor"/>
     <attr name="backgroundColors"/>
     <attr name="blackLightBlackWhiteColor"/>
+    <attr name="whiteLightBlackBlackColor"/>
 </resources>

@@ -78,7 +78,7 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("tasks")tasks: List<Task>,
             @Part("images") images: List<MultipartBody.Part>,
             @Part("sounds") sounds: List<MultipartBody.Part>,
-            @Field("noticeTimes") noticeTimes: List<Date>
+            @Field("noticeTimes")noticeTimes: List<Long>
         ): Single<Response<Response<Note>>>
 
         @Multipart
@@ -96,7 +96,7 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("images")imagesString: List<String>,
             @Part("sounds") sounds: List<MultipartBody.Part>,
             @Field("sounds")soundsString: List<String>,
-            @Field("noticeTimes")noticeTimes: List<Date>
+            @Field("noticeTimes")noticeTimes: List<Long>
         ): Single<Response<Response<Note>>>
 
         @DELETE("delete/{uid}/{nid}")

@@ -5,7 +5,6 @@ import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
-import java.util.Date
 import javax.inject.Inject
 
 class UserRetrofitServiceImpl @Inject constructor(private val service: Service) : UserNetwork {
@@ -110,7 +109,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Part("avatar") avatar: MultipartBody.Part,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Date
+            @Field("birthDay") birthDay: Long
         ): Single<Response<User>>
 
         @FormUrlEncoded
@@ -122,7 +121,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("avatar") avatar: String,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Date
+            @Field("birthDay") birthDay: Long
         ): Single<Response<User>>
 
         @FormUrlEncoded
@@ -133,7 +132,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("type") type: String,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Date
+            @Field("birthDay") birthDay: Long
         ): Single<Response<User>>
 
         @Multipart
@@ -144,7 +143,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Part("avatar") avatar: MultipartBody.Part,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Date
+            @Field("birthDay") birthDay: Long
         ): Single<Response<User>>
 
         @FormUrlEncoded
@@ -154,7 +153,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("avatar") avatar: String,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Date
+            @Field("birthDay") birthDay: Long
         ): Single<Response<User>>
 
         @FormUrlEncoded
@@ -163,7 +162,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
             @Field("uid") uid: Long,
             @Field("fname") firstName: String,
             @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Date
+            @Field("birthDay") birthDay: Long
         ): Single<Response<User>>
 
         @FormUrlEncoded

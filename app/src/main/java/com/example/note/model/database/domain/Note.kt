@@ -26,7 +26,7 @@ data class Note(
     @ColumnInfo(name = "tags") var tags: List<String>,
     @ColumnInfo(name = "images") var images: List<String>? = null,
     @ColumnInfo(name = "sounds") var sounds: List<String>? = null,
-    @ColumnInfo(name = "notice_times") var noticeTimes: List<Date>? = null,
+    @ColumnInfo(name = "notice_times") var noticeTimes: List<Long>? = null,
     @ColumnInfo(name = "user_id") var userId: Long? = null,
     @ColumnInfo(name = "modified_at") var modifiedAt: Long
 ) {

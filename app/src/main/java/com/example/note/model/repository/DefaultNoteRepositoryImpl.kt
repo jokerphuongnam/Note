@@ -72,30 +72,16 @@ class DefaultNoteRepositoryImpl @Inject constructor(
             val pagingSourceFactory = {
                 local.findNotes(uid)
             }
-            if(count < START){
-                Pager(
-                    config = PagingConfig(
-                        pageSize = LOOP,
-                        enablePlaceholders = true,
-                        maxSize = count.toInt(),
-                        prefetchDistance = PREFECT_DISTANCE,
-                        initialLoadSize = START
-                    ),
-                    remoteMediator = remoteMediator,
-                    pagingSourceFactory = pagingSourceFactory
-                )
-            }else{
-                Pager(
-                    config = PagingConfig(
-                        pageSize = LOOP,
-                        enablePlaceholders = true,
-                        prefetchDistance = PREFECT_DISTANCE,
-                        initialLoadSize = START
-                    ),
-                    remoteMediator = remoteMediator,
-                    pagingSourceFactory = pagingSourceFactory
-                )
-            }.flowable
-
+            Pager(
+                config = PagingConfig(
+                    pageSize = LOOP,
+                    enablePlaceholders = true,
+                    maxSize = count.toInt(),
+                    prefetchDistance = PREFECT_DISTANCE,
+                    initialLoadSize = START
+                ),
+                remoteMediator = remoteMediator,
+                pagingSourceFactory = pagingSourceFactory
+            ).flowable
         }
 }

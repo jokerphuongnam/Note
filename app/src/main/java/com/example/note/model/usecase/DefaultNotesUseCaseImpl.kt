@@ -12,6 +12,7 @@ class DefaultNotesUseCaseImpl @Inject constructor(
     override val noteRepository: NoteRepository,
     override val userRepository: UserRepository
 ) : NotesUseCase {
+
     override fun getNotes(): Flowable<PagingData<Note>> =
         noteRepository.getNotes().subscribeOn(Schedulers.io())
 }

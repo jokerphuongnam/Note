@@ -22,14 +22,8 @@ class DataConverter {
     fun toStrings(json: String): List<String> = gson.fromJson(json, object : TypeToken<List<String>>() {}.type)
 
     @TypeConverter
-    fun fromDates(dates: List<Date>): String = gson.toJson(dates, object : TypeToken<List<Date>>() {}.type)
+    fun fromDates(dates: List<Long>): String = gson.toJson(dates, object : TypeToken<List<Long>>() {}.type)
 
     @TypeConverter
-    fun toDates(json: String): List<Date> = gson.fromJson(json, object : TypeToken<List<Date>>() {}.type)
-
-    @TypeConverter
-    fun fromDate(date: Date): String = gson.toJson(date, object : TypeToken<Date>() {}.type)
-
-    @TypeConverter
-    fun toDate(json: String): Date = gson.fromJson(json, object : TypeToken<Date>() {}.type)
+    fun toDates(json: String): List<Long> = gson.fromJson(json, object : TypeToken<List<Long>>() {}.type)
 }

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.main.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -49,8 +52,8 @@
                         android:layout_width="@dimen/circle_background_size"
                         android:layout_height="@dimen/circle_background_size"
                         android:layout_margin="8dp"
-                        android:tint="?attr/tintColor"
-                        android:background="@drawable/circle_background" />
+                        android:background="@drawable/circle_background"
+                        android:tint="?attr/tintColor" />
                 </LinearLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -78,15 +81,43 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation"
+            android:layout_alignParentTop="true"
             android:fillViewport="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/main_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1"/>
+                android:orientation="horizontal" />
         </androidx.core.widget.NestedScrollView>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:gravity="bottom">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/add_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:tabIconTint="@color/color_tab"
+                app:tabIndicatorColor="@color/primary_color"
+                app:tabMode="scrollable"
+                app:tabTextColor="@color/color_tab">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_notes" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_notes" />
+            </com.google.android.material.tabs.TabLayout>
+        </RelativeLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
