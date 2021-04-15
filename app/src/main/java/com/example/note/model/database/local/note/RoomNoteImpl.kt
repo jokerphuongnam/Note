@@ -25,8 +25,15 @@ interface RoomNoteImpl : NoteLocal {
     @Query("SELECT * FROM NOTES WHERE note_id = :nid")
     fun findNotesWithTask(nid: Long): Single<NoteWithTasks>
 
-    @Query("SELECT * FROM NOTES WHERE note_id = :nid")
-    override fun findSingleNote(nid: Long): Single<Note>
+    /**
+     * make noteWithTask do support query for note
+     * */
+    override fun findSingleNote(nid: Long): Single<Note> = findNotesWithTask(nid).map {
+        it.toNote()
+    }
+
+    @Query("SELECT * FROM TASKS WHERE note_id =:nid")
+    override fun fetchTasksByUid(nid: Long): Single<List<Task>>
 
     @Insert(onConflict = REPLACE)
     override fun insertNotes(vararg notes: Note): Completable
@@ -49,4 +56,7 @@ interface RoomNoteImpl : NoteLocal {
 
     @Delete
     override fun deleteTasks(vararg tasks: Task): Single<Int>
+
+    @Query("DELETE FROM TASKS WHERE note_id = :uid" )
+    override fun clearTasksByNote(uid: Long): Single<Int>
 }

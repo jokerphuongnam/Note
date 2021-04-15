@@ -1,10 +1,11 @@
 package com.example.note.ui.noteinfo
 
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
+import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.usecase.NoteInfoUseCase
+import com.example.note.throwable.NoConnectivityException
 import com.example.note.ui.base.BaseViewModel
-import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.SingleObserver
@@ -13,40 +14,45 @@ import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteInfoViewModel @Inject constructor(private val infoUseCase: NoteInfoUseCase) :
+class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase) :
     BaseViewModel() {
     private val composite: CompositeDisposable by lazy {
         CompositeDisposable()
     }
-    private var deleteDisable: Disposable? = null
-    private val deleteTaskObserver by lazy {
+
+    private val singleObserver: SingleObserver<Int> by lazy {
         object : SingleObserver<Int> {
+            private var saveNoteDisable: Disposable? = null
             override fun onSubscribe(d: Disposable?) {
-                delete.postValue(Resource.Loading())
-                deleteDisable?.let {
-                    composite.remove(it)
-                    it.dispose()
-                }
-                deleteDisable = d
+                saveNoteDisable = d
             }
 
             override fun onSuccess(t: Int?) {
-                delete.postValue(Resource.Success(!delete.value!!.data!!))
+                Log.e("ccccccccccccc", "aaaaaa")
+                saveNoteDisable?.dispose()
             }
 
-            override fun onError(e: Throwable) {
-                e.printStackTrace()
-                delete.postValue(Resource.Error(e.message!!))
+            override fun onError(e: Throwable?) {
+                saveNoteDisable?.dispose()
+                e?.printStackTrace()
+                when (e) {
+                    is NoConnectivityException -> {
+                        internetError.postValue("")
+                    }
+                }
             }
         }
     }
 
-    val delete: MutableLiveData<Resource<Boolean>> by lazy {
-        MutableLiveData<Resource<Boolean>>()
-    }
+    private var _newNote: Note? = null
+    var newNote: Note
+        get() = _newNote!!
+        set(value) {
+            _newNote = value
+        }
 
-    fun deleteTask(vararg task: Task) {
-        infoUseCase.deleteTask(*task).subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe(deleteTaskObserver)
+    fun saveNote() {
+        useCase.saveNote(_newNote!!).subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe(singleObserver)
     }
 }

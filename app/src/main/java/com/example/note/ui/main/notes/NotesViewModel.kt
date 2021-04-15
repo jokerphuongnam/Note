@@ -44,7 +44,7 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
                 it.dispose()
             }
             noteDisable =
-                useCase.noteRepository.getNotes().observeOn(AndroidSchedulers.mainThread())
+                useCase.getNotes().subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe(observerNotes, this::onNotesError)
             composite.add(noteDisable)
             return _noteLiveData

@@ -10,14 +10,12 @@ import javax.inject.Singleton
 @Singleton
 interface NoteNetwork {
     fun insertNote(
-        uid: Long,
         note: Note,
         images: List<MultipartBody.Part>,
         sounds: List<MultipartBody.Part>
     ): Single<Response<Note>>
 
     fun updateNote(
-        uid: Long,
         nid: Long,
         note: Note,
         images: List<MultipartBody.Part>,

@@ -38,7 +38,7 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
                 it.dispose()
             }
             uidDisable =
-                useCase.currentUser().observeOn(AndroidSchedulers.mainThread())
+                useCase.currentUser().subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe(observerUid, this::onUidError)
             composite.add(uidDisable)
             return _uid

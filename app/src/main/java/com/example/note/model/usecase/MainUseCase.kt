@@ -12,6 +12,6 @@ interface MainUseCase {
     val noteRepository: NoteRepository
     val userRepository: UserRepository
 
-    fun currentUser(): Flowable<Long>
+    fun currentUser(): Single<Long>
     fun login(username: String, password: String, type: String): Single<User>
 }

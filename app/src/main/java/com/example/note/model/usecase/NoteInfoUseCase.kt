@@ -1,8 +1,10 @@
 package com.example.note.model.usecase
 
+import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.repository.NoteRepository
 import com.example.note.model.repository.UserRepository
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Singleton
 
@@ -14,4 +16,6 @@ interface NoteInfoUseCase {
     fun deleteTask(
         vararg tasks: Task
     ): Single<Int>
+
+    fun saveNote(note: Note): Single<Int>
 }

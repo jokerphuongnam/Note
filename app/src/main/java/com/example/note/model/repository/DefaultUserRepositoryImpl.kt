@@ -19,7 +19,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
     override val network: UserNetwork,
     override val currentUser: CurrentUser
 ) : UserRepository {
-    override fun currentUser(): Flowable<Long> = currentUser.uid.map { uid->
+    override fun currentUser(): Single<Long> = currentUser.uid.firstOrError().map { uid ->
         uid ?: throw NotFoundException()
     }
 
@@ -43,7 +43,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun logout():  Single<Preferences> = currentUser.signOut()
+    override fun logout(): Single<Preferences> = currentUser.signOut()
 
     override fun deleteUser(uid: Long): Single<Int> = local.deleteUser(uid)
 

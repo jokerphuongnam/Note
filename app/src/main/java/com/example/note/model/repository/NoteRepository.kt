@@ -17,10 +17,9 @@ interface NoteRepository {
     val network: NoteNetwork
 
     fun insertNote(
-        uid: Long,
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<MultipartBody.Part>? = null,
+        sounds: List<MultipartBody.Part>? = null
     ): Single<Int>
 
     fun insertTask(
@@ -28,11 +27,10 @@ interface NoteRepository {
     ):Single<Int>
 
     fun updateNote(
-        uid: Long,
         nid: Long,
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<MultipartBody.Part>? = null,
+        sounds: List<MultipartBody.Part>? = null
     ): Single<Int>
 
     fun updateTask(
@@ -48,7 +46,11 @@ interface NoteRepository {
         vararg tasks: Task
     ): Single<Int>
 
-    fun getNotes(): Flowable<PagingData<Note>>
+    fun clearTasksByNote(
+        nid: Long
+    ): Single<Int>
+
+    fun getNotes(uid: Long): Flowable<PagingData<Note>>
 
     fun getSingleNote(): Single<Note>
 }

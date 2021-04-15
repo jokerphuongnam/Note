@@ -10,15 +10,15 @@ import com.example.note.model.database.domain.Task
 import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.local.user.CurrentUser
 import com.example.note.model.database.network.note.NoteNetwork
-import com.example.note.utils.PagingUtil.LOOP
+import com.example.note.throwable.CannotSaveException
+import com.example.note.utils.PagingUtil.PAGE_SIZE
 import com.example.note.utils.PagingUtil.PREFECT_DISTANCE
-import com.example.note.utils.PagingUtil.START
+import com.example.note.utils.PagingUtil.INIT_LOAD_SIZE
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MultipartBody
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @ExperimentalPagingApi
@@ -29,27 +29,39 @@ class DefaultNoteRepositoryImpl @Inject constructor(
     private val currentUser: CurrentUser
 ) : NoteRepository {
     override fun insertNote(
-        uid: Long,
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
-    ): Single<Int> = Single.just(0)
+        images: List<MultipartBody.Part>?,
+        sounds: List<MultipartBody.Part>?
+    ): Single<Int> =
+        network.insertNote(note, images ?: emptyList(), sounds ?: emptyList()).flatMap {
+            if (it.code() == 200) {
+                throw CannotSaveException()
+            } else {
+                val receiveNote: Note = it.body()!!
+                local.clearTasksByNote(receiveNote.nid).flatMap {
+                    local.insertNotes(receiveNote).toSingle {
+                        0
+                    }
+                }
+            }
+        }
 
     override fun insertTask(vararg tasks: Task): Single<Int> = Single.just(0)
 
     override fun updateNote(
-        uid: Long,
         nid: Long,
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<MultipartBody.Part>?,
+        sounds: List<MultipartBody.Part>?
     ): Single<Int> = Single.just(0)
 
     override fun updateTask(vararg tasks: Task): Single<Int> = Single.just(0)
 
     override fun deleteNote(uid: Long, nid: Long): Single<Int> = Single.just(0)
 
-    override fun deleteTask(vararg tasks: Task): Single<Int> = Single.just(0)
+    override fun deleteTask(vararg tasks: Task): Single<Int> = local.deleteTasks(*tasks)
+
+    override fun clearTasksByNote(nid: Long): Single<Int> = local.clearTasksByNote(nid)
 
     /**
      * get uid (is always non-null) in data store
@@ -57,13 +69,10 @@ class DefaultNoteRepositoryImpl @Inject constructor(
      * configure for Pager
      * convert to flowable
      * */
-    override fun getNotes(): Flowable<PagingData<Note>> =
-        currentUser.uid.flatMap { uid ->
-            network.fetchCount(uid!!).map { count ->
-                uid to count.body()!!
-            }.toFlowable()
-        }.flatMap { uidToCount ->
-            val (uid, count) = uidToCount
+    override fun getNotes(uid: Long): Flowable<PagingData<Note>> =
+        network.fetchCount(uid).map { count ->
+            count.body()!!
+        }.toFlowable().flatMap { count ->
             val remoteMediator = mediator.apply {
                 maxCount = count
                 this.uid = uid
@@ -73,11 +82,11 @@ class DefaultNoteRepositoryImpl @Inject constructor(
             }
             Pager(
                 config = PagingConfig(
-                    pageSize = LOOP,
+                    pageSize = PAGE_SIZE,
                     enablePlaceholders = true,
                     maxSize = count.toInt(),
                     prefetchDistance = PREFECT_DISTANCE,
-                    initialLoadSize = START
+                    initialLoadSize = INIT_LOAD_SIZE
                 ),
                 remoteMediator = remoteMediator,
                 pagingSourceFactory = pagingSourceFactory

@@ -11,10 +11,11 @@ import com.example.note.databinding.ItemTaskBinding
 import com.example.note.model.database.domain.Task
 
 
-class TasksAdapter : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DIFF_CALLBACK) {
+class TasksAdapter(private val deleteCallBack: (Task) -> Unit) :
+    ListAdapter<Task, TasksAdapter.TaskViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder =
-        TaskViewHolder.create(parent, viewType)
+        TaskViewHolder.create(parent, viewType, deleteCallBack)
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -32,24 +33,32 @@ class TasksAdapter : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DIFF_CALLBAC
         }
     }
 
-    class TaskViewHolder private constructor(private val binding: ItemTaskBinding) :
+    class TaskViewHolder private constructor(
+        private val binding: ItemTaskBinding,
+        private val deleteCallBack: (Task) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(task: Task){
+        fun bind(task: Task) {
             binding.task = task
             binding.deleteTaskBtn.setOnClickListener {
-
+                deleteCallBack.invoke(task)
             }
         }
 
         companion object {
-            fun create(parent: ViewGroup, viewType: Int): TaskViewHolder = TaskViewHolder(
+            fun create(
+                parent: ViewGroup,
+                viewType: Int,
+                deleteCallBack: (Task) -> Unit
+            ): TaskViewHolder = TaskViewHolder(
                 DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
                     R.layout.item_task,
                     parent,
                     false
-                )
+                ),
+                deleteCallBack
             )
         }
     }

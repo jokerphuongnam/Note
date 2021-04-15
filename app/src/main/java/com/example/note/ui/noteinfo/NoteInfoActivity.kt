@@ -15,16 +15,18 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class NoteInfoActivity :
     BaseActivity<ActivityNoteInfoBinding, NoteInfoViewModel>(R.layout.activity_note_info) {
-
-    private val newNote: Note by lazy { Note() }
-    private val tasksInfoAdapter: TasksAdapter by lazy { TasksAdapter() }
+    private val tasksInfoAdapter: TasksAdapter by lazy {
+        TasksAdapter {
+            viewModel.newNote.tasks.remove(it)
+        }
+    }
     private val actionBar: ActionBar by lazy { supportActionBar!! }
 
-    private fun recyclerViewSetUp(){
+    private fun recyclerViewSetUp() {
         binding.apply {
             tasks.apply {
                 adapter = tasksInfoAdapter.apply {
-                    submitList(newNote.tasks)
+                    submitList(viewModel.newNote.tasks)
                 }
                 layoutManager = LinearLayoutManager(this@NoteInfoActivity)
             }
@@ -32,28 +34,23 @@ class NoteInfoActivity :
     }
 
     override fun action() {
+        viewModel.newNote = intent.getParcelableExtra(NOTE) ?: Note()
+        noInternetError()
         setSupportActionBar(binding.addToolBar)
         actionBar.setDisplayHomeAsUpEnabled(true)
         binding.apply {
-            note = newNote
+            note = viewModel.newNote
             addTask.setOnClickListener {
                 /**
                  * before set tasks need change address of task if don't this will can't submit task
                  * because submitList has (oldList == newList) {don't do}
                  * */
-                tasksInfoAdapter.submitList(null)
-                tasksInfoAdapter.submitList(newNote.tasks.apply {
-                    add(Task(false, "", newNote.nid))
-                })
+                viewModel.newNote.tasks.add(Task(false, "", viewModel.newNote.nid))
+                tasksInfoAdapter.submitList(viewModel.newNote.tasks.toMutableList())
             }
-        }
-        viewModel.delete.observe {
-            tasksInfoAdapter.submitList(newNote.tasks)
         }
         recyclerViewSetUp()
     }
-
-    override val viewModel: NoteInfoViewModel by viewModels()
 
     /**
      * this event will enable the back
@@ -67,5 +64,16 @@ class NoteInfoActivity :
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        viewModel.saveNote()
+    }
+
+    override val viewModel: NoteInfoViewModel by viewModels()
+
+    companion object{
+        const val NOTE:String = "note"
     }
 }

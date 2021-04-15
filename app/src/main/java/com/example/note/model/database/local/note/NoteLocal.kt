@@ -16,6 +16,8 @@ interface NoteLocal {
 
     fun findSingleNote(nid: Long): Single<Note>
 
+    fun fetchTasksByUid(nid: Long): Single<List<Task>>
+
     fun insertNotes(vararg notes: Note): Completable
 
     fun insertTasks(vararg tasks: Task)
@@ -29,4 +31,6 @@ interface NoteLocal {
     fun deleteNotes(uid: Long): Single<Int>
 
     fun deleteTasks(vararg tasks: Task): Single<Int>
+
+    fun clearTasksByNote(uid:Long) : Single<Int>
 }

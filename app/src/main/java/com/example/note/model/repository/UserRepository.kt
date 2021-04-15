@@ -16,7 +16,7 @@ interface UserRepository {
     val network: UserNetwork
     val currentUser: CurrentUser
 
-    fun currentUser(): Flowable<Long>
+    fun currentUser(): Single<Long>
 
     fun login(username: String, password: String, type: String): Single<User>
 

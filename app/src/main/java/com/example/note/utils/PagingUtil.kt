@@ -1,8 +1,8 @@
 package com.example.note.utils
 
 object PagingUtil {
-    const val START = 15
-    const val LOOP = 10
+    const val INIT_LOAD_SIZE = 15
+    const val PAGE_SIZE = 10
     const val PREFECT_DISTANCE = 5
     const val OUT_DATE_TIME_STAMP = 120000000
 
@@ -14,10 +14,10 @@ object PagingUtil {
     fun pageToItem(page: Int): Pair<Long, Long> {
         return when (page) {
             1 -> {
-                0L to (START - 1).toLong()
+                0L to (INIT_LOAD_SIZE - 1).toLong()
             }
             else -> {
-                (START + LOOP * (page - 2)).toLong() to (START + LOOP * (page -1) - 1).toLong()
+                (INIT_LOAD_SIZE + PAGE_SIZE * (page - 2)).toLong() to (INIT_LOAD_SIZE + PAGE_SIZE * (page -1) - 1).toLong()
             }
         }
     }

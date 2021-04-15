@@ -1,7 +1,10 @@
 package com.example.note.model.database.domain
 
+import android.os.Parcelable
 import androidx.room.*
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(
     tableName = "notes",
     foreignKeys = [ForeignKey(
@@ -29,7 +32,7 @@ data class Note(
     @ColumnInfo(name = "user_id") var userId: Long? = null,
     @ColumnInfo(name = "modified_at") var modifiedAt: Long = 0,
     @ColumnInfo(name = "created_at") var createAt: Long = 0
-) {
+): Parcelable{
     @Ignore
     var tasks: MutableList<Task> = mutableListOf()
 }
