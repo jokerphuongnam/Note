@@ -6,10 +6,14 @@ import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import androidx.datastore.rxjava3.RxDataStore
 import androidx.room.Room
 import com.example.note.model.database.local.AppDatabase
+import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.local.note.RoomNoteImpl
 import com.example.note.model.database.local.user.RoomUserImpl
+import com.example.note.model.database.local.user.UserLocal
 import com.example.note.model.database.network.NetworkConnectionInterceptor
+import com.example.note.model.database.network.note.NoteNetwork
 import com.example.note.model.database.network.note.NoteRetrofitServiceImpl
+import com.example.note.model.database.network.user.UserNetwork
 import com.example.note.model.database.network.user.UserRetrofitServiceImpl
 import com.example.note.utils.DataStoreConstrain.DATA_STORE_NAME
 import com.example.note.utils.RetrofitConstrain.BASE_URL
@@ -44,11 +48,11 @@ object AppProvidesModules {
 
     @Provides
     @Singleton
-    fun providerNoteLocal(appDatabase: AppDatabase): RoomNoteImpl.NoteDao = appDatabase.noteDao()
+    fun providerNoteLocal(appDatabase: AppDatabase): NoteLocal = appDatabase.noteDao()
 
     @Provides
     @Singleton
-    fun providerUserLocal(appDatabase: AppDatabase): RoomUserImpl.UserDao = appDatabase.userDao()
+    fun providerUserLocal(appDatabase: AppDatabase): UserLocal = appDatabase.userDao()
 
     //retrofit
     @Provides
@@ -83,11 +87,11 @@ object AppProvidesModules {
 
     @Provides
     @Singleton
-    fun providerNoteService(retrofit: Retrofit): NoteRetrofitServiceImpl.Service =
-        retrofit.create(NoteRetrofitServiceImpl.Service::class.java)
+    fun providerNoteService(retrofit: Retrofit): NoteNetwork =
+        retrofit.create(NoteRetrofitServiceImpl::class.java)
 
     @Provides
     @Singleton
-    fun providerUserService(retrofit: Retrofit): UserRetrofitServiceImpl.Service =
-        retrofit.create(UserRetrofitServiceImpl.Service::class.java)
+    fun providerUserService(retrofit: Retrofit): UserNetwork =
+        retrofit.create(UserRetrofitServiceImpl::class.java)
 }

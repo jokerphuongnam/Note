@@ -1,6 +1,7 @@
 package com.example.note.ui.base
 
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.annotation.AnimRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -64,4 +65,8 @@ abstract class BaseActivity<BD : ViewDataBinding, VM : BaseViewModel>(
             }
         }
     }
+
+//    override val actionBarSize: Int by lazy {
+//        TypedValue.complexToDimensionPixelSize(TypedValue().data, resources.displayMetrics)
+//    }
 }

@@ -9,14 +9,14 @@ import retrofit2.http.*
 import java.util.Date
 import javax.inject.Inject
 
-class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) : NoteNetwork {
+interface NoteRetrofitServiceImpl : NoteNetwork {
 
     override fun insertNote(
         uid: Long,
         note: Note,
         images: List<MultipartBody.Part>,
         sounds: List<MultipartBody.Part>
-    ): Single<Response<Response<Note>>> = service.insertNote(
+    ): Single<Response<Note>> = insertNote(
         uid,
         note.title,
         note.isFavorite,
@@ -34,7 +34,7 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         note: Note,
         images: List<MultipartBody.Part>,
         sounds: List<MultipartBody.Part>
-    ): Single<Response<Response<Note>>> = service.updateNote(
+    ): Single<Response<Note>> = updateNote(
         uid,
         note.nid,
         note.title,
@@ -49,67 +49,49 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         note.noticeTimes?: emptyList()
     )
 
-    override fun deleteNote(uid: Long, nid: Long): Single<Response<Response<Note>>> =
-        service.deleteNote(uid, nid)
+    @DELETE("delete/{uid}/{nid}")
+    override fun deleteNote(uid: Long, nid: Long): Single<Response<Note>>
 
+    @GET("notes")
     override fun fetchNotes(
         uid: Long,
         start: Long,
         amount: Long
-    ): Single<Response<MutableList<Note>>> = service.fetchNotes(
-        uid,
-        start,
-        amount
-    )
+    ): Single<Response<MutableList<Note>>>
 
-    override fun fetchCount(uid: Long): Single<Response<Long>> = service.fetchCount(uid)
+    @GET("nodecount")
+    override fun fetchCount(uid: Long): Single<Response<Long>>
 
-    interface Service {
+    @Multipart
+    @FormUrlEncoded
+    @POST("insert")
+    fun insertNote(
+        @Field("uid") uid: Long,
+        @Field("title") title: String,
+        @Field("isFavorite") isFavorite: Boolean,
+        @Field("detail")detail: String,
+        @Field("tags") tags: List<String>,
+        @Field("tasks")tasks: List<Task>,
+        @Part("images") images: List<MultipartBody.Part>,
+        @Part("sounds") sounds: List<MultipartBody.Part>,
+        @Field("noticeTimes")noticeTimes: List<Long>
+    ): Single<Response<Note>>
 
-        @Multipart
-        @FormUrlEncoded
-        @POST("insert")
-        fun insertNote(
-            @Field("uid") uid: Long,
-            @Field("title") title: String,
-            @Field("isFavorite") isFavorite: Boolean,
-            @Field("detail")detail: String,
-            @Field("tags") tags: List<String>,
-            @Field("tasks")tasks: List<Task>,
-            @Part("images") images: List<MultipartBody.Part>,
-            @Part("sounds") sounds: List<MultipartBody.Part>,
-            @Field("noticeTimes")noticeTimes: List<Long>
-        ): Single<Response<Response<Note>>>
-
-        @Multipart
-        @FormUrlEncoded
-        @PUT("update")
-        fun updateNote(
-            @Field("uid") uid: Long,
-            @Field("nid")nid: Long,
-            @Field("title")title: String,
-            @Field("isFavorite")isFavorite: Boolean,
-            @Field("detail")detail: String,
-            @Field("tags")tags: List<String>,
-            @Field("tasks")tasks: List<Task>,
-            @Part("images") images: List<MultipartBody.Part>,
-            @Field("images")imagesString: List<String>,
-            @Part("sounds") sounds: List<MultipartBody.Part>,
-            @Field("sounds")soundsString: List<String>,
-            @Field("noticeTimes")noticeTimes: List<Long>
-        ): Single<Response<Response<Note>>>
-
-        @DELETE("delete/{uid}/{nid}")
-        fun deleteNote(@Path("uid") uid: Long,@Path("nid") nid: Long): Single<Response<Response<Note>>>
-
-        @GET("notes")
-        fun fetchNotes(
-            @Query("uid") uid: Long,
-            @Query("start") start: Long,
-            @Query("amount")amount: Long
-        ): Single<Response<MutableList<Note>>>
-
-        @GET("nodecount")
-        fun fetchCount(@Query("uid") uid: Long): Single<Response<Long>>
-    }
+    @Multipart
+    @FormUrlEncoded
+    @PUT("update")
+    fun updateNote(
+        @Field("uid") uid: Long,
+        @Field("nid")nid: Long,
+        @Field("title")title: String,
+        @Field("isFavorite")isFavorite: Boolean,
+        @Field("detail")detail: String,
+        @Field("tags")tags: List<String>,
+        @Field("tasks")tasks: List<Task>,
+        @Part("images") images: List<MultipartBody.Part>,
+        @Field("images")imagesString: List<String>,
+        @Part("sounds") sounds: List<MultipartBody.Part>,
+        @Field("sounds")soundsString: List<String>,
+        @Field("noticeTimes")noticeTimes: List<Long>
+    ): Single<Response<Note>>
 }

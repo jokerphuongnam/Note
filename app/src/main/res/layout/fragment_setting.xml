@@ -5,22 +5,16 @@
 
     </data>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#00FFFF">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/log_out"
-                android:textAllCaps="false" />
-        </LinearLayout>
-    </ScrollView>
+            android:text="@string/log_out"
+            android:textAllCaps="false" />
+    </LinearLayout>
 </layout>

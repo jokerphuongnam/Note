@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="note"
+            type="com.example.note.model.database.domain.Note" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/add_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.noteinfo.NoteInfoActivity"
+            android:background="?attr/whiteLightBlackNightColor">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/primary_color">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="true"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp">
+
+                    <EditText
+                        android:id="@+id/editTextTextPersonName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/title"
+                        android:inputType="text"
+                        android:textColor="?attr/whiteLightBlackNightColor"
+                        android:textColorHighlight="?attr/greyColor"
+                        android:background="@android:color/transparent"
+                        android:textCursorDrawable="@drawable/cursor_in_note"
+                        android:text="@={note.title}"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:textSize="30sp"/>
+
+                    <EditText
+                        android:id="@+id/editTextTextPersonName2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/detail"
+                        android:inputType="text|textMultiLine"
+                        android:textColor="?attr/whiteLightBlackNightColor"
+                        android:textColorHighlight="?attr/greyColor"
+                        android:background="@android:color/transparent"
+                        android:textCursorDrawable="@drawable/cursor_in_note"
+                        android:text="@={note.detail}"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="16dp"
+                        android:paddingRight="16dp"
+                        android:textSize="24sp"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/tasks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:overScrollMode="never" />
+
+                    <FrameLayout
+                        android:id="@+id/add_task"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="64dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="64dp"
+                        android:background="@drawable/doter"
+                        android:orientation="horizontal"
+                        android:focusable="true"
+                        android:clickable="true">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/ripple">
+
+                            <ImageButton
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@android:color/transparent"
+                                android:drawableLeft="@drawable/ic_add"
+                                android:gravity="center"
+                                android:padding="8dp"
+                                android:scaleType="fitXY"
+                                android:tint="?attr/whiteLightBlackNightColor"
+                                app:elevation="0dp"
+                                app:rippleColor="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_add" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="@string/add_new_task"
+                                android:textColor="?attr/whiteLightBlackNightColor"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </ScrollView>
+    </LinearLayout>
+</layout>

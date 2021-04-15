@@ -19,8 +19,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.Interceptor
 
+@ExperimentalCoroutinesApi
 @ExperimentalPagingApi
 @Module
 @InstallIn(SingletonComponent::class)
@@ -30,18 +32,6 @@ abstract class AppBindsModules {
     abstract fun getInterceptor(interceptor: NetworkConnectionInterceptor): Interceptor
 
     //database
-    @Binds
-    abstract fun getNoteNetwork(network: NoteRetrofitServiceImpl): NoteNetwork
-
-    @Binds
-    abstract fun getUserNetwork(network: UserRetrofitServiceImpl): UserNetwork
-
-    @Binds
-    abstract fun getNoteLocal(local: RoomNoteImpl): NoteLocal
-
-    @Binds
-    abstract fun getUserLocal(local: RoomUserImpl): UserLocal
-
     @Binds
     abstract fun getSettingLocal(local: LocalReference) : LocalReference
 

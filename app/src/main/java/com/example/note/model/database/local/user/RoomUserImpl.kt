@@ -7,33 +7,21 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class RoomUserImpl @Inject constructor(private val dao: UserDao): UserLocal {
+@Dao
+interface RoomUserImpl : UserLocal {
 
-    override fun findUsers(): Single<List<User>> = dao.findUsers()
+    @Query("SELECT * FROM USERS")
+    override fun findUsers(): Single<List<User>>
 
-    override fun insertUsers(users: User): Single<Long> = dao.insertUsers(users)
+    @Insert(onConflict = REPLACE)
+    override fun insertUsers(users: User): Single<Long>
 
-    override fun updateUsers(vararg users: User): Single<Int> = dao.updateUsers(*users)
+    @Update
+    override fun updateUsers(vararg users: User): Single<Int>
 
-    override fun deleteUsers(vararg users: User): Single<Int> = dao.deleteUsers(*users)
+    @Delete
+    override fun deleteUsers(vararg users: User): Single<Int>
 
-    override fun deleteUser(uid: Long): Single<Int> = dao.deleteUser(uid)
-
-    @Dao
-    interface UserDao{
-        @Query("SELECT * FROM USERS")
-        fun findUsers(): Single<List<User>>
-
-        @Insert(onConflict = REPLACE)
-        fun insertUsers(users: User): Single<Long>
-
-        @Update
-        fun updateUsers(vararg users: User): Single<Int>
-
-        @Delete
-        fun deleteUsers(vararg users: User): Single<Int>
-
-        @Query("DELETE FROM USERS WHERE user_id = :uid")
-        fun deleteUser(uid: Long): Single<Int>
-    }
+    @Query("DELETE FROM USERS WHERE user_id = :uid")
+    override fun deleteUser(uid: Long): Single<Int>
 }

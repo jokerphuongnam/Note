@@ -2,6 +2,7 @@ package com.example.note.ui.base
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,4 +83,8 @@ abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(
             replace(resFragment, fragment, tag)
         }
     }
+
+//    override val actionBarSize: Int by lazy {
+//        TypedValue.complexToDimensionPixelSize(TypedValue().data, requireActivity().resources.displayMetrics)
+//    }
 }

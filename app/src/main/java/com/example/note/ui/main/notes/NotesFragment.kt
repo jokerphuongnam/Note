@@ -2,6 +2,7 @@ package com.example.note.ui.main.notes
 
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.note.R
 import com.example.note.databinding.FragmentNotesBinding
 import com.example.note.ui.adapter.NotesAdapter
@@ -19,7 +20,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
     override fun action() {
         binding.notesRecycler.apply {
             adapter = notesAdapter
-            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         }
         viewModel.noteLiveData.observe { resource ->
             when (resource) {

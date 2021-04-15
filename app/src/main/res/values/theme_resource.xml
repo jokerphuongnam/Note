@@ -4,6 +4,7 @@
     <attr name="textColor"/>
     <attr name="tintColor"/>
     <attr name="backgroundColors"/>
-    <attr name="blackLightBlackWhiteColor"/>
-    <attr name="whiteLightBlackBlackColor"/>
+    <attr name="blackLightWhiteNightColor"/>
+    <attr name="whiteLightBlackNightColor"/>
+    <attr name="whiteLightGreyNightColor"/>
 </resources>

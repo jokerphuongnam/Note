@@ -14,7 +14,7 @@ interface NoteNetwork {
         note: Note,
         images: List<MultipartBody.Part>,
         sounds: List<MultipartBody.Part>
-    ): Single<Response<Response<Note>>>
+    ): Single<Response<Note>>
 
     fun updateNote(
         uid: Long,
@@ -22,12 +22,12 @@ interface NoteNetwork {
         note: Note,
         images: List<MultipartBody.Part>,
         sounds: List<MultipartBody.Part>
-    ): Single<Response<Response<Note>>>
+    ): Single<Response<Note>>
 
     fun deleteNote(
         uid: Long,
         nid: Long
-    ): Single<Response<Response<Note>>>
+    ): Single<Response<Note>>
 
     fun fetchNotes(uid: Long, start: Long, amount: Long): Single<Response<MutableList<Note>>>
 

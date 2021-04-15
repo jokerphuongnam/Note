@@ -49,4 +49,6 @@ interface NoteRepository {
     ): Single<Int>
 
     fun getNotes(): Flowable<PagingData<Note>>
+
+    fun getSingleNote(): Single<Note>
 }

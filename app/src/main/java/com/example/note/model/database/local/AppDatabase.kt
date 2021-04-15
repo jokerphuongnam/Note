@@ -19,6 +19,6 @@ import javax.inject.Singleton
 )
 @TypeConverters(DataConverter::class)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun userDao(): RoomUserImpl.UserDao
-    abstract fun noteDao(): RoomNoteImpl.NoteDao
+    abstract fun userDao(): RoomUserImpl
+    abstract fun noteDao(): RoomNoteImpl
 }

@@ -9,4 +9,8 @@
     <string name="or">or</string>
     <string name="register">Register</string>
     <string name="log_out">Log out</string>
+    <string name="no_internet">No internet</string>
+    <string name="detail">Detail</string>
+    <string name="title">Title</string>
+    <string name="add_new_task">Add new task</string>
 </resources>

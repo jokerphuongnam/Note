@@ -22,7 +22,6 @@ import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @ExperimentalPagingApi
-@Singleton
 class DefaultNoteRepositoryImpl @Inject constructor(
     override val local: NoteLocal,
     override val network: NoteNetwork,
@@ -84,4 +83,8 @@ class DefaultNoteRepositoryImpl @Inject constructor(
                 pagingSourceFactory = pagingSourceFactory
             ).flowable
         }
+
+    override fun getSingleNote(): Single<Note> = currentUser.uid.firstOrError().flatMap { uid ->
+        local.findSingleNote(uid!!)
+    }
 }

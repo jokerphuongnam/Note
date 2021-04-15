@@ -13,10 +13,11 @@
         <item name="greyColor">@color/dark_grey</item>
         <item name="textColor">#000</item>
         <item name="tintColor">#FFF</item>
-        <item name="blackLightBlackWhiteColor">#FFF</item>
-        <item name="whiteLightBlackBlackColor">#000</item>
+        <item name="blackLightWhiteNightColor">#FFF</item>
+        <item name="whiteLightBlackNightColor">#000</item>
+        <item name="whiteLightGreyNightColor">@color/dark_grey</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/whiteLightBlackBlackColor</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/whiteLightBlackNightColor</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <!-- Customize your theme here. -->
     </style>

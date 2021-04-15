@@ -110,7 +110,16 @@ class NoteRxMediator @Inject constructor(
         database.runInTransaction {
             when (loadType) {
                 REFRESH -> {
-                    local.insertNotesWithTimestamp(*data.toTypedArray())
+                    /**
+                     * with first time fetch data from api will save current time to be the
+                     * next times find data by room will check data outdated will update note for current user
+                     * */
+                    local.insertNotes(*data.map { note ->
+                        note.apply {
+                            createAt = System.currentTimeMillis()
+                            modifiedAt = System.currentTimeMillis()
+                        }
+                    }.toTypedArray())
                 }
                 APPEND, PREPEND -> {
                     local.insertNotes(*data.toTypedArray())
