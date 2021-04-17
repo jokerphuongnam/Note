@@ -14,7 +14,6 @@ class SettingFragment :
         viewModel.logoutLiveData.observe{
 
         }
-
         binding.logout.setOnClickListener {
             viewModel.logout()
             logoutPublisher.onNext(0)

@@ -2,6 +2,7 @@ package com.example.note.model.usecase
 
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
+import com.example.note.model.database.domain.Task
 import com.example.note.model.repository.NoteRepository
 import com.example.note.model.repository.UserRepository
 import io.reactivex.rxjava3.core.Flowable
@@ -19,7 +20,11 @@ class DefaultNotesUseCaseImpl @Inject constructor(
             noteRepository.getNotes(uid)
         }.subscribeOn(Schedulers.io())
 
-    override fun refresh(): Single<Int> = userRepository.currentUser().flatMap { uid ->
-        noteRepository.clearNotes(uid)
-    }.subscribeOn(Schedulers.io())
+    override fun deleteTask(vararg tasks: Task): Single<Int> =
+        noteRepository.deleteTask(*tasks).observeOn(Schedulers.io())
+
+    override fun deleteNote(note: Note): Single<Long> = userRepository.currentUser().flatMap { userId ->
+        note.userId = userId
+        noteRepository.deleteNote(note)
+    }.observeOn(Schedulers.io())
 }

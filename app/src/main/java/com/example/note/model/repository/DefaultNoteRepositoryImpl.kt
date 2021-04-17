@@ -14,6 +14,7 @@ import com.example.note.utils.PagingUtil.INIT_LOAD_SIZE
 import com.example.note.utils.PagingUtil.PAGE_SIZE
 import com.example.note.utils.PagingUtil.PREFECT_DISTANCE
 import com.example.note.utils.RetrofitConstrain.INTERNAL_SERVER_ERROR
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -86,9 +87,17 @@ class DefaultNoteRepositoryImpl @Inject constructor(
 
     override fun updateTask(vararg tasks: Task): Single<Int> = Single.just(0)
 
-    override fun deleteNote(uid: Long, nid: Long): Single<Int> = Single.just(0)
+    override fun deleteNote(note: Note): Single<Long> = network.deleteNote(note.userId!!, note.nid).flatMap {
+        Single.create {
+            local.deleteNotes(note)
+            it.onSuccess(note.nid)
+        }
+    }
 
-    override fun deleteTask(vararg tasks: Task): Single<Int> = local.deleteTasks(*tasks)
+    override fun deleteTask(vararg tasks: Task): Single<Int> = Single.create {
+        local.deleteTasks(*tasks)
+        it.onSuccess(tasks.size)
+    }
 
     override fun clearTasksByNote(nid: Long): Single<Int> = local.clearTasksByNote(nid)
 
@@ -107,8 +116,7 @@ class DefaultNoteRepositoryImpl @Inject constructor(
                 this.uid = uid
             }
             val pagingSourceFactory = {
-                val findNotes = local.findNotesPaging(uid)
-                findNotes
+                local.findNotesPaging(uid)
             }
             if (count == 0L || count < PAGE_SIZE + 2 * PREFECT_DISTANCE) {
                 /**
@@ -145,5 +153,8 @@ class DefaultNoteRepositoryImpl @Inject constructor(
 
     override fun getSingleNote(uid: Long): Single<Note> = local.findSingleNote(uid)
 
-    override fun clearNotes(uid: Long): Single<Int> = local.deleteNotes(uid)
+    override fun clearNotes(uid: Long): Completable = Completable.create {
+        local.clearNotesByUserId(uid)
+        it.onComplete()
+    }
 }

@@ -73,7 +73,7 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
     interface Service {
 
         @DELETE("delete/{uid}/{nid}")
-        fun deleteNote(uid: Long, nid: Long): Single<Response<Note>>
+        fun deleteNote(@Path("uid") uid: Long,@Path("nid") nid: Long): Single<Response<Note>>
 
         @GET("notes")
         fun fetchNotes(

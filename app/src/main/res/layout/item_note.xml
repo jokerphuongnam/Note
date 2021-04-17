@@ -9,15 +9,17 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/note_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="6dp"
         app:cardCornerRadius="4dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/yellow"
         android:orientation="vertical"
+        android:minHeight="100dp"
         android:padding="8dp">
 
         <TextView

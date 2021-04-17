@@ -12,8 +12,6 @@ import javax.inject.Singleton
 interface NoteLocal {
     fun findNotesPaging(uid: Long): PagingSource<Int, Note>
 
-    fun findNotes(uid: Long): Flowable<MutableList<Note>>
-
     fun findLastUpdateSingle(uid: Long): Single<Note>
 
     fun findSingleNote(nid: Long): Single<Note>
@@ -30,11 +28,11 @@ interface NoteLocal {
 
     fun updateTasks(vararg tasks: Task): Single<Int>
 
-    fun deleteNotes(vararg notes: Note): Single<Int>
+    fun deleteNotes(vararg notes: Note)
 
-    fun deleteNotes(uid: Long): Single<Int>
+    fun clearNotesByUserId(uid: Long)
 
-    fun deleteTasks(vararg tasks: Task): Single<Int>
+    fun deleteTasks(vararg tasks: Task)
 
     fun clearTasksByNote(uid: Long): Single<Int>
 }

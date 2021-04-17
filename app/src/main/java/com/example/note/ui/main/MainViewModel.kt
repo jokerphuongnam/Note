@@ -1,20 +1,15 @@
 package com.example.note.ui.main
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.note.model.database.domain.Note
 import com.example.note.model.usecase.MainUseCase
 import com.example.note.throwable.NoConnectivityException
 import com.example.note.ui.base.BaseViewModel
 import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
-import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,4 +61,6 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
             }
         }
     }
+
+    var isInit = false
 }

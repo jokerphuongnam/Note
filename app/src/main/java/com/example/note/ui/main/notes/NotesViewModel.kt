@@ -1,6 +1,5 @@
 package com.example.note.ui.main.notes
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
@@ -9,12 +8,11 @@ import com.example.note.ui.base.BaseViewModel
 import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : BaseViewModel() {
@@ -57,18 +55,42 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
         error.printStackTrace()
         _noteLiveData.postValue(Resource.Error(error.message!!))
     }
-
     override fun onCleared() {
         super.onCleared()
         composite.dispose()
     }
 
-    init {
-        useCase.noteRepository.local.findNotes(1618132704841).observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io()).subscribe({ notes ->
-                Log.e("cccccccccccccc", notes.toString())
-            }, {
-                it.printStackTrace()
-            })
+    private var dispose : Disposable? = null
+
+    private val deleteObserver: SingleObserver<Long> by lazy {
+        object : SingleObserver<Long>{
+            override fun onSubscribe(d: Disposable) {
+                dispose?.let {
+                    composite.remove(it)
+                    it.dispose()
+                }
+                dispose = d
+            }
+
+            override fun onSuccess(t: Long?) {
+                deleteLiveData.postValue(Resource.Success(0))
+                dispose?.dispose()
+            }
+
+            override fun onError(e: Throwable?) {
+                e?.printStackTrace()
+                deleteLiveData.postValue(Resource.Error(""))
+                dispose?.dispose()
+            }
+        }
+    }
+
+    val deleteLiveData: MutableLiveData<Resource<Long>> by lazy {
+        MutableLiveData<Resource<Long>>()
+    }
+
+    fun delete(note: Note) {
+        deleteLiveData.postValue(Resource.Loading())
+        useCase.deleteNote(note).subscribeOn(AndroidSchedulers.mainThread()).subscribe(deleteObserver)
     }
 }

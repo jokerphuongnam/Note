@@ -2,6 +2,7 @@ package com.example.note.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -10,31 +11,65 @@ import com.example.note.R
 import com.example.note.databinding.ItemNoteBinding
 import com.example.note.model.database.domain.Note
 
-class NotesAdapter : PagingDataAdapter<Note, NotesAdapter.NoteViewHolder>(DIFF_CALLBACK) {
+class NotesAdapter(private val itemClick: (Note) -> Unit, private val longClick: (Note) -> Unit) :
+    PagingDataAdapter<Note, NotesAdapter.NoteViewHolder>(DIFF_CALLBACK) {
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
-        NoteViewHolder.create(parent, viewType)
+        NoteViewHolder.create(parent, viewType, itemClick, longClick)
 
-    class NoteViewHolder private constructor(private val biding: ItemNoteBinding) :
+    class NoteViewHolder private constructor(
+        private val biding: ItemNoteBinding,
+        private val itemClick: (Note) -> Unit,
+        private val longClick: (Note) -> Unit
+    ) :
         RecyclerView.ViewHolder(biding.root) {
 
-        fun bind(note: Note?) {
-            biding.note = note
+        fun bind(noteOptional: Note?) {
+            biding.note = noteOptional
+            noteOptional?.let { note ->
+                biding.noteItem.apply {
+                    setOnClickListener {
+                        itemClick(note)
+                    }
+                    setOnLongClickListener {
+                        PopupMenu(context, it).apply {
+                            setOnMenuItemClickListener {item ->
+                                when (item.itemId) {
+                                    R.id.delete -> {
+                                        longClick(note)
+                                        true
+                                    }
+                                    else -> false
+                                }
+                            }
+                            inflate(R.menu.note)
+                            show()
+                        }
+                        true
+                    }
+                }
+            }
         }
 
         companion object {
-            fun create(parent: ViewGroup, viewType: Int): NoteViewHolder {
+            fun create(
+                parent: ViewGroup, viewType: Int,
+                itemClick: (Note) -> Unit,
+                longClick: (Note) -> Unit
+            ): NoteViewHolder {
                 return NoteViewHolder(
                     DataBindingUtil.inflate(
                         LayoutInflater.from(parent.context),
                         R.layout.item_note,
                         parent,
                         false
-                    )
+                    ),
+                    itemClick,
+                    longClick
                 )
             }
         }

@@ -12,7 +12,6 @@ import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.network.note.NoteNetwork
 import com.example.note.utils.PagingUtil
 import com.example.note.utils.PagingUtil.OUT_DATE_TIME_STAMP
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -76,7 +75,7 @@ class NoteRxMediator @Inject constructor(
                 getRemoteKeyForLastItem(state)
             }
             PREPEND -> {
-                getRemoteKeyForFirstItem(state)
+                PagingUtil.PREPEND
             }
         }
     }.flatMap { page ->
@@ -89,26 +88,32 @@ class NoteRxMediator @Inject constructor(
          * will delete all data of user in cache and set type = refresh to save extend time
          * */
         if (page == PagingUtil.UNKNOWN_PAGE || firstNote == null || System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP) {
-            local.deleteNotes(_uid)
+            local.clearNotesByUserId(_uid)
             type = REFRESH
+        } else if (page == PagingUtil.PREPEND) {
+
         }
-        /**
-         * convert page to index of first, and element page
-         * */
-        val (start, end) = PagingUtil.pageToItem(page ?: 1)
-        network.fetchNotes(_uid, start, end).map { notes ->
+        if (page == PagingUtil.PREPEND) {
             /**
-             * fetch notes and insert to cache depend type and if can't fetch notes in api will create emptyList
+             * can't need prepend
              * */
-            insertToDb(type, notes.body() ?: emptyList())
-        }.map<MediatorResult> {
+            Single.just<MediatorResult>(MediatorResult.Success(false))
+        } else {
             /**
-             * if end >= maxCount - 1: end page user will don't need fetch more notes
+             * convert page to index of first, and element page
              * */
-            MediatorResult.Success(end >= maxCount - 1)
-        }.onErrorReturn {
-            it.printStackTrace()
-            MediatorResult.Error(it)
+            val (start, end) = PagingUtil.pageToItem(page ?: 1)
+            network.fetchNotes(_uid, start, end).map { notes ->
+                /**
+                 * fetch notes and insert to cache depend type and if can't fetch notes in api will create emptyList
+                 * */
+                insertToDb(type, notes.body() ?: emptyList())
+            }.map<MediatorResult> {
+                /**
+                 * if end >= maxCount - 1: end page user will don't need fetch more notes
+                 * */
+                MediatorResult.Success(end >= maxCount - 1)
+            }
         }
     }.onErrorReturn {
         MediatorResult.Error(it)
@@ -125,7 +130,7 @@ class NoteRxMediator @Inject constructor(
      * */
     @WorkerThread
     private fun insertToDb(loadType: LoadType, data: List<Note>): List<Note> {
-        data.map {note ->
+        data.map { note ->
             note.userId = _uid
         }
         database.runInTransaction {

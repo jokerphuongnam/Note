@@ -1,12 +1,13 @@
 package com.example.note.ui.noteinfo
 
+import android.app.Activity
+import android.content.Intent
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.note.R
 import com.example.note.databinding.ActivityNoteInfoBinding
-import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.ui.adapter.TasksAdapter
 import com.example.note.ui.base.BaseActivity
@@ -17,37 +18,40 @@ class NoteInfoActivity :
     BaseActivity<ActivityNoteInfoBinding, NoteInfoViewModel>(R.layout.activity_note_info) {
     private val tasksInfoAdapter: TasksAdapter by lazy {
         TasksAdapter {
-            viewModel.newNote.tasks.remove(it)
-            tasksInfoAdapter.submitList(viewModel.newNote.tasks)
+            viewModel.newNote.value!!.tasks.remove(it)
+            tasksInfoAdapter.submitList(viewModel.newNote.value!!.tasks)
         }
     }
+
     private val actionBar: ActionBar by lazy { supportActionBar!! }
 
     private fun recyclerViewSetUp() {
         binding.apply {
             tasks.apply {
-                adapter = tasksInfoAdapter.apply {
-                    submitList(viewModel.newNote.tasks)
-                }
+                adapter = tasksInfoAdapter
                 layoutManager = LinearLayoutManager(this@NoteInfoActivity)
             }
         }
     }
 
     override fun action() {
-        viewModel.newNote = intent.getParcelableExtra(NOTE) ?: Note()
+        viewModel.initNote(intent.getLongExtra(NOTE, INSERT))
         noInternetError()
         setSupportActionBar(binding.addToolBar)
         actionBar.setDisplayHomeAsUpEnabled(true)
+        viewModel.newNote.observe{
+            binding.note = it
+            tasksInfoAdapter.submitList(it.tasks)
+        }
         binding.apply {
-            note = viewModel.newNote
             addTask.setOnClickListener {
                 /**
                  * before set tasks need change address of task if don't this will can't submit task
                  * because submitList has (oldList == newList) {don't do}
                  * */
-                viewModel.newNote.tasks.add(Task(false, ""))
-                tasksInfoAdapter.submitList(viewModel.newNote.tasks.toMutableList())
+                tasksInfoAdapter.submitList(viewModel.newNote.value!!.tasks.apply {
+                    add(Task(false, ""))
+                }.toMutableList())
             }
         }
         recyclerViewSetUp()
@@ -68,13 +72,15 @@ class NoteInfoActivity :
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         viewModel.saveNote()
+        setResult(Activity.RESULT_OK, Intent())
+        super.onBackPressed()
     }
 
     override val viewModel: NoteInfoViewModel by viewModels()
 
-    companion object{
-        const val NOTE:String = "note"
+    companion object {
+        const val NOTE: String = "note"
+        const val INSERT: Long = -1
     }
 }

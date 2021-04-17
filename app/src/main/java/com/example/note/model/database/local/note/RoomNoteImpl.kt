@@ -14,11 +14,8 @@ interface RoomNoteImpl : NoteLocal {
     /**
      * with show notes will do get demo notes for user follow
      * */
-    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid")
+    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid ORDER BY created_at")
     override fun findNotesPaging(uid: Long): PagingSource<Int, Note>
-
-    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid")
-    override fun findNotes(uid: Long): Flowable<MutableList<Note>>
 
     /**
      * get first note for init notes
@@ -67,13 +64,13 @@ interface RoomNoteImpl : NoteLocal {
     override fun updateTasks(vararg tasks: Task): Single<Int>
 
     @Delete
-    override fun deleteNotes(vararg notes: Note): Single<Int>
+    override fun deleteNotes(vararg notes: Note)
 
     @Query("DELETE FROM NOTES WHERE user_id = :uid")
-    override fun deleteNotes(uid: Long): Single<Int>
+    override fun clearNotesByUserId(uid: Long)
 
     @Delete
-    override fun deleteTasks(vararg tasks: Task): Single<Int>
+    override fun deleteTasks(vararg tasks: Task)
 
     @Query("DELETE FROM TASKS WHERE note_id = :uid")
     override fun clearTasksByNote(uid: Long): Single<Int>

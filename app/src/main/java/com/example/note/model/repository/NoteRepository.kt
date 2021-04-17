@@ -5,6 +5,7 @@ import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.network.note.NoteNetwork
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
@@ -24,7 +25,7 @@ interface NoteRepository {
 
     fun insertTasks(
         vararg tasks: Task
-    ):Single<Int>
+    ): Single<Int>
 
     fun updateNote(
         note: Note,
@@ -34,12 +35,9 @@ interface NoteRepository {
 
     fun updateTask(
         vararg tasks: Task
-    ):Single<Int>
-
-    fun deleteNote(
-        uid: Long,
-        nid: Long
     ): Single<Int>
+
+    fun deleteNote(note: Note): Single<Long>
 
     fun deleteTask(
         vararg tasks: Task
@@ -53,5 +51,5 @@ interface NoteRepository {
 
     fun getSingleNote(uid: Long): Single<Note>
 
-    fun clearNotes(uid: Long): Single<Int>
+    fun clearNotes(uid: Long): Completable
 }

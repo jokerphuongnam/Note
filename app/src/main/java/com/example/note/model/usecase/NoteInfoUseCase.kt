@@ -18,10 +18,14 @@ interface NoteInfoUseCase {
         vararg tasks: Task
     ): Single<Int>
 
+    fun deleteNote(note: Note): Single<Long>
+
     fun saveNote(
         note: Note,
         images: List<MultipartBody.Part>? = null,
         sounds: List<MultipartBody.Part>? = null,
         isUpdate: Boolean = false
     ): Single<Int>
+
+    fun getNote(nid: Long): Single<Note>
 }

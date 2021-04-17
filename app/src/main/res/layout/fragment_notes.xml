@@ -8,14 +8,19 @@
             type="androidx.recyclerview.widget.RecyclerView.Adapter" />
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/notes_refresh"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent">
+        android:layout_height="match_parent">
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/notes_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent">
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notes_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

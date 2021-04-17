@@ -1,6 +1,9 @@
 package com.example.note.ui.main
 
+import android.app.Activity
 import android.content.Intent
+import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +20,9 @@ import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.utils.Resource
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
+import com.rbddevs.splashy.Splashy
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main) {
@@ -33,12 +38,33 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+
+    fun refreshSubscription(): PublishSubject<Int> = refreshPublisher
+
+    /**
+     * when onNext Publisher will send broadcast for activity subscribe
+     * */
+    private val refreshPublisher: PublishSubject<Int> by lazy {
+        PublishSubject.create()
+    }
+
     private val loginContent: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> }
 
     private val loginIntent by lazy {
         Intent(this, LoginActivity::class.java)
     }
+
+    private val addIntent: Intent by lazy {
+        Intent(this, NoteInfoActivity::class.java)
+    }
+
+    val addContent: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                refreshPublisher.onNext(0)
+            }
+        }
 
     private val tabSelectedCallBack: TabLayout.OnTabSelectedListener by lazy {
         object : TabLayout.OnTabSelectedListener {
@@ -91,50 +117,89 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private val addIntent: Intent by lazy {
-        Intent(this, NoteInfoActivity::class.java)
-    }
-
     private val addAction: View.OnClickListener by lazy {
         View.OnClickListener {
-            startActivity(addIntent)
+            addContent.launch(addIntent)
+        }
+    }
+
+    private fun splashyScreen() {
+        @Suppress("DEPRECATION")
+        Handler().postDelayed({
+            if (isRun) {
+                binding.viewSwitch.showNext()
+                initAction(viewModel.uidLiveData.value!!)
+            } else {
+                isRun = true
+            }
+        }, 2000)
+        Splashy(this)
+            .setLogo(R.drawable.ic_logo)
+            .setTitle(R.string.app_name)
+            .setAnimation(Splashy.Animation.SLIDE_IN_TOP_BOTTOM)
+            .setDuration(2000)
+            .show()
+
+    }
+
+    private var isRun = false
+
+    /**
+     * if have data will set event to link pager with tabs
+     * */
+    private fun setUpUI() {
+        binding.apply {
+            mainViewPager.apply {
+                currentItem = 0
+                adapter = mainAdapter
+                registerOnPageChangeCallback(
+                    object : ViewPager2.OnPageChangeCallback() {
+                        override fun onPageSelected(position: Int) {
+                            tabs.selectTab(tabs.getTabAt(position))
+                            if (position != 0) {
+                                changeUIWhenSelectedOtherTab()
+                            } else {
+                                changeUIWhenSelectedFirstTab()
+                            }
+                        }
+                    }
+                )
+            }
+            tabs.addOnTabSelectedListener(tabSelectedCallBack)
+            addBtn.setOnClickListener(addAction)
+        }
+    }
+
+    private fun initAction(resource: Resource<Long>) {
+        when (resource) {
+            is Resource.Loading -> {
+
+            }
+            is Resource.Success -> {
+                if (isRun) {
+                    setUpUI()
+                } else {
+                    isRun = true
+                }
+            }
+            is Resource.Error -> {
+                if (isRun) {
+                    logout()
+                } else {
+                    isRun = true
+                }
+            }
         }
     }
 
     override fun action() {
+        if (viewModel.isInit) {
+            viewModel.isInit = true
+        } else {
+            splashyScreen()
+        }
         viewModel.uidLiveData.observe { resource ->
-            when (resource) {
-                is Resource.Loading -> {
-
-                }
-                is Resource.Success -> {
-                    /**
-                     * if have data will set event to link pager with tabs
-                     * */
-                    binding.apply {
-                        mainViewPager.apply {
-                            currentItem = 0
-                            adapter = mainAdapter
-                            registerOnPageChangeCallback(object :
-                                ViewPager2.OnPageChangeCallback() {
-                                override fun onPageSelected(position: Int) {
-                                    tabs.selectTab(tabs.getTabAt(position))
-                                    if (position != 0) {
-                                        changeUIWhenSelectedOtherTab()
-                                    } else {
-                                        changeUIWhenSelectedFirstTab()
-                                    }
-                                }
-                            })
-                        }
-                        tabs.addOnTabSelectedListener(tabSelectedCallBack)
-                        addBtn.setOnClickListener(addAction)
-                    }
-                }
-                is Resource.Error -> {
-                    logout()
-                }
-            }
+            initAction(resource)
         }
     }
 

@@ -16,6 +16,12 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
     override fun deleteTask(vararg tasks: Task): Single<Int> =
         noteRepository.deleteTask(*tasks).observeOn(Schedulers.io())
 
+    override fun deleteNote(note: Note): Single<Long> =
+        userRepository.currentUser().flatMap { userId ->
+            note.userId = userId
+            noteRepository.deleteNote(note)
+        }.observeOn(Schedulers.io())
+
     override fun saveNote(
         note: Note,
         images: List<MultipartBody.Part>?,
@@ -29,4 +35,7 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
             noteRepository.insertNote(note)
         }
     }.observeOn(Schedulers.io())
+
+    override fun getNote(nid: Long): Single<Note> =
+        noteRepository.getSingleNote(nid).observeOn(Schedulers.io())
 }
