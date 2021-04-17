@@ -1,24 +1,28 @@
 package com.example.note.model.database.local.note
 
 import androidx.paging.PagingSource
-import androidx.room.Query
-import androidx.room.Transaction
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
-import com.example.note.model.database.domain.supportquery.NoteWithTasks
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Singleton
 
 @Singleton
 interface NoteLocal {
-    fun findNotes(uid: Long): PagingSource<Int, Note>
+    fun findNotesPaging(uid: Long): PagingSource<Int, Note>
+
+    fun findNotes(uid: Long): Flowable<MutableList<Note>>
+
+    fun findLastUpdateSingle(uid: Long): Single<Note>
 
     fun findSingleNote(nid: Long): Single<Note>
 
-    fun fetchTasksByUid(nid: Long): Single<List<Task>>
+    fun findTasksByUid(nid: Long): Single<List<Task>>
 
-    fun insertNotes(vararg notes: Note): Completable
+    fun insertNotesWithTime(notes: List<Note>)
+
+    fun insertNotes(notes: List<Note>)
 
     fun insertTasks(vararg tasks: Task)
 
@@ -32,5 +36,5 @@ interface NoteLocal {
 
     fun deleteTasks(vararg tasks: Task): Single<Int>
 
-    fun clearTasksByNote(uid:Long) : Single<Int>
+    fun clearTasksByNote(uid: Long): Single<Int>
 }

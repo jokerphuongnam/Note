@@ -38,6 +38,12 @@ abstract class AppBindsModules {
     @Binds
     abstract fun getCurrentUser(local: DataStoreCurrentUserImpl): CurrentUser
 
+    @Binds
+    abstract fun getNoteNetwork(network: NoteRetrofitServiceImpl):NoteNetwork
+
+    @Binds
+    abstract fun getUserNetwork(network: UserRetrofitServiceImpl): UserNetwork
+
     //repository
     @Binds
     abstract fun getNoteRepository(repository: DefaultNoteRepositoryImpl): NoteRepository

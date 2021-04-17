@@ -28,7 +28,6 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
             }
 
             override fun onSuccess(t: Int?) {
-                Log.e("ccccccccccccc", "aaaaaa")
                 saveNoteDisable?.dispose()
             }
 

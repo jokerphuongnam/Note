@@ -6,6 +6,7 @@ import com.example.note.model.repository.NoteRepository
 import com.example.note.model.repository.UserRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import okhttp3.MultipartBody
 import javax.inject.Singleton
 
 @Singleton
@@ -17,5 +18,10 @@ interface NoteInfoUseCase {
         vararg tasks: Task
     ): Single<Int>
 
-    fun saveNote(note: Note): Single<Int>
+    fun saveNote(
+        note: Note,
+        images: List<MultipartBody.Part>? = null,
+        sounds: List<MultipartBody.Part>? = null,
+        isUpdate: Boolean = false
+    ): Single<Int>
 }

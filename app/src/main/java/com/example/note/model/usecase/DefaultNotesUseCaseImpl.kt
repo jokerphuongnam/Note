@@ -18,4 +18,8 @@ class DefaultNotesUseCaseImpl @Inject constructor(
         userRepository.currentUser().toFlowable().flatMap { uid ->
             noteRepository.getNotes(uid)
         }.subscribeOn(Schedulers.io())
+
+    override fun refresh(): Single<Int> = userRepository.currentUser().flatMap { uid ->
+        noteRepository.clearNotes(uid)
+    }.subscribeOn(Schedulers.io())
 }

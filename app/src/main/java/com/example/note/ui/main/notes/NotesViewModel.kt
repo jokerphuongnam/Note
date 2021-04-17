@@ -1,5 +1,6 @@
 package com.example.note.ui.main.notes
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
@@ -11,7 +12,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : BaseViewModel() {
@@ -58,5 +61,14 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
     override fun onCleared() {
         super.onCleared()
         composite.dispose()
+    }
+
+    init {
+        useCase.noteRepository.local.findNotes(1618132704841).observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io()).subscribe({ notes ->
+                Log.e("cccccccccccccc", notes.toString())
+            }, {
+                it.printStackTrace()
+            })
     }
 }

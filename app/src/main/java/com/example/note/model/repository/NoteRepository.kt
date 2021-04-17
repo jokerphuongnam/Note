@@ -22,12 +22,11 @@ interface NoteRepository {
         sounds: List<MultipartBody.Part>? = null
     ): Single<Int>
 
-    fun insertTask(
+    fun insertTasks(
         vararg tasks: Task
     ):Single<Int>
 
     fun updateNote(
-        nid: Long,
         note: Note,
         images: List<MultipartBody.Part>? = null,
         sounds: List<MultipartBody.Part>? = null
@@ -52,5 +51,7 @@ interface NoteRepository {
 
     fun getNotes(uid: Long): Flowable<PagingData<Note>>
 
-    fun getSingleNote(): Single<Note>
+    fun getSingleNote(uid: Long): Single<Note>
+
+    fun clearNotes(uid: Long): Single<Int>
 }

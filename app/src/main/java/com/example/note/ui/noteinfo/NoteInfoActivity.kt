@@ -18,6 +18,7 @@ class NoteInfoActivity :
     private val tasksInfoAdapter: TasksAdapter by lazy {
         TasksAdapter {
             viewModel.newNote.tasks.remove(it)
+            tasksInfoAdapter.submitList(viewModel.newNote.tasks)
         }
     }
     private val actionBar: ActionBar by lazy { supportActionBar!! }
@@ -45,7 +46,7 @@ class NoteInfoActivity :
                  * before set tasks need change address of task if don't this will can't submit task
                  * because submitList has (oldList == newList) {don't do}
                  * */
-                viewModel.newNote.tasks.add(Task(false, "", viewModel.newNote.nid))
+                viewModel.newNote.tasks.add(Task(false, ""))
                 tasksInfoAdapter.submitList(viewModel.newNote.tasks.toMutableList())
             }
         }

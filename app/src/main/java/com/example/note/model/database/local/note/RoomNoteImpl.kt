@@ -2,13 +2,12 @@ package com.example.note.model.database.local.note
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import androidx.room.OnConflictStrategy.REPLACE
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.database.domain.supportquery.NoteWithTasks
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
 
 @Dao
 interface RoomNoteImpl : NoteLocal {
@@ -16,7 +15,16 @@ interface RoomNoteImpl : NoteLocal {
      * with show notes will do get demo notes for user follow
      * */
     @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid")
-    override fun findNotes(uid: Long): PagingSource<Int, Note>
+    override fun findNotesPaging(uid: Long): PagingSource<Int, Note>
+
+    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid")
+    override fun findNotes(uid: Long): Flowable<MutableList<Note>>
+
+    /**
+     * get first note for init notes
+     * */
+    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid ORDER BY created_at DESC LIMIT 1")
+    override fun findLastUpdateSingle(uid: Long): Single<Note>
 
     /**
      * when user select note user need seen all info note
@@ -32,14 +40,24 @@ interface RoomNoteImpl : NoteLocal {
         it.toNote()
     }
 
+
     @Query("SELECT * FROM TASKS WHERE note_id =:nid")
-    override fun fetchTasksByUid(nid: Long): Single<List<Task>>
+    override fun findTasksByUid(nid: Long): Single<List<Task>>
 
-    @Insert(onConflict = REPLACE)
-    override fun insertNotes(vararg notes: Note): Completable
+    override fun insertNotesWithTime(notes: List<Note>) {
+        notes.map { note ->
+            note.apply {
+                createAt = System.currentTimeMillis()
+                modifiedAt = System.currentTimeMillis()
+            }
+        }
+        insertNotes(notes)
+    }
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    override fun insertNotes(notes: List<Note>)
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     override fun insertTasks(vararg tasks: Task)
 
     @Update
@@ -57,6 +75,6 @@ interface RoomNoteImpl : NoteLocal {
     @Delete
     override fun deleteTasks(vararg tasks: Task): Single<Int>
 
-    @Query("DELETE FROM TASKS WHERE note_id = :uid" )
+    @Query("DELETE FROM TASKS WHERE note_id = :uid")
     override fun clearTasksByNote(uid: Long): Single<Int>
 }

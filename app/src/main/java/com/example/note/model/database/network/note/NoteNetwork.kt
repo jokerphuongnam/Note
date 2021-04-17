@@ -16,7 +16,6 @@ interface NoteNetwork {
     ): Single<Response<Note>>
 
     fun updateNote(
-        nid: Long,
         note: Note,
         images: List<MultipartBody.Part>,
         sounds: List<MultipartBody.Part>

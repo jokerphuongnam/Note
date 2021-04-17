@@ -14,7 +14,7 @@ interface RoomUserImpl : UserLocal {
     override fun findUsers(): Single<List<User>>
 
     @Insert(onConflict = REPLACE)
-    override fun insertUsers(users: User): Single<Long>
+    override fun insertUser(users: User): Single<Long>
 
     @Update
     override fun updateUsers(vararg users: User): Single<Int>

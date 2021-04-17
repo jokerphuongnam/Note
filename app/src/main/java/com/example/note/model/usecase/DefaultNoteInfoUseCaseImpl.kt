@@ -6,6 +6,7 @@ import com.example.note.model.repository.NoteRepository
 import com.example.note.model.repository.UserRepository
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class DefaultNoteInfoUseCaseImpl @Inject constructor(
@@ -15,9 +16,17 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
     override fun deleteTask(vararg tasks: Task): Single<Int> =
         noteRepository.deleteTask(*tasks).observeOn(Schedulers.io())
 
-    override fun saveNote(note: Note): Single<Int>  = userRepository.currentUser().flatMap { uid->
-        noteRepository.insertNote(note.apply {
-            userId = uid
-        })
+    override fun saveNote(
+        note: Note,
+        images: List<MultipartBody.Part>?,
+        sounds: List<MultipartBody.Part>?,
+        isUpdate: Boolean
+    ): Single<Int> = userRepository.currentUser().flatMap { uid ->
+        note.userId = uid
+        if (isUpdate) {
+            noteRepository.updateNote(note)
+        } else {
+            noteRepository.insertNote(note)
+        }
     }.observeOn(Schedulers.io())
 }

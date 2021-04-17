@@ -3,8 +3,6 @@ package com.example.note.utils
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.Date
-import javax.inject.Inject
 
 /**
  * for field have type not support for room, need class data converter
@@ -13,17 +11,21 @@ import javax.inject.Inject
  * - to object when find from room
  * */
 class DataConverter {
-    private var gson: Gson = Gson()
+    private val gson: Gson by lazy { Gson() }
 
     @TypeConverter
-    fun fromStrings(strings: List<String>): String = gson.toJson(strings, object : TypeToken<List<String>>() {}.type)
+    fun fromStrings(strings: List<String>): String =
+        gson.toJson(strings, object : TypeToken<List<String>>() {}.type)
 
     @TypeConverter
-    fun toStrings(json: String): List<String> = gson.fromJson(json, object : TypeToken<List<String>>() {}.type)
+    fun toStrings(json: String): List<String> =
+        listOf(gson.fromJson(json, object : TypeToken<List<String>>() {}.type))
 
     @TypeConverter
-    fun fromDates(dates: List<Long>): String = gson.toJson(dates, object : TypeToken<List<Long>>() {}.type)
+    fun fromDates(dates: List<Long>): String =
+        gson.toJson(dates, object : TypeToken<List<Long>>() {}.type)
 
     @TypeConverter
-    fun toDates(json: String): List<Long> = gson.fromJson(json, object : TypeToken<List<Long>>() {}.type)
+    fun toDates(json: String): List<Long> =
+        listOf(gson.fromJson(json, object : TypeToken<List<Long>>() {}.type))
 }

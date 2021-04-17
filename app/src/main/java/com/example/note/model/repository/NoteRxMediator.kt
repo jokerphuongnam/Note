@@ -12,6 +12,7 @@ import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.network.note.NoteNetwork
 import com.example.note.utils.PagingUtil
 import com.example.note.utils.PagingUtil.OUT_DATE_TIME_STAMP
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -44,6 +45,20 @@ class NoteRxMediator @Inject constructor(
             _uid = value!!
         }
 
+    /**
+     * check time if outdated time refresh else skip init refresh
+     * */
+    override fun initializeSingle(): Single<InitializeAction> =
+        local.findLastUpdateSingle(_uid).map { firstNote ->
+            if (System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP) {
+                InitializeAction.LAUNCH_INITIAL_REFRESH
+            } else {
+                InitializeAction.SKIP_INITIAL_REFRESH
+            }
+        }.onErrorReturn {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
+
     override fun loadSingle(
         loadType: LoadType,
         state: PagingState<Int, Note>
@@ -55,7 +70,7 @@ class NoteRxMediator @Inject constructor(
          * */
         when (loadType) {
             REFRESH -> {
-                null
+                PagingUtil.UNKNOWN_PAGE
             }
             APPEND -> {
                 getRemoteKeyForLastItem(state)
@@ -73,7 +88,7 @@ class NoteRxMediator @Inject constructor(
          * - System.currentTimeMillis() - firstNote.modifiedAt: data outdated
          * will delete all data of user in cache and set type = refresh to save extend time
          * */
-        if (page == null || firstNote == null || System.currentTimeMillis() - firstNote.modifiedAt > OUT_DATE_TIME_STAMP) {
+        if (page == PagingUtil.UNKNOWN_PAGE || firstNote == null || System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP) {
             local.deleteNotes(_uid)
             type = REFRESH
         }
@@ -92,9 +107,12 @@ class NoteRxMediator @Inject constructor(
              * */
             MediatorResult.Success(end >= maxCount - 1)
         }.onErrorReturn {
+            it.printStackTrace()
             MediatorResult.Error(it)
         }
-    }.onErrorReturn { MediatorResult.Error(it) }
+    }.onErrorReturn {
+        MediatorResult.Error(it)
+    }
 
     /**
      * check loadType refresh when:
@@ -107,6 +125,9 @@ class NoteRxMediator @Inject constructor(
      * */
     @WorkerThread
     private fun insertToDb(loadType: LoadType, data: List<Note>): List<Note> {
+        data.map {note ->
+            note.userId = _uid
+        }
         database.runInTransaction {
             when (loadType) {
                 REFRESH -> {
@@ -114,33 +135,30 @@ class NoteRxMediator @Inject constructor(
                      * with first time fetch data from api will save current time to be the
                      * next times find data by room will check data outdated will update note for current user
                      * */
-                    local.insertNotes(*data.map { note ->
-                        note.apply {
-                            createAt = System.currentTimeMillis()
-                            modifiedAt = System.currentTimeMillis()
-                        }
-                    }.toTypedArray())
+                    local.insertNotesWithTime(data)
                 }
                 APPEND, PREPEND -> {
-                    local.insertNotes(*data.toTypedArray())
+                    local.insertNotes(data)
                 }
-            }.andThen {
-                data.forEach { note ->
-                    local.insertTasks(*note.tasks.toTypedArray())
+            }
+            data.forEach { note ->
+                note.tasks.map { task ->
+                    task.noteId = note.nid
                 }
+                local.insertTasks(*note.tasks.toTypedArray())
             }
         }
         return data
     }
 
     /**
-     *
+     * get last key
      * */
     private fun getRemoteKeyForLastItem(state: PagingState<Int, Note>): Int? =
         state.pages.last().nextKey
 
     /**
-     *
+     * get first key
      * */
     private fun getRemoteKeyForFirstItem(state: PagingState<Int, Note>): Int =
         state.pages.first().prevKey ?: 1

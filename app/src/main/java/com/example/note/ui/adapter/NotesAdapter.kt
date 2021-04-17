@@ -13,24 +13,17 @@ import com.example.note.model.database.domain.Note
 class NotesAdapter : PagingDataAdapter<Note, NotesAdapter.NoteViewHolder>(DIFF_CALLBACK) {
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        getItem(position)?.let { note ->
-            holder.bind(note)
-        }
+        holder.bind(getItem(position))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        return NoteViewHolder.create(parent, viewType)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
+        NoteViewHolder.create(parent, viewType)
 
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
-
-    class NoteViewHolder private constructor(biding: ItemNoteBinding) :
+    class NoteViewHolder private constructor(private val biding: ItemNoteBinding) :
         RecyclerView.ViewHolder(biding.root) {
 
-        fun bind(note: Note) {
-
+        fun bind(note: Note?) {
+            biding.note = note
         }
 
         companion object {

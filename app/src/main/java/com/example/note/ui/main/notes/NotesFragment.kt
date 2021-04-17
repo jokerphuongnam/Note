@@ -1,6 +1,9 @@
 package com.example.note.ui.main.notes
 
+import android.util.Log
 import androidx.fragment.app.viewModels
+import androidx.paging.filter
+import androidx.paging.flatMap
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.note.R
@@ -22,6 +25,9 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
             adapter = notesAdapter
             layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         }
+        binding.notesRefresh.setOnRefreshListener {
+            notesAdapter.refresh()
+        }
         viewModel.noteLiveData.observe { resource ->
             when (resource) {
                 is Resource.Loading -> {
@@ -29,6 +35,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
                 }
                 is Resource.Success -> {
                     notesAdapter.submitData(lifecycle, resource.data!!)
+                    binding.notesRefresh.isRefreshing = false
                 }
                 is Resource.Error -> {
 

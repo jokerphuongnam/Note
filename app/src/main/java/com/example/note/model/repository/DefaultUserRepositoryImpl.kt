@@ -9,7 +9,6 @@ import com.example.note.throwable.NotFoundException
 import com.example.note.throwable.WrongException
 import com.example.note.utils.RetrofitConstrain.CONFLICT
 import com.example.note.utils.RetrofitConstrain.NOT_FOUND
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -37,7 +36,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
         }.flatMap { user ->
             user.username = username
             currentUser.changeCurrentUser(user.uid).flatMap {
-                local.insertUsers(user)
+                local.insertUser(user)
             }.map {
                 user
             }

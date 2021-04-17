@@ -9,11 +9,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.note.R
 import com.example.note.databinding.ActivityMainBinding
 import com.example.note.ui.adapter.MainFragmentAdapter
-import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.ui.base.BaseActivity
 import com.example.note.ui.login.LoginActivity
 import com.example.note.ui.main.notes.NotesFragment
 import com.example.note.ui.main.setting.SettingFragment
+import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.utils.Resource
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
