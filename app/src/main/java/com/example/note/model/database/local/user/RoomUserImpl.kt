@@ -4,6 +4,7 @@ import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import com.example.note.model.database.domain.User
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -12,6 +13,9 @@ interface RoomUserImpl : UserLocal {
 
     @Query("SELECT * FROM USERS")
     override fun findUsers(): Single<List<User>>
+
+    @Query("SELECT * FROM USERS WHERE user_id = :uid")
+    override fun findSingleUser(uid: Long): Flowable<User>
 
     @Insert(onConflict = REPLACE)
     override fun insertUser(users: User): Single<Long>

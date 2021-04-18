@@ -14,8 +14,8 @@ import com.example.note.throwable.NotFoundException
 import com.example.note.utils.PagingUtil.INIT_LOAD_SIZE
 import com.example.note.utils.PagingUtil.PAGE_SIZE
 import com.example.note.utils.PagingUtil.PREFECT_DISTANCE
-import com.example.note.utils.RetrofitConstrain.INTERNAL_SERVER_ERROR
-import com.example.note.utils.RetrofitConstrain.NOT_FOUND
+import com.example.note.utils.RetrofitUtils.INTERNAL_SERVER_ERROR
+import com.example.note.utils.RetrofitUtils.NOT_FOUND
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -30,6 +30,7 @@ class DefaultNoteRepositoryImpl @Inject constructor(
     override val network: NoteNetwork,
     private val mediator: NoteRxMediator
 ) : NoteRepository {
+
     /**
      * insert to network
      * clear tasks by note
@@ -89,6 +90,10 @@ class DefaultNoteRepositoryImpl @Inject constructor(
 
     override fun updateTask(vararg tasks: Task): Single<Int> = Single.just(0)
 
+    /**
+     * delete note success in network request code != NOT_FOUND (404)
+     * delete note in local
+     * */
     override fun deleteNote(note: Note): Single<Long> =
         network.deleteNote(note.userId!!, note.nid).flatMap {response ->
             if (response.code() == NOT_FOUND) {
@@ -160,6 +165,9 @@ class DefaultNoteRepositoryImpl @Inject constructor(
 
     override fun getSingleNote(uid: Long): Single<Note> = local.findSingleNote(uid)
 
+    /**
+     * clear note of user in cache
+     * */
     override fun clearNotes(uid: Long): Completable = Completable.create {
         local.clearNotesByUserId(uid)
         it.onComplete()

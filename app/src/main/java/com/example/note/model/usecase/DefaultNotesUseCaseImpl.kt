@@ -15,16 +15,22 @@ class DefaultNotesUseCaseImpl @Inject constructor(
     override val userRepository: UserRepository
 ) : NotesUseCase {
 
+
     override fun getNotes(): Flowable<PagingData<Note>> =
         userRepository.currentUser().toFlowable().flatMap { uid ->
             noteRepository.getNotes(uid)
-        }.subscribeOn(Schedulers.io())
+        }
 
     override fun deleteTask(vararg tasks: Task): Single<Int> =
         noteRepository.deleteTask(*tasks).observeOn(Schedulers.io())
 
+    /**
+     * get id note from user repository
+     * set uid for note
+     * delete note
+     * */
     override fun deleteNote(note: Note): Single<Long> = userRepository.currentUser().flatMap { userId ->
         note.userId = userId
         noteRepository.deleteNote(note)
-    }.observeOn(Schedulers.io())
+    }.subscribeOn(Schedulers.io())
 }

@@ -7,5 +7,5 @@
         android:title=""
         android:icon="@drawable/ic_checkbox"
         app:showAsAction="always"
-        android:iconTint="?attr/blackLightWhiteNightColor"/>
+        app:iconTint="?attr/blackLightWhiteNightColor"/>
 </menu>

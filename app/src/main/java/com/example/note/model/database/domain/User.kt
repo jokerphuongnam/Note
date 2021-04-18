@@ -2,10 +2,9 @@ package com.example.note.model.database.domain
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Entity(tableName = "users")
 data class User(
@@ -15,16 +14,27 @@ data class User(
     @ColumnInfo(name = "avatar") var avatar: String?,
     @ColumnInfo(name = "birth_day") var birthDay: Long
 ) {
+
     @ColumnInfo(name = "username")
     var username: String = ""
 
-    //    @ColumnInfo(name = "birth_day") private var _birthDay: Long = 0
-//    var birthDay: Long
-//        get() {
-//
-//        }
-//        set(value) {_birthDay = value.}
-    init {
-//        birthDay = Date(birthDayLong * 1000)
-    }
+    var birthDayString: String
+        get() {
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.add(
+                Calendar.MILLISECOND,
+                TimeZone.getDefault().getOffset(calendar.timeInMillis)
+            )
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            return sdf.format(Date(birthDay * 1000))
+        }
+        set(value) {
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.add(
+                Calendar.MILLISECOND,
+                TimeZone.getDefault().getOffset(calendar.timeInMillis)
+            )
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            birthDay = sdf.parse(value)?.time ?: 0
+        }
 }

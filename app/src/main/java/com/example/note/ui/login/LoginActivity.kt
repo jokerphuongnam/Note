@@ -7,9 +7,12 @@ import androidx.activity.viewModels
 import com.example.note.R
 import com.example.note.databinding.ActivityLoginBinding
 import com.example.note.ui.base.BaseActivity
+import com.example.note.ui.main.MainActivity
 import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layout.activity_login) {
 
@@ -32,7 +35,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
         }
     }
 
-    override fun action() {
+    override fun createUI() {
         noInternetError()
         binding.apply {
             login.setOnClickListener(loginClick)
@@ -45,11 +48,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
 
                 }
                 is Resource.Success -> {
-                    val data: Intent = Intent().apply {
+                    val data: Intent = Intent(this, MainActivity::class.java).apply {
                         putExtra(UID,resource.data?.uid)
                     }
-                    setResult(Activity.RESULT_OK, data)
-                    finish()
+                    startActivity(data)
                 }
                 is Resource.Error -> {
 

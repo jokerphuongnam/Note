@@ -14,13 +14,13 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
     override val userRepository: UserRepository
 ) : NoteInfoUseCase {
     override fun deleteTask(vararg tasks: Task): Single<Int> =
-        noteRepository.deleteTask(*tasks).observeOn(Schedulers.io())
+        noteRepository.deleteTask(*tasks).subscribeOn(Schedulers.io())
 
     override fun deleteNote(note: Note): Single<Long> =
         userRepository.currentUser().flatMap { userId ->
             note.userId = userId
             noteRepository.deleteNote(note)
-        }.observeOn(Schedulers.io())
+        }.subscribeOn(Schedulers.io())
 
     override fun saveNote(
         note: Note,
@@ -34,8 +34,8 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
         } else {
             noteRepository.insertNote(note)
         }
-    }.observeOn(Schedulers.io())
+    }.subscribeOn(Schedulers.io())
 
     override fun getNote(nid: Long): Single<Note> =
-        noteRepository.getSingleNote(nid).observeOn(Schedulers.io())
+        noteRepository.getSingleNote(nid).subscribeOn(Schedulers.io())
 }

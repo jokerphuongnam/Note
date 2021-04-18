@@ -15,4 +15,8 @@
     <string name="add_new_task">Add new task</string>
     <string name="delete_success">Delete success</string>
     <string name="delete_error">Delete Error</string>
+    <string name="name">Name:</string>
+    <string name="birth_day">birth day:</string>
+    <string name="first_name">First name:</string>
+    <string name="last_name">Last name:</string>
 </resources>

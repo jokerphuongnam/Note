@@ -7,8 +7,9 @@ import com.example.note.model.database.local.user.UserLocal
 import com.example.note.model.database.network.user.UserNetwork
 import com.example.note.throwable.NotFoundException
 import com.example.note.throwable.WrongException
-import com.example.note.utils.RetrofitConstrain.CONFLICT
-import com.example.note.utils.RetrofitConstrain.NOT_FOUND
+import com.example.note.utils.RetrofitUtils.CONFLICT
+import com.example.note.utils.RetrofitUtils.NOT_FOUND
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -18,6 +19,9 @@ class DefaultUserRepositoryImpl @Inject constructor(
     override val network: UserNetwork,
     override val currentUser: CurrentUser
 ) : UserRepository {
+    /**
+     * get current user single flowable first time or first time is complete will return error
+     * */
     override fun currentUser(): Single<Long> = currentUser.uid.firstOrError().map { uid ->
         uid ?: throw NotFoundException()
     }
@@ -45,6 +49,10 @@ class DefaultUserRepositoryImpl @Inject constructor(
     override fun logout(): Single<Preferences> = currentUser.signOut()
 
     override fun deleteUser(uid: Long): Single<Int> = local.deleteUser(uid)
+
+    override fun getUser(): Flowable<User> = currentUser.uid.flatMap {
+        local.findSingleUser(it!!)
+    }
 
     override fun editUser(user: User, avatar: MultipartBody.Part?): Single<User> =
         network.editProfile(user, avatar).map {

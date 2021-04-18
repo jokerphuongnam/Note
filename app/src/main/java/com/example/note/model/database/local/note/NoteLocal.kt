@@ -12,6 +12,8 @@ import javax.inject.Singleton
 interface NoteLocal {
     fun findNotesPaging(uid: Long): PagingSource<Int, Note>
 
+    fun findNotes(): Flowable<MutableList<Note>>
+
     fun findLastUpdateSingle(uid: Long): Single<Note>
 
     fun findSingleNote(nid: Long): Single<Note>

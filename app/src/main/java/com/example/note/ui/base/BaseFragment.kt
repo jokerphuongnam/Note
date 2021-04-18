@@ -1,8 +1,6 @@
 package com.example.note.ui.base
 
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import androidx.lifecycle.ViewModel
 
 abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes override val layoutRes: Int
@@ -38,7 +35,7 @@ abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        action()
+        createUI()
     }
 
     inline fun <reified F : Fragment> navigateFragmentChild(

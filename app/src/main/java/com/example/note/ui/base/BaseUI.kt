@@ -3,7 +3,6 @@ package com.example.note.ui.base
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +17,7 @@ import com.google.android.material.appbar.AppBarLayout
 
 interface BaseUI<BD : ViewDataBinding, VM : BaseViewModel> {
     val layoutRes: Int
-    fun action()
+    fun createUI()
     val binding: BD
     val viewModel: VM
 

@@ -40,4 +40,6 @@ interface UserRepository {
         type: String,
         avatar: MultipartBody.Part? = null
     ): Single<User>
+
+    fun getUser(): Flowable<User>
 }

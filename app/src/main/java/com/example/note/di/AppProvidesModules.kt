@@ -13,7 +13,7 @@ import com.example.note.model.database.network.NetworkConnectionInterceptor
 import com.example.note.model.database.network.note.NoteRetrofitServiceImpl
 import com.example.note.model.database.network.user.UserRetrofitServiceImpl
 import com.example.note.utils.DataStoreConstrain.DATA_STORE_NAME
-import com.example.note.utils.RetrofitConstrain.BASE_URL
+import com.example.note.utils.RetrofitUtils.BASE_URL
 import com.example.note.utils.RoomConstrain.DB_NAME
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(private val useCase: LoginUseCase) : Ba
             it.dispose()
         }
         loginDisable =
-            useCase.loginEmailPass(username, password).subscribeOn(AndroidSchedulers.mainThread())
+            useCase.loginEmailPass(username, password).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observerLogin, this::loginError)
         composite.add(loginDisable)
     }

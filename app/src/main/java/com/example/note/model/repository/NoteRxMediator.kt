@@ -49,7 +49,7 @@ class NoteRxMediator @Inject constructor(
      * */
     override fun initializeSingle(): Single<InitializeAction> =
         local.findLastUpdateSingle(_uid).map { firstNote ->
-            if (System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP) {
+            if (firstNote == null || System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP) {
                 InitializeAction.LAUNCH_INITIAL_REFRESH
             } else {
                 InitializeAction.SKIP_INITIAL_REFRESH
@@ -80,7 +80,6 @@ class NoteRxMediator @Inject constructor(
         }
     }.flatMap { page ->
         val firstNote = state.firstItemOrNull()
-
         /**
          * - page == null: user want to refresh notes
          * - firstNote == null: note not cached yet
@@ -117,6 +116,9 @@ class NoteRxMediator @Inject constructor(
                  * if end >= maxCount - 1: end page user will don't need fetch more notes
                  * */
                 MediatorResult.Success(end >= maxCount - 1)
+            }.onErrorReturn {
+                it.printStackTrace()
+                MediatorResult.Error(it)
             }
         }
     }.onErrorReturn {

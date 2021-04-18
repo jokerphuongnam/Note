@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 @AndroidEntryPoint
 class SettingFragment :
     BaseFragment<FragmentSettingBinding, SettingViewModel>(R.layout.fragment_setting) {
-    override fun action() {
+    override fun createUI() {
         viewModel.logoutLiveData.observe{
 
         }

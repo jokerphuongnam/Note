@@ -36,10 +36,12 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
     }
 
     /**
-     * first time loading
-     * check null noteDisable if (noteDisable != null) remove in composite and dispose this
-     * handle it have data and error
-     * add noteDisable to composite
+     * when call userLiveData for set observer will action
+     * set loading for livedata
+     * disposable
+     * remove disposable from composite
+     * observer from retrofit
+     * add disposable to composite
      * */
     internal val noteLiveData: MutableLiveData<Resource<PagingData<Note>>>
         get() {
@@ -49,7 +51,8 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
                 it.dispose()
             }
             noteDisable =
-                useCase.getNotes().subscribeOn(AndroidSchedulers.mainThread()).cachedIn(viewModelScope)
+                useCase.getNotes()
+                    .cachedIn(viewModelScope)
                     .subscribe(observerNotes, this::onNotesError)
             composite.add(noteDisable)
             return _noteLiveData
@@ -66,6 +69,13 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
 
     private var dispose : Disposable? = null
 
+    /**
+     * when call userLiveData for set observer will action
+     * set loading for livedata
+     * disposable
+     * observer from retrofit
+     * when success or error will dispose
+     * */
     private val deleteObserver: SingleObserver<Long> by lazy {
         object : SingleObserver<Long>{
             override fun onSubscribe(d: Disposable) {
@@ -95,6 +105,6 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
 
     internal fun delete(note: Note) {
         deleteLiveData.postValue(Resource.Loading())
-        useCase.deleteNote(note).subscribeOn(AndroidSchedulers.mainThread()).subscribe(deleteObserver)
+        useCase.deleteNote(note).observeOn(AndroidSchedulers.mainThread()).subscribe(deleteObserver)
     }
 }

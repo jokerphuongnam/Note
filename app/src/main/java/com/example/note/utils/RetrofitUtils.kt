@@ -1,6 +1,6 @@
 package com.example.note.utils
 
-object RetrofitConstrain {
+object RetrofitUtils {
     private const val PORT: Int = 3000
     private const val IP: String = "192.168.1.199"
     private const val DYNAMIC_IP: String = "192.168.43.108"
@@ -13,4 +13,7 @@ object RetrofitConstrain {
     const val NOT_FOUND: Int = 404
     const val CONFLICT: Int = 409
     const val INTERNAL_SERVER_ERROR: Int = 500
+
+    fun getImageUrl(imageName: String) = "${BASE_URL}image/$imageName"
+    fun getSoundUrl(soundName: String) = "${BASE_URL}sound/$soundName"
 }

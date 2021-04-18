@@ -8,15 +8,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
+import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.example.note.R
 import com.example.note.databinding.ActivityMainBinding
 import com.example.note.model.database.domain.Reference
+import com.example.note.model.database.domain.User
 import com.example.note.ui.adapter.MainFragmentAdapter
 import com.example.note.ui.base.BaseActivity
 import com.example.note.ui.login.LoginActivity
 import com.example.note.ui.main.notes.NotesFragment
 import com.example.note.ui.main.setting.SettingFragment
+import com.example.note.ui.main.userinfo.UserInfoFragment
 import com.example.note.ui.noteinfo.InsertType
 import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.utils.Resource
@@ -35,9 +38,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     @Inject
     lateinit var reference: Reference
 
+    /**
+     * set adapter for view pager 2
+     * */
     private val mainAdapter: MainFragmentAdapter by lazy {
         MainFragmentAdapter(this).apply {
             addFragment(NotesFragment())
+            addFragment(UserInfoFragment())
             addFragment(SettingFragment()) {
                 logoutSubscription().subscribe {
                     logout()
@@ -46,7 +53,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-
+    /**
+     * communication between activity and fragment (acton refresh when from note activity back main activity)
+     * */
     fun refreshSubscription(): PublishSubject<Int> = refreshPublisher
 
     /**
@@ -56,25 +65,32 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         PublishSubject.create()
     }
 
-    private val loginContent: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            recreate()
-        }
-
+    /**
+     * intent for login activity
+     * */
     private val loginIntent by lazy {
         Intent(this, LoginActivity::class.java)
     }
 
+    /**
+     * intent start activity note (add note, edit note)
+     * */
     private val addIntent: Intent by lazy {
         Intent(this, NoteInfoActivity::class.java)
     }
 
+    /**
+     * intent will start activity note (add note, edit note) will create list have 1 task
+     * */
     private val addIntentWithTask: Intent by lazy {
         Intent(this, NoteInfoActivity::class.java).apply {
             putParcelableExtra(NoteInfoActivity.INSERT_TYPE, InsertType.CHECK_BOX)
         }
     }
 
+    /**
+     * add content use for start activity for result
+     * */
     val addContent: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -82,6 +98,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
         }
 
+    /**
+     * event click for item bottom appbar
+     * */
     private val bottomAppBarItemClick: OnMenuItemClickListener by lazy {
         OnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
@@ -147,12 +166,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+    /**
+     * action when click floating action button add
+     * */
     private val addAction: View.OnClickListener by lazy {
         View.OnClickListener {
             addContent.launch(addIntent)
         }
     }
 
+    /**
+     * if user launch app first time
+     * make splashy (launcher) screen after success load splashy screen when setting for ui
+     * */
     private fun splashyScreen() {
         @Suppress("DEPRECATION")
         Handler().postDelayed({
@@ -172,12 +198,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             .show()
     }
 
+    /**
+     * check app is running
+     * if app run don't reload set view
+     * if app not running yet will init view
+     * */
     private var isRun = false
 
     /**
      * if have data will set event to link pager with tabs
      * */
     private fun setUpUI() {
+        viewModel.userLiveData.observe(userObservable)
         binding.apply {
             mainViewPager.apply {
                 currentItem = 0
@@ -201,15 +233,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+    /**
+     * init action (logout, show view) when get Long id
+     * */
     private fun initAction(resource: Resource<Long>) {
         when (resource) {
             is Resource.Loading -> {
 
             }
             is Resource.Success -> {
-                if (isRun) {
+                if (!isRun) {
                     setUpUI()
-                } else {
                     isRun = true
                 }
             }
@@ -223,7 +257,41 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    override fun action() {
+    /**
+     * logout
+     * */
+    private fun logout() {
+        startActivity(loginIntent)
+    }
+
+    override fun onBackPressed() {
+        if (isEmptyFragmentBackStack) {
+            twiceTimeToExit()
+        } else {
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+    /**
+     * observer for get image avatar
+     * */
+    private val userObservable: Observer<Resource<User>> by lazy {
+        Observer<Resource<User>> { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    binding.avatar.setImageResource(R.drawable.ic_loading)
+                }
+                is Resource.Success -> {
+                    binding.user = resource.data
+                }
+                is Resource.Error -> {
+                    binding.avatar.setImageResource(R.drawable.ic_empty)
+                }
+            }
+        }
+    }
+
+    override fun createUI() {
         if (!reference.isSplashy) {
             reference.isSplashy = true
             splashyScreen()
@@ -234,11 +302,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             initAction(resource)
         }
     }
-
-    private fun logout() {
-        loginContent.launch(loginIntent)
-    }
-
 
     override val viewModel: MainViewModel by viewModels()
 }

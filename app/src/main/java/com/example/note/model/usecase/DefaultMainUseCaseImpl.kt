@@ -12,9 +12,12 @@ class DefaultMainUseCaseImpl @Inject constructor(
     override val noteRepository: NoteRepository,
     override val userRepository: UserRepository
 ) : MainUseCase {
+
     override fun currentUser(): Single<Long> =
         userRepository.currentUser().subscribeOn(Schedulers.io())
 
     override fun login(username: String, password: String, type: String): Single<User> =
         userRepository.login(username, password, type).subscribeOn(Schedulers.io())
+
+    override fun getUser(): Flowable<User> = userRepository.getUser().subscribeOn(Schedulers.io())
 }

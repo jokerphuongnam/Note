@@ -15,6 +15,8 @@ interface NotesUseCase {
     val userRepository: UserRepository
 
     fun getNotes(): Flowable<PagingData<Note>>
+
     fun deleteTask(vararg tasks: Task): Single<Int>
+
     fun deleteNote(note: Note): Single<Long>
 }

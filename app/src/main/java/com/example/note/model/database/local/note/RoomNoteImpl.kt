@@ -5,7 +5,6 @@ import androidx.room.*
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.database.domain.supportquery.NoteWithTasks
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 
@@ -14,8 +13,14 @@ interface RoomNoteImpl : NoteLocal {
     /**
      * with show notes will do get demo notes for user follow
      * */
-    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid ORDER BY created_at")
+    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES WHERE user_id = :uid ORDER BY note_id")
     override fun findNotesPaging(uid: Long): PagingSource<Int, Note>
+
+    /**
+     * find all note for test
+     * */
+    @Query("SELECT note_id, title, detail, tags, is_favorite, tags, created_at, modified_at FROM NOTES ORDER BY note_id")
+    override fun findNotes(): Flowable<MutableList<Note>>
 
     /**
      * get first note for init notes
@@ -41,6 +46,9 @@ interface RoomNoteImpl : NoteLocal {
     @Query("SELECT * FROM TASKS WHERE note_id =:nid")
     override fun findTasksByUid(nid: Long): Single<List<Task>>
 
+    /**
+     * save create time save for query (if outdated will refresh)
+     * */
     override fun insertNotesWithTime(notes: List<Note>) {
         notes.map { note ->
             note.apply {

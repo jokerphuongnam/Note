@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
+    <data>
+
+        <variable
+            name="user"
+            type="com.example.note.model.database.domain.User" />
+    </data>
 
     <ViewSwitcher
         android:id="@+id/view_switch"
@@ -61,12 +66,16 @@
                             android:tint="?attr/tintColor"
                             app:srcCompat="@drawable/ic_search" />
 
-                        <ImageButton
+                        <ImageView
+                            android:id="@+id/avatar"
                             android:layout_width="@dimen/circle_background_size"
                             android:layout_height="@dimen/circle_background_size"
                             android:layout_margin="8dp"
+                            android:padding="8dp"
                             android:background="@drawable/circle_background"
-                            android:tint="?attr/tintColor" />
+                            android:tint="?attr/tintColor"
+                            app:image_from_url="@{user.avatar}"
+                            app:is_circle="@{true}"/>
                     </LinearLayout>
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -85,6 +94,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:icon="@drawable/ic_home" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_user" />
 
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
@@ -113,10 +127,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="25dp"
-                app:backgroundTint="?attr/whiteLightGreyNightColor"
                 android:clickable="true"
-                android:focusable="true"
                 android:elevation="0.6dp"
+                android:focusable="true"
+                app:backgroundTint="?attr/whiteLightGreyNightColor"
                 app:borderWidth="0dp"
                 app:layout_anchor="@+id/tab_wrap"
                 app:layout_anchorGravity="right"
@@ -130,9 +144,9 @@
                 android:layout_gravity="bottom"
                 android:background="?attr/whiteLightGreyNightColor"
                 android:gravity="center|start"
-                app:menu="@menu/main"
                 app:fabAlignmentMode="end"
-                app:fabAnimationMode="slide" />
+                app:fabAnimationMode="slide"
+                app:menu="@menu/main" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </ViewSwitcher>
 </layout>

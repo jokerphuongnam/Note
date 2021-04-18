@@ -34,7 +34,7 @@ class NoteInfoActivity :
         }
     }
 
-    override fun action() {
+    override fun createUI() {
         val insertType: InsertType? = intent.getParcelableExtra(INSERT_TYPE)
         viewModel.initNote(intent.getLongExtra(NOTE, INSERT), insertType)
         noInternetError()

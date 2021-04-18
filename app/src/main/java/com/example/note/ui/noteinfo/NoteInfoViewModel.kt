@@ -73,7 +73,7 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
             })
         } else {
             useCase.getNote(nid)
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(initNote)
         }
     }

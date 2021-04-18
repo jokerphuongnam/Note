@@ -1,55 +1,22 @@
-package com.example.note.ui.main
+package com.example.note.ui.main.userinfo
 
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
-import com.example.note.model.usecase.MainUseCase
-import com.example.note.throwable.NoConnectivityException
+import com.example.note.model.usecase.UserInfoUseCase
 import com.example.note.ui.base.BaseViewModel
 import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.functions.Consumer
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val useCase: MainUseCase) : BaseViewModel() {
-
+class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase) :
+    BaseViewModel() {
     private val composite: CompositeDisposable by lazy {
         CompositeDisposable()
     }
-
-    private var uidDisable: Disposable? = null
-    private val observerUid: Consumer<Long> by lazy {
-        Consumer<Long> { uid ->
-            _uid.postValue(Resource.Success(uid))
-        }
-    }
-
-    private val _uid: MutableLiveData<Resource<Long>> by lazy {
-        MutableLiveData<Resource<Long>>()
-    }
-
-    internal val uidLiveData: MutableLiveData<Resource<Long>>
-        get() {
-            _uid.postValue(Resource.Loading())
-            uidDisable?.let {
-                composite.remove(it)
-                it.dispose()
-            }
-            uidDisable =
-                useCase.currentUser().observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observerUid, this::onUidError)
-            composite.add(uidDisable)
-            return _uid
-        }
-
-    internal var uid: Long
-        get() = TODO()
-        set(value) {
-            _uid.postValue(Resource.Success(value))
-        }
 
     private var disposable: Disposable? = null
 
@@ -57,6 +24,15 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
         MutableLiveData<Resource<User>>()
     }
 
+
+    /**
+     * when call userLiveData for set observer will action
+     * set loading for livedata
+     * disposable
+     * remove disposable from composite
+     * observer from retrofit
+     * add disposable to composite
+     * */
     internal val userLiveData: MutableLiveData<Resource<User>>
         get() {
             _userLiveData.postValue(Resource.Loading())
@@ -67,6 +43,7 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
             disposable = useCase.getUser()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ user ->
+                    currentUser = user
                     _userLiveData.postValue(Resource.Success(user))
                 }, { throwable ->
                     throwable.printStackTrace()
@@ -78,15 +55,16 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
             return _userLiveData
         }
 
-    private fun onUidError(error: Throwable) {
-        error.printStackTrace()
-        when (error) {
-            is NoConnectivityException -> {
-                internetError.postValue("")
-            }
-            else -> {
-                _uid.postValue(Resource.Error(error.message!!))
-            }
-        }
+    internal lateinit var currentUser: User
+
+    internal lateinit var editUser: User
+
+    internal fun editProfile() {
+        _userLiveData.postValue(Resource.Loading())
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        composite.dispose()
     }
 }

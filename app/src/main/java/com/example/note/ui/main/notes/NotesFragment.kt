@@ -50,7 +50,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
         }
     }
 
-    override fun action() {
+    override fun createUI() {
         initNotesRecycler()
         binding.notesRefresh.apply {
             setOnRefreshListener { refreshNotes() }

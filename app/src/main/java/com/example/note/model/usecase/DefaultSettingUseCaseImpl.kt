@@ -7,5 +7,5 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class DefaultSettingUseCaseImpl @Inject constructor(override val userRepository: UserRepository) : SettingUseCase {
-    override fun logout() : Single<Preferences> = userRepository.logout().observeOn(Schedulers.io())
+    override fun logout() : Single<Preferences> = userRepository.logout().subscribeOn(Schedulers.io())
 }
