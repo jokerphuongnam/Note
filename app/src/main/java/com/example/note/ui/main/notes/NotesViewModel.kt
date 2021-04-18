@@ -1,7 +1,9 @@
 package com.example.note.ui.main.notes
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.rxjava3.cachedIn
 import com.example.note.model.database.domain.Note
 import com.example.note.model.usecase.NotesUseCase
 import com.example.note.ui.base.BaseViewModel
@@ -12,8 +14,10 @@ import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : BaseViewModel() {
     private val composite: CompositeDisposable by lazy {
@@ -37,7 +41,7 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
      * handle it have data and error
      * add noteDisable to composite
      * */
-    val noteLiveData: MutableLiveData<Resource<PagingData<Note>>>
+    internal val noteLiveData: MutableLiveData<Resource<PagingData<Note>>>
         get() {
             _noteLiveData.postValue(Resource.Loading())
             noteDisable?.let {
@@ -45,7 +49,7 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
                 it.dispose()
             }
             noteDisable =
-                useCase.getNotes().subscribeOn(AndroidSchedulers.mainThread())
+                useCase.getNotes().subscribeOn(AndroidSchedulers.mainThread()).cachedIn(viewModelScope)
                     .subscribe(observerNotes, this::onNotesError)
             composite.add(noteDisable)
             return _noteLiveData
@@ -85,11 +89,11 @@ class NotesViewModel @Inject constructor(private val useCase: NotesUseCase) : Ba
         }
     }
 
-    val deleteLiveData: MutableLiveData<Resource<Long>> by lazy {
+    internal val deleteLiveData: MutableLiveData<Resource<Long>> by lazy {
         MutableLiveData<Resource<Long>>()
     }
 
-    fun delete(note: Note) {
+    internal fun delete(note: Note) {
         deleteLiveData.postValue(Resource.Loading())
         useCase.deleteNote(note).subscribeOn(AndroidSchedulers.mainThread()).subscribe(deleteObserver)
     }

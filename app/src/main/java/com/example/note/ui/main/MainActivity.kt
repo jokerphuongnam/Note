@@ -3,19 +3,21 @@ package com.example.note.ui.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.viewpager2.widget.ViewPager2
 import com.example.note.R
 import com.example.note.databinding.ActivityMainBinding
+import com.example.note.model.database.domain.Reference
 import com.example.note.ui.adapter.MainFragmentAdapter
 import com.example.note.ui.base.BaseActivity
 import com.example.note.ui.login.LoginActivity
 import com.example.note.ui.main.notes.NotesFragment
 import com.example.note.ui.main.setting.SettingFragment
+import com.example.note.ui.noteinfo.InsertType
 import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.utils.Resource
 import com.google.android.material.appbar.AppBarLayout
@@ -23,12 +25,18 @@ import com.google.android.material.tabs.TabLayout
 import com.rbddevs.splashy.Splashy
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main) {
 
+    @Inject
+    lateinit var reference: Reference
+
     private val mainAdapter: MainFragmentAdapter by lazy {
-        MainFragmentAdapter(this@MainActivity).apply {
+        MainFragmentAdapter(this).apply {
             addFragment(NotesFragment())
             addFragment(SettingFragment()) {
                 logoutSubscription().subscribe {
@@ -49,7 +57,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private val loginContent: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> }
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            recreate()
+        }
 
     private val loginIntent by lazy {
         Intent(this, LoginActivity::class.java)
@@ -59,12 +69,32 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         Intent(this, NoteInfoActivity::class.java)
     }
 
+    private val addIntentWithTask: Intent by lazy {
+        Intent(this, NoteInfoActivity::class.java).apply {
+            putParcelableExtra(NoteInfoActivity.INSERT_TYPE, InsertType.CHECK_BOX)
+        }
+    }
+
     val addContent: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 refreshPublisher.onNext(0)
             }
         }
+
+    private val bottomAppBarItemClick: OnMenuItemClickListener by lazy {
+        OnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.checkbox -> {
+                    addContent.launch(addIntentWithTask)
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
+    }
 
     private val tabSelectedCallBack: TabLayout.OnTabSelectedListener by lazy {
         object : TabLayout.OnTabSelectedListener {
@@ -136,10 +166,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         Splashy(this)
             .setLogo(R.drawable.ic_logo)
             .setTitle(R.string.app_name)
+            .setFullScreen(true)
             .setAnimation(Splashy.Animation.SLIDE_IN_TOP_BOTTOM)
             .setDuration(2000)
             .show()
-
     }
 
     private var isRun = false
@@ -167,6 +197,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
             tabs.addOnTabSelectedListener(tabSelectedCallBack)
             addBtn.setOnClickListener(addAction)
+            tabWrap.setOnMenuItemClickListener(bottomAppBarItemClick)
         }
     }
 
@@ -193,10 +224,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     override fun action() {
-        if (viewModel.isInit) {
-            viewModel.isInit = true
-        } else {
+        if (!reference.isSplashy) {
+            reference.isSplashy = true
             splashyScreen()
+        } else {
+            binding.viewSwitch.showNext()
         }
         viewModel.uidLiveData.observe { resource ->
             initAction(resource)

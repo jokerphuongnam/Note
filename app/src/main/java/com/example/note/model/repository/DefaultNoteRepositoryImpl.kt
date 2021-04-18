@@ -10,10 +10,12 @@ import com.example.note.model.database.domain.Task
 import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.network.note.NoteNetwork
 import com.example.note.throwable.CannotSaveException
+import com.example.note.throwable.NotFoundException
 import com.example.note.utils.PagingUtil.INIT_LOAD_SIZE
 import com.example.note.utils.PagingUtil.PAGE_SIZE
 import com.example.note.utils.PagingUtil.PREFECT_DISTANCE
 import com.example.note.utils.RetrofitConstrain.INTERNAL_SERVER_ERROR
+import com.example.note.utils.RetrofitConstrain.NOT_FOUND
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -87,12 +89,17 @@ class DefaultNoteRepositoryImpl @Inject constructor(
 
     override fun updateTask(vararg tasks: Task): Single<Int> = Single.just(0)
 
-    override fun deleteNote(note: Note): Single<Long> = network.deleteNote(note.userId!!, note.nid).flatMap {
-        Single.create {
-            local.deleteNotes(note)
-            it.onSuccess(note.nid)
+    override fun deleteNote(note: Note): Single<Long> =
+        network.deleteNote(note.userId!!, note.nid).flatMap {response ->
+            if (response.code() == NOT_FOUND) {
+                throw NotFoundException()
+            } else {
+                Single.create {
+                    local.deleteNotes(note)
+                    it.onSuccess(note.nid)
+                }
+            }
         }
-    }
 
     override fun deleteTask(vararg tasks: Task): Single<Int> = Single.create {
         local.deleteTasks(*tasks)

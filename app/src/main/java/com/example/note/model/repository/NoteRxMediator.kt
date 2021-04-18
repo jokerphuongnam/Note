@@ -80,18 +80,22 @@ class NoteRxMediator @Inject constructor(
         }
     }.flatMap { page ->
         val firstNote = state.firstItemOrNull()
-        var type = loadType
+
         /**
          * - page == null: user want to refresh notes
          * - firstNote == null: note not cached yet
          * - System.currentTimeMillis() - firstNote.modifiedAt: data outdated
          * will delete all data of user in cache and set type = refresh to save extend time
          * */
-        if (page == PagingUtil.UNKNOWN_PAGE || firstNote == null || System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP) {
+        val type = if (
+            page == PagingUtil.UNKNOWN_PAGE ||
+            firstNote == null ||
+            System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP
+        ) {
             local.clearNotesByUserId(_uid)
-            type = REFRESH
-        } else if (page == PagingUtil.PREPEND) {
-
+            REFRESH
+        } else {
+            loadType
         }
         if (page == PagingUtil.PREPEND) {
             /**
@@ -125,7 +129,8 @@ class NoteRxMediator @Inject constructor(
      * - when data in room outdated
      * if type refresh:
      * insert notes (replace if duplicate) with time to have last time cache
-     * if append, prepend (user paging) will add simple note
+     * if append (user paging) will add simple note
+     * if prepend do not think
      * and insert tasks of notes (if duplicate will replace tasks)
      * */
     @WorkerThread
@@ -142,8 +147,13 @@ class NoteRxMediator @Inject constructor(
                      * */
                     local.insertNotesWithTime(data)
                 }
-                APPEND, PREPEND -> {
+                APPEND -> {
                     local.insertNotes(data)
+                }
+                PREPEND -> {
+                    /**
+                     * can't need prepend
+                     * */
                 }
             }
             data.forEach { note ->

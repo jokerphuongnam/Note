@@ -1,6 +1,5 @@
 package com.example.note.ui.login
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
 import com.example.note.model.usecase.LoginUseCase
@@ -33,10 +32,10 @@ class LoginViewModel @Inject constructor(private val useCase: LoginUseCase) : Ba
         MutableLiveData<Resource<User>>()
     }
 
-    val login: MutableLiveData<Resource<User>>
+    internal val login: MutableLiveData<Resource<User>>
         get() = _login
 
-    fun loginEmailPass(username: String, password: String) {
+    internal fun loginEmailPass(username: String, password: String) {
         _login.postValue(Resource.Loading())
         loginDisable?.let {
             composite.remove(it)

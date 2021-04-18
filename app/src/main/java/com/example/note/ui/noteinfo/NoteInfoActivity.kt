@@ -35,11 +35,12 @@ class NoteInfoActivity :
     }
 
     override fun action() {
-        viewModel.initNote(intent.getLongExtra(NOTE, INSERT))
+        val insertType: InsertType? = intent.getParcelableExtra(INSERT_TYPE)
+        viewModel.initNote(intent.getLongExtra(NOTE, INSERT), insertType)
         noInternetError()
         setSupportActionBar(binding.addToolBar)
         actionBar.setDisplayHomeAsUpEnabled(true)
-        viewModel.newNote.observe{
+        viewModel.newNote.observe {
             binding.note = it
             tasksInfoAdapter.submitList(it.tasks)
         }
@@ -50,7 +51,7 @@ class NoteInfoActivity :
                  * because submitList has (oldList == newList) {don't do}
                  * */
                 tasksInfoAdapter.submitList(viewModel.newNote.value!!.tasks.apply {
-                    add(Task(false, ""))
+                    add(Task())
                 }.toMutableList())
             }
         }
@@ -82,5 +83,6 @@ class NoteInfoActivity :
     companion object {
         const val NOTE: String = "note"
         const val INSERT: Long = -1
+        const val INSERT_TYPE: String = "insertType"
     }
 }

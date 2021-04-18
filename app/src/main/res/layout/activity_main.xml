@@ -99,14 +99,13 @@
                 android:layout_above="@+id/bottom_navigation"
                 android:background="?attr/whiteLightBlackNightColor"
                 android:fillViewport="true"
-                android:paddingBottom="?android:attr/actionBarSize"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/main_view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"></androidx.viewpager2.widget.ViewPager2>
+                    android:orientation="horizontal" />
             </androidx.core.widget.NestedScrollView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -114,8 +113,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="25dp"
-                android:backgroundTint="?attr/whiteLightGreyNightColor"
+                app:backgroundTint="?attr/whiteLightGreyNightColor"
                 android:clickable="true"
+                android:focusable="true"
                 android:elevation="0.6dp"
                 app:borderWidth="0dp"
                 app:layout_anchor="@+id/tab_wrap"
@@ -130,8 +130,9 @@
                 android:layout_gravity="bottom"
                 android:background="?attr/whiteLightGreyNightColor"
                 android:gravity="center|start"
+                app:menu="@menu/main"
                 app:fabAlignmentMode="end"
-                app:fabAnimationMode="scale" />
+                app:fabAnimationMode="slide" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </ViewSwitcher>
 </layout>

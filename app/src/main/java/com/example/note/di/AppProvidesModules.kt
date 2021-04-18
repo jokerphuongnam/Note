@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import androidx.datastore.rxjava3.RxDataStore
 import androidx.room.Room
+import com.example.note.model.database.domain.Reference
 import com.example.note.model.database.local.AppDatabase
 import com.example.note.model.database.local.note.NoteLocal
 import com.example.note.model.database.local.user.UserLocal
@@ -23,6 +24,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -31,6 +33,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppProvidesModules {
+
+    @Provides
+    @Singleton
+    fun providerReference(): Reference = Reference()
+
     //data store
     @Provides
     @Singleton
@@ -69,9 +76,20 @@ object AppProvidesModules {
 
     @Provides
     @Singleton
-    fun providerOkHttp(interceptor: NetworkConnectionInterceptor): OkHttpClient =
-        OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor(interceptor).build()
+    fun providerLogging(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    @Provides
+    @Singleton
+    fun providerOkHttp(
+        interceptor: NetworkConnectionInterceptor,
+        logging: HttpLoggingInterceptor
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(interceptor).build()
 
     @Provides
     @Singleton

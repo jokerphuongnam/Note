@@ -2,6 +2,7 @@ package com.example.note.ui.noteinfo
 
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.Note
+import com.example.note.model.database.domain.Task
 import com.example.note.model.usecase.NoteInfoUseCase
 import com.example.note.throwable.NoConnectivityException
 import com.example.note.ui.base.BaseViewModel
@@ -58,9 +59,18 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
         }
     }
 
-    fun initNote(nid: Long) {
+    internal fun initNote(nid: Long, type: InsertType? = null) {
         if (nid == NoteInfoActivity.INSERT) {
-            _newNote.postValue(Note())
+            _newNote.postValue(Note().apply {
+                type ?: return@apply
+                when (type) {
+                    InsertType.CHECK_BOX -> {
+                        tasks.apply {
+                            add(Task())
+                        }
+                    }
+                }
+            })
         } else {
             useCase.getNote(nid)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -71,10 +81,10 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
     private var isUpdate = false
 
     private val _newNote: MutableLiveData<Note> by lazy { MutableLiveData<Note>() }
-    val newNote: MutableLiveData<Note>
+    internal val newNote: MutableLiveData<Note>
         get() = _newNote
 
-    fun saveNote() {
+    internal fun saveNote() {
         useCase.saveNote(_newNote.value!!, isUpdate = isUpdate)
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(singleObserver)

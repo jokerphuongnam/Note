@@ -2,7 +2,6 @@ package com.example.note.ui.main.notes
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -15,7 +14,9 @@ import com.example.note.ui.main.MainActivity
 import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layout.fragment_notes) {
 
@@ -35,6 +36,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
             }
         }
     }
+
     private val deleteItem: (Note) -> Unit by lazy {
         { note ->
             viewModel.delete(note)
@@ -45,7 +47,6 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
         binding.notesRecycler.apply {
             adapter = notesAdapter
             layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-
         }
     }
 

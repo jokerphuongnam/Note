@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
         MutableLiveData<Resource<Long>>()
     }
 
-    val uidLiveData: MutableLiveData<Resource<Long>>
+    internal val uidLiveData: MutableLiveData<Resource<Long>>
         get() {
             _uid.postValue(Resource.Loading())
             uidDisable?.let {
@@ -44,7 +44,7 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
             return _uid
         }
 
-    var uid: Long
+    internal var uid: Long
         get() = TODO()
         set(value) {
             _uid.postValue(Resource.Success(value))
@@ -61,6 +61,4 @@ class MainViewModel @Inject constructor(private val useCase: MainUseCase) : Base
             }
         }
     }
-
-    var isInit = false
 }

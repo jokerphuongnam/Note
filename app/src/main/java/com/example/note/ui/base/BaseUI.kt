@@ -1,6 +1,8 @@
 package com.example.note.ui.base
 
 import android.animation.ValueAnimator
+import android.content.Intent
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -93,5 +95,9 @@ interface BaseUI<BD : ViewDataBinding, VM : BaseViewModel> {
         val params: AppBarLayout.LayoutParams = layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags = flags
         layoutParams = params
+    }
+
+    fun Intent.putParcelableExtra(key: String, value: Parcelable) {
+        putExtra(key, value)
     }
 }
