@@ -20,4 +20,18 @@
     <string name="first_name">First name:</string>
     <string name="last_name">Last name:</string>
     <string name="change_password">Change password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">new password</string>
+    <string name="repeat_password">repeat password</string>
+    <string name="repeat_password_other_new_password">Repeat password need same new password</string>
+    <string name="password_empty">Password cannot be empty</string>
+    <string name="password_length">Password need than 6 word</string>
+    <string name="password_only_alphabet">Password only is alphabet</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="change_password_success">Change password success</string>
+    <string name="cannot_change_password">Cannot change password</string>
+    <string name="detail_forgot_password">if you forgot your password, you can enter email, we will send a form to you to recover your password</string>
+    <string name="recover_password">Recover password</string>
+    <string name="recovert_password_success">Please check your email</string>
+    <string name="email">Email</string>
 </resources>

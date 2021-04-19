@@ -25,5 +25,5 @@ interface UserNetwork {
         newPassword: String
     ): Single<Response<User>>
 
-    fun forgotPassword(username: String): Single<Response<User>>
+    fun forgotPassword(username: String): Single<Response<Int>>
 }

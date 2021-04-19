@@ -92,7 +92,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         newPassword: String
     ): Single<Response<User>> = service.changePassword(username, oldPassword, newPassword)
 
-    override fun forgotPassword(username: String): Single<Response<User>> =
+    override fun forgotPassword(username: String): Single<Response<Int>> =
         service.forgotPassword(username)
 
     interface Service {
@@ -113,7 +113,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
 
         @FormUrlEncoded
         @PUT("forgotpassword")
-        fun forgotPassword(@Field("username") username: String): Single<Response<User>>
+        fun forgotPassword(@Field("username") username: String): Single<Response<Int>>
 
         @Multipart
         @POST("register")

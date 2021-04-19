@@ -76,15 +76,14 @@ class DefaultUserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun forgotPassword(user: User): Single<User> =
-        network.forgotPassword(user.username).map {
-            if (it.code().equals(CONFLICT)) {
-                throw NotFoundException()
-            } else {
-                it.body()!!
+    override fun forgotPassword(username: String): Single<Int> =
+        network.forgotPassword(username).map {
+            if(it.code().equals(NOT_FOUND)){
+                throw  NotFoundException()
+            }else{
+                it.code()
             }
         }
-
 
     override fun register(
         user: User,

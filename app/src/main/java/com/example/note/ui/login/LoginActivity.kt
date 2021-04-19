@@ -1,12 +1,12 @@
 package com.example.note.ui.login
 
-import android.app.Activity
 import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import com.example.note.R
 import com.example.note.databinding.ActivityLoginBinding
 import com.example.note.ui.base.BaseActivity
+import com.example.note.ui.forgotpassword.ForgotPasswordActivity
 import com.example.note.ui.main.MainActivity
 import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +31,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
     }
     private val forgotPasswordClick: View.OnClickListener by lazy {
         View.OnClickListener {
-
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
     }
 
@@ -45,7 +45,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
         viewModel.login.observe { resource ->
             when (resource) {
                 is Resource.Loading -> {
-
+                    binding.loginError.visibility = View.INVISIBLE
                 }
                 is Resource.Success -> {
                     val data: Intent = Intent(this, MainActivity::class.java).apply {
@@ -54,9 +54,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
                     startActivity(data)
                 }
                 is Resource.Error -> {
-
+                    binding.loginError.visibility = View.VISIBLE
+                    binding.loginError.setText(R.string.wrong_password)
                 }
             }
+        }
+        viewModel.internetError.observe{
+            binding.loginError.visibility = View.VISIBLE
+            binding.loginError.setText(R.string.no_internet)
         }
     }
 

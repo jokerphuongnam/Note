@@ -19,8 +19,7 @@
             android:gravity="center"
             android:text="@string/change_password"
             android:textAllCaps="false"
-            android:textColor="?attr/blackLightWhiteNightColor"
-            android:textSize="24sp" />
+            android:textColor="?attr/blackLightWhiteNightColor"/>
 
         <Button
             android:id="@+id/logout"
@@ -30,7 +29,6 @@
             android:gravity="center"
             android:text="@string/log_out"
             android:textAllCaps="false"
-            android:textColor="?attr/blackLightWhiteNightColor"
-            android:textSize="24sp" />
+            android:textColor="?attr/blackLightWhiteNightColor"/>
     </LinearLayout>
 </layout>

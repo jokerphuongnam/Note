@@ -33,13 +33,13 @@ abstract class AppBindsModules {
 
     //database
     @Binds
-    abstract fun getSettingLocal(local: LocalReference) : LocalReference
+    abstract fun getSettingLocal(local: LocalReference): LocalReference
 
     @Binds
     abstract fun getCurrentUser(local: DataStoreCurrentUserImpl): CurrentUser
 
     @Binds
-    abstract fun getNoteNetwork(network: NoteRetrofitServiceImpl):NoteNetwork
+    abstract fun getNoteNetwork(network: NoteRetrofitServiceImpl): NoteNetwork
 
     @Binds
     abstract fun getUserNetwork(network: UserRetrofitServiceImpl): UserNetwork
@@ -74,5 +74,8 @@ abstract class AppBindsModules {
     abstract fun getUserInfoUseCase(useCase: DefaultUserInfoUseCaseImpl): UserInfoUseCase
 
     @Binds
-    abstract fun getForgotPassword(useCase: DefaultForgotPasswordUseCaseImpl): ForgotPasswordUseCase
+    abstract fun getForgotPasswordUseCase(useCase: DefaultForgotPasswordUseCaseImpl): ForgotPasswordUseCase
+
+    @Binds
+    abstract fun getChangePasswordUseCase(useCase: DefaultChangePasswordUseCaseImpl): ChangePasswordUseCase
 }

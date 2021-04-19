@@ -32,7 +32,7 @@ interface UserRepository {
         newPassword: String
     ): Single<User>
 
-    fun forgotPassword(user: User): Single<User>
+    fun forgotPassword(username: String): Single<Int>
 
     fun register(
         user: User,

@@ -32,8 +32,7 @@ class LoginViewModel @Inject constructor(private val useCase: LoginUseCase) : Ba
         MutableLiveData<Resource<User>>()
     }
 
-    internal val login: MutableLiveData<Resource<User>>
-        get() = _login
+    internal val login: MutableLiveData<Resource<User>> get() = _login
 
     internal fun loginEmailPass(username: String, password: String) {
         _login.postValue(Resource.Loading())
@@ -48,11 +47,11 @@ class LoginViewModel @Inject constructor(private val useCase: LoginUseCase) : Ba
     }
 
     private fun loginError(t: Throwable) {
-        when(t){
-            is NoConnectivityException ->{
-                 internetError.postValue("")
+        when (t) {
+            is NoConnectivityException -> {
+                internetError.postValue("")
             }
-            else ->{
+            else -> {
                 _login.postValue(Resource.Error(t.message ?: ""))
             }
         }
