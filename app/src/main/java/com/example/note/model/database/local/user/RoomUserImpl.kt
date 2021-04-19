@@ -21,7 +21,7 @@ interface RoomUserImpl : UserLocal {
     override fun insertUser(users: User): Single<Long>
 
     @Update
-    override fun updateUsers(vararg users: User): Single<Int>
+    override fun updateUsers(vararg users: User)
 
     @Delete
     override fun deleteUsers(vararg users: User): Single<Int>

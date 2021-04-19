@@ -3,6 +3,7 @@ package com.example.note.model.database.network.user
 import com.example.note.model.database.domain.User
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 import javax.inject.Inject
@@ -21,26 +22,26 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         type: String,
         avatar: MultipartBody.Part?
     ): Single<Response<User>> = with(service) {
-        if (avatar != null) {
+        if (user.avatar != null) {
             register(
                 user.username,
                 password,
                 type,
-                avatar,
+                user.avatar!!,
                 user.fname,
                 user.lname,
                 user.birthDay
             )
         } else {
-            if (user.avatar != null) {
+            if (avatar != null) {
                 register(
-                    user.username,
-                    password,
-                    type,
-                    user.avatar!!,
-                    user.fname,
-                    user.lname,
-                    user.birthDay
+                    RequestBody.create(MultipartBody.FORM,user.username),
+                    RequestBody.create(MultipartBody.FORM,password),
+                    RequestBody.create(MultipartBody.FORM,type),
+                    avatar,
+                    RequestBody.create(MultipartBody.FORM,user.fname),
+                    RequestBody.create(MultipartBody.FORM,user.lname),
+                    RequestBody.create(MultipartBody.FORM,user.birthDay.toString())
                 )
             } else {
                 register(
@@ -57,22 +58,22 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
 
     override fun editProfile(user: User, avatar: MultipartBody.Part?): Single<Response<User>> =
         with(service) {
-            if (avatar != null) {
+            if (user.avatar != null) {
                 editProfile(
                     user.uid,
-                    avatar,
+                    user.avatar!!,
                     user.fname,
                     user.lname,
                     user.birthDay
                 )
             } else {
-                if (user.avatar != null) {
+                if (avatar != null) {
                     editProfile(
-                        user.uid,
-                        user.avatar!!,
-                        user.fname,
-                        user.lname,
-                        user.birthDay
+                        RequestBody.create(MultipartBody.FORM, user.uid.toString()),
+                        avatar,
+                        RequestBody.create(MultipartBody.FORM, user.fname),
+                        RequestBody.create(MultipartBody.FORM, user.lname),
+                        RequestBody.create(MultipartBody.FORM, user.birthDay.toString())
                     )
                 } else {
                     editProfile(
@@ -115,16 +116,15 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         fun forgotPassword(@Field("username") username: String): Single<Response<User>>
 
         @Multipart
-        @FormUrlEncoded
         @POST("register")
         fun register(
-            @Field("username") username: String,
-            @Field("password") password: String,
-            @Field("type") type: String,
-            @Part("avatar") avatar: MultipartBody.Part,
-            @Field("fname") firstName: String,
-            @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Long
+            @Part("username") username: RequestBody,
+            @Part("password") password: RequestBody,
+            @Part("type") type: RequestBody,
+            @Part avatar: MultipartBody.Part,
+            @Part("fname") firstName: RequestBody,
+            @Part("lname") lastName: RequestBody,
+            @Part("birthDay") birthDay: RequestBody
         ): Single<Response<User>>
 
         @FormUrlEncoded
@@ -151,18 +151,17 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         ): Single<Response<User>>
 
         @Multipart
-        @FormUrlEncoded
-        @PUT("register")
+        @PUT("editprofile")
         fun editProfile(
-            @Field("uid") uid: Long,
-            @Part("avatar") avatar: MultipartBody.Part,
-            @Field("fname") firstName: String,
-            @Field("lname") lastName: String,
-            @Field("birthDay") birthDay: Long
+            @Field("uid") uid: RequestBody,
+            @Part avatar: MultipartBody.Part,
+            @Field("fname") firstName: RequestBody,
+            @Field("lname") lastName: RequestBody,
+            @Field("birthDay") birthDay: RequestBody
         ): Single<Response<User>>
 
         @FormUrlEncoded
-        @PUT("register")
+        @PUT("editprofile")
         fun editProfile(
             @Field("uid") uid: Long,
             @Field("avatar") avatar: String,
@@ -172,7 +171,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         ): Single<Response<User>>
 
         @FormUrlEncoded
-        @PUT("register")
+        @PUT("editprofile")
         fun editProfile(
             @Field("uid") uid: Long,
             @Field("fname") firstName: String,

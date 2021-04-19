@@ -1,5 +1,6 @@
 package com.example.note.model.repository
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -45,7 +46,7 @@ class NoteRxMediator @Inject constructor(
         }
 
     /**
-     * check time if outdated time refresh else skip init refresh
+     * check time if outdated time or note empty refresh else skip init refresh
      * */
     override fun initializeSingle(): Single<InitializeAction> =
         local.findLastUpdateSingle(_uid).map { firstNote ->
@@ -165,6 +166,7 @@ class NoteRxMediator @Inject constructor(
                 local.insertTasks(*note.tasks.toTypedArray())
             }
         }
+        Log.e("ccccccccccccc", data.toString())
         return data
     }
 

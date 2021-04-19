@@ -72,4 +72,7 @@ abstract class AppBindsModules {
 
     @Binds
     abstract fun getUserInfoUseCase(useCase: DefaultUserInfoUseCaseImpl): UserInfoUseCase
+
+    @Binds
+    abstract fun getForgotPassword(useCase: DefaultForgotPasswordUseCaseImpl): ForgotPasswordUseCase
 }

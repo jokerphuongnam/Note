@@ -14,7 +14,7 @@ interface UserLocal {
 
     fun insertUser(users: User): Single<Long>
 
-    fun updateUsers(vararg users: User): Single<Int>
+    fun updateUsers(vararg users: User)
 
     fun deleteUsers(vararg users: User): Single<Int>
 

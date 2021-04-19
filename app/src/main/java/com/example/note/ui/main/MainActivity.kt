@@ -53,6 +53,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+
+    fun cancelSubscription(): PublishSubject<Int> = cancelPublisher
+
+    /**
+     * when onNext Publisher will send broadcast for fragment subscribe
+     * */
+    private val cancelPublisher: PublishSubject<Int> by lazy {
+        PublishSubject.create()
+    }
+
     /**
      * communication between activity and fragment (acton refresh when from note activity back main activity)
      * */
@@ -183,7 +193,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         @Suppress("DEPRECATION")
         Handler().postDelayed({
             if (isRun) {
-                binding.viewSwitch.showNext()
+                binding.viewSwitch.displayedChild = 1
                 initAction(viewModel.uidLiveData.value!!)
             } else {
                 isRun = true
@@ -218,6 +228,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                     object : ViewPager2.OnPageChangeCallback() {
                         override fun onPageSelected(position: Int) {
                             tabs.selectTab(tabs.getTabAt(position))
+                            when(position){
+                                0->{
+
+                                }
+                                1->{
+                                    cancelPublisher.onNext(0)
+                                }
+                                2 ->{
+
+                                }
+                            }
                             if (position != 0) {
                                 changeUIWhenSelectedOtherTab()
                             } else {
@@ -296,7 +317,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             reference.isSplashy = true
             splashyScreen()
         } else {
-            binding.viewSwitch.showNext()
+            binding.viewSwitch.displayedChild = 1
         }
         viewModel.uidLiveData.observe { resource ->
             initAction(resource)

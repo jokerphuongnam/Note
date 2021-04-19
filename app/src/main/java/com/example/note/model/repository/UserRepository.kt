@@ -24,7 +24,7 @@ interface UserRepository {
 
     fun deleteUser(uid: Long): Single<Int>
 
-    fun editUser(user: User, avatar: MultipartBody.Part? = null): Single<User>
+    fun editProfile(user: User, avatar: MultipartBody.Part? = null): Single<User>
 
     fun changePassword(
         user: User,

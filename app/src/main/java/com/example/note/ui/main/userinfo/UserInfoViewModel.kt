@@ -3,10 +3,12 @@ package com.example.note.ui.main.userinfo
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
 import com.example.note.model.usecase.UserInfoUseCase
+import com.example.note.throwable.NotFoundException
 import com.example.note.ui.base.BaseViewModel
 import com.example.note.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
@@ -18,12 +20,11 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
         CompositeDisposable()
     }
 
-    private var disposable: Disposable? = null
+    private var userDisposable: Disposable? = null
 
     private val _userLiveData: MutableLiveData<Resource<User>> by lazy {
         MutableLiveData<Resource<User>>()
     }
-
 
     /**
      * when call userLiveData for set observer will action
@@ -36,14 +37,14 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
     internal val userLiveData: MutableLiveData<Resource<User>>
         get() {
             _userLiveData.postValue(Resource.Loading())
-            disposable?.let {
+            userDisposable?.let {
                 it.dispose()
                 composite.remove(it)
             }
-            disposable = useCase.getUser()
+            userDisposable = useCase.getUser()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ user ->
-                    currentUser = user
+                    currentUser.postValue(user)
                     _userLiveData.postValue(Resource.Success(user))
                 }, { throwable ->
                     throwable.printStackTrace()
@@ -51,16 +52,61 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
                 }, {
                     _userLiveData.postValue(Resource.Success())
                 })
-            composite.add(disposable)
+            composite.add(userDisposable)
             return _userLiveData
         }
 
-    internal lateinit var currentUser: User
+    internal val currentUser: MutableLiveData<User> by lazy { MutableLiveData<User>() }
 
-    internal lateinit var editUser: User
+    internal lateinit var tempUser: User
+
+    private var editProfileDisposable: Disposable? = null
+
+    private val _resultEditUserLiveData: MutableLiveData<Resource<User>> by lazy { MutableLiveData<Resource<User>>() }
+
+    internal val resultEditUserLiveData: MutableLiveData<Resource<User>> get() = _resultEditUserLiveData
+
+    private val resultEditUserObservable: SingleObserver<User> by lazy {
+        object : SingleObserver<User> {
+            override fun onSubscribe(d: Disposable) {
+                _userLiveData.postValue(Resource.Loading())
+                editProfileDisposable?.let {
+                    it.dispose()
+                    composite.remove(it)
+                }
+                editProfileDisposable = d
+                composite.add(userDisposable)
+            }
+
+            override fun onSuccess(user: User) {
+                _resultEditUserLiveData.postValue(Resource.Success(user))
+                editProfileDisposable?.let {
+                    it.dispose()
+                    composite.remove(it)
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                when (e) {
+                    is NotFoundException -> {
+                        internetError.postValue("")
+                    }
+                    else -> {
+                        _resultEditUserLiveData.postValue(Resource.Error(""))
+                    }
+                }
+                editProfileDisposable?.let {
+                    it.dispose()
+                    composite.remove(it)
+                }
+            }
+
+        }
+    }
 
     internal fun editProfile() {
-        _userLiveData.postValue(Resource.Loading())
+        useCase.editProfile(currentUser.value!!).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(resultEditUserObservable)
     }
 
     override fun onCleared() {

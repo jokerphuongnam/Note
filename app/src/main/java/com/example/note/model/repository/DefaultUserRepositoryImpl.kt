@@ -54,13 +54,13 @@ class DefaultUserRepositoryImpl @Inject constructor(
         local.findSingleUser(it!!)
     }
 
-    override fun editUser(user: User, avatar: MultipartBody.Part?): Single<User> =
+    override fun editProfile(user: User, avatar: MultipartBody.Part?): Single<User> =
         network.editProfile(user, avatar).map {
             if (it.code().equals(CONFLICT)) {
                 throw WrongException()
             } else {
                 local.updateUsers(user)
-                it.body()
+                it.body()!!
             }
         }
 
