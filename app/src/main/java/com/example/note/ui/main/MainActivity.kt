@@ -228,14 +228,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                     object : ViewPager2.OnPageChangeCallback() {
                         override fun onPageSelected(position: Int) {
                             tabs.selectTab(tabs.getTabAt(position))
-                            when(position){
-                                0->{
+                            when (position) {
+                                0 -> {
 
                                 }
-                                1->{
+                                1 -> {
                                     cancelPublisher.onNext(0)
                                 }
-                                2 ->{
+                                2 -> {
 
                                 }
                             }
@@ -285,14 +285,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         startActivity(loginIntent)
     }
 
-    override fun onBackPressed() {
-        if (isEmptyFragmentBackStack) {
-            twiceTimeToExit()
-        } else {
-            supportFragmentManager.popBackStack()
-        }
-    }
-
     /**
      * observer for get image avatar
      * */
@@ -321,6 +313,24 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
         viewModel.uidLiveData.observe { resource ->
             initAction(resource)
+        }
+    }
+
+    /**
+     * when back if in editable user info will cancel this mode
+     * if have fragment in back stack will close this fragment
+     * else will click first time will warning if continues click will kill app
+     * */
+    override fun onBackPressed() {
+        if (
+            binding.mainViewPager.currentItem == 1
+            && (mainAdapter.getItem(1) as UserInfoFragment).isEditUse
+        ) {
+            cancelPublisher.onNext(0)
+        } else if (isEmptyFragmentBackStack) {
+            twiceTimeToExit()
+        } else {
+            mainAdapter.fragmentActivity.supportFragmentManager.popBackStack()
         }
     }
 

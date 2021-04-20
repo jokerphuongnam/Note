@@ -12,7 +12,6 @@ import com.example.note.ui.base.BaseFragment
 import com.example.note.ui.main.MainActivity
 import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
 
@@ -21,6 +20,11 @@ import java.util.*
 class UserInfoFragment :
     BaseFragment<FragmentUserInfoBinding, UserInfoViewModel>(R.layout.fragment_user_info) {
 
+    /**
+     * when finish edit user
+     * if success will update for user
+     * if error will update temp user
+     * */
     private val editProfileObserver: Observer<Resource<User>> by lazy {
         Observer<Resource<User>> { resource ->
             when (resource) {
@@ -37,7 +41,11 @@ class UserInfoFragment :
         }
     }
 
-    private val userObservable: Observer<Resource<User>> by lazy {
+    /**
+     * after set user will set loading for avatar
+     * if can't load image empty
+     * */
+    private val userObserver: Observer<Resource<User>> by lazy {
         Observer<Resource<User>> { resource ->
             when (resource) {
                 is Resource.Loading -> {
@@ -54,16 +62,15 @@ class UserInfoFragment :
         }
     }
 
+    /**
+     * when click ok button of date picker dialog will set time for birthday of user
+     * */
     private val datePickerCallBack: DatePickerDialog.OnDateSetListener by lazy {
         DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, monthOfYear)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
             viewModel.currentUser.value!!.birthDay = calendar.timeInMillis
             viewModel.currentUser.postValue(viewModel.currentUser.value!!)
         }
@@ -71,19 +78,19 @@ class UserInfoFragment :
 
     private val datePicker: DatePickerDialog
         get() {
-            val date = Date(viewModel.currentUser.value!!.birthDay)
+            val calendar: Calendar = viewModel.currentUser.value!!.birthDayCalendar
             return DatePickerDialog(
                 requireContext(),
                 datePickerCallBack,
-                date.year + 1900,
-                date.month,
-                date.day
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
             )
         }
 
     private fun initAction() {
         binding.apply {
-            viewModel.currentUser.observe{
+            viewModel.currentUser.observe {
                 user = it
             }
             edit.setOnClickListener {
@@ -132,7 +139,7 @@ class UserInfoFragment :
     }
 
     override fun createUI() {
-        viewModel.userLiveData.observe(userObservable)
+        viewModel.userLiveData.observe(userObserver)
         viewModel.resultEditUserLiveData.observe(editProfileObserver)
     }
 
@@ -144,11 +151,11 @@ class UserInfoFragment :
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        when(context){
-            is MainActivity ->{
+        when (context) {
+            is MainActivity -> {
                 context.cancelSubscription().subscribe {
                     binding.apply {
-                        if(userControl.displayedChild == 1){
+                        if (userControl.displayedChild == 1) {
                             cancelBtn.performClick()
                         }
                     }
@@ -156,6 +163,8 @@ class UserInfoFragment :
             }
         }
     }
+
+    val isEditUse: Boolean get() = binding.userControl.displayedChild == 1
 
     override val viewModel: UserInfoViewModel by viewModels()
 }

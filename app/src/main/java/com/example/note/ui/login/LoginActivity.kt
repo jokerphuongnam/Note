@@ -8,6 +8,7 @@ import com.example.note.databinding.ActivityLoginBinding
 import com.example.note.ui.base.BaseActivity
 import com.example.note.ui.forgotpassword.ForgotPasswordActivity
 import com.example.note.ui.main.MainActivity
+import com.example.note.ui.register.RegisterActivity
 import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +27,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
     }
     private val registerClick: View.OnClickListener by lazy {
         View.OnClickListener {
-
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
     private val forgotPasswordClick: View.OnClickListener by lazy {
@@ -49,7 +50,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
                 }
                 is Resource.Success -> {
                     val data: Intent = Intent(this, MainActivity::class.java).apply {
-                        putExtra(UID,resource.data?.uid)
+                        putExtra(UID, resource.data?.uid)
                     }
                     startActivity(data)
                 }
@@ -59,7 +60,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
                 }
             }
         }
-        viewModel.internetError.observe{
+        viewModel.internetError.observe {
             binding.loginError.visibility = View.VISIBLE
             binding.loginError.setText(R.string.no_internet)
         }
@@ -75,7 +76,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(R.layou
 
     override val viewModel: LoginViewModel by viewModels()
 
-    companion object{
+    companion object {
         const val UID: String = "uid"
     }
 }

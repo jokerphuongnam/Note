@@ -43,7 +43,9 @@
                 android:hint="@string/email"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textCursorDrawable="@drawable/color_cursor" />
+                android:textCursorDrawable="@drawable/color_cursor" >
+                <requestFocus/>
+            </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

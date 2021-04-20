@@ -32,6 +32,16 @@
     <string name="cannot_change_password">Cannot change password</string>
     <string name="detail_forgot_password">if you forgot your password, you can enter email, we will send a form to you to recover your password</string>
     <string name="recover_password">Recover password</string>
-    <string name="recovert_password_success">Please check your email</string>
+    <string name="recover_password_success">Please check your email</string>
     <string name="email">Email</string>
+    <string name="detail_register">If you don\'t have account for note you can register an account</string>
+    <string name="first_name_not_dot">First name</string>
+    <string name="last_name_not_dot">Last name</string>
+    <string name="email_need_at">Email need @</string>
+    <string name="email_empty">Email cannot be empty</string>
+    <string name="email_length">Email need than 6 word</string>
+    <string name="email_only_alphabet">Email only alphabet</string>
+    <string name="name_empty">Name be empty</string>
+    <string name="name_length">Name cannot be empty</string>
+    <string name="the_email_same">The email same</string>
 </resources>

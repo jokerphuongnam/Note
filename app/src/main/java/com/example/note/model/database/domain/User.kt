@@ -15,21 +15,32 @@ data class User(
     @ColumnInfo(name = "birth_day") var birthDay: Long
 ) {
 
+
+    constructor() : this(0, "", "", null, 916678800000)
+
     @ColumnInfo(name = "username")
     var username: String = ""
 
-    val birthDayString: String
+    val birthDayCalendar: Calendar
         get() {
             val calendar: Calendar = Calendar.getInstance()
-            calendar.add(
-                Calendar.MILLISECOND,
-                TimeZone.getDefault().getOffset(calendar.timeInMillis)
-            )
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            return sdf.format(Date(birthDay))
+            calendar.timeZone = TimeZone.getDefault()
+            calendar.timeInMillis = birthDay
+            return calendar
         }
 
-    fun clone(): User{
+    var birthDayString: String
+        get() {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            return sdf.format(birthDayCalendar.time)
+        }
+        set(value) {
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            dateFormat.timeZone = TimeZone.getDefault()
+            birthDay = dateFormat.parse(value)!!.time
+        }
+
+    fun clone(): User {
         val user = this.copy()
         user.username = username
         return user

@@ -8,8 +8,8 @@ import com.example.note.R
 import com.example.note.databinding.ActivityChangePasswordBinding
 import com.example.note.throwable.NoErrorException
 import com.example.note.ui.base.BaseActivity
-import com.example.note.utils.InputUtils
 import com.example.note.utils.Resource
+import com.example.note.utils.passwordRegex
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,7 +63,7 @@ class ChangePasswordActivity :
                         is Resource.Success -> {
                             try {
                                 newPassword.error =
-                                    getString(InputUtils.passwordRegex(newPassword.editText!!.text.toString()))
+                                    getString(newPassword.editText!!.text.toString().passwordRegex())
                             } catch (e: NoErrorException) {
                                 viewModel.changePassword(
                                     oldPassword.editText!!.text.toString(),
@@ -118,6 +118,10 @@ class ChangePasswordActivity :
         setUpObserver()
     }
 
+    /**
+     * this event will enable the back
+     * function to the button on press
+     * */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {

@@ -23,7 +23,7 @@ class ForgotPasswordActivity: BaseActivity<ActivityForgotPassowdBinding, ForgotP
                 }
                 is Resource.Success -> {
                     finish()
-                    showToast(getString(R.string.recovert_password_success))
+                    showToast(getString(R.string.recover_password_success))
                 }
                 is Resource.Error -> {
                     binding.recoverPasswordError.visibility = View.VISIBLE
