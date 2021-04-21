@@ -16,20 +16,16 @@ abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes override val layoutRes: Int
 ) : Fragment(), BaseUI<BD, VM> {
 
-    override val binding: BD by lazy {
-        DataBindingUtil.inflate<BD>(layoutInflater, layoutRes, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }
-    }
-
-    private var container: ViewGroup? = null
+    override var _binding: BD? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        this.container = container
+        _binding = DataBindingUtil.inflate<BD>(layoutInflater, layoutRes, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
         return binding.root
     }
 
@@ -79,6 +75,11 @@ abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(
             }
             replace(resFragment, fragment, tag)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 //    override val actionBarSize: Int by lazy {

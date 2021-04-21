@@ -53,6 +53,10 @@ class RegisterActivity :
             )
         }
 
+    /**
+     * check regex for user
+     * if satisfy will to catch
+     * */
     private val registerAction: View.OnClickListener by lazy {
         View.OnClickListener {
             binding.apply {

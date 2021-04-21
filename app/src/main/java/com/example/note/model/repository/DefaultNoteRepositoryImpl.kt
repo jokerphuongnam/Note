@@ -130,37 +130,17 @@ class DefaultNoteRepositoryImpl @Inject constructor(
             val pagingSourceFactory = {
                 local.findNotesPaging(uid)
             }
-            if (count == 0L || count < PAGE_SIZE + 2 * PREFECT_DISTANCE) {
-                /**
-                 * if count == 0 no need divide
-                 * no need to pass max into the pager
-                 *
-                 * if count != 0 need divide
-                 * max page need than page size * prefect distance
-                 * */
-                Pager(
-                    config = PagingConfig(
-                        pageSize = PAGE_SIZE,
-                        enablePlaceholders = true,
-                        prefetchDistance = PREFECT_DISTANCE,
-                        initialLoadSize = INIT_LOAD_SIZE
-                    ),
-                    remoteMediator = remoteMediator,
-                    pagingSourceFactory = pagingSourceFactory
-                )
-            } else {
-                Pager(
-                    config = PagingConfig(
-                        pageSize = PAGE_SIZE,
-                        enablePlaceholders = true,
-                        maxSize = count.toInt(),
-                        prefetchDistance = PREFECT_DISTANCE,
-                        initialLoadSize = INIT_LOAD_SIZE
-                    ),
-                    remoteMediator = remoteMediator,
-                    pagingSourceFactory = pagingSourceFactory
-                )
-            }.flowable
+            Pager(
+                config = PagingConfig(
+                    pageSize = PAGE_SIZE,
+                    enablePlaceholders = true,
+                    maxSize = count.toInt(),
+                    prefetchDistance = PREFECT_DISTANCE,
+                    initialLoadSize = INIT_LOAD_SIZE
+                ),
+                remoteMediator = remoteMediator,
+                pagingSourceFactory = pagingSourceFactory
+            ).flowable
         }
 
     override fun getSingleNote(uid: Long): Single<Note> = local.findSingleNote(uid)

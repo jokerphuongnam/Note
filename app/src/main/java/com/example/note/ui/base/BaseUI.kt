@@ -18,7 +18,8 @@ import com.google.android.material.appbar.AppBarLayout
 interface BaseUI<BD : ViewDataBinding, VM : BaseViewModel> {
     val layoutRes: Int
     fun createUI()
-    val binding: BD
+    var _binding: BD?
+    val binding: BD get() = _binding!!
     val viewModel: VM
 
     fun <T> LiveData<T>.observe(observer: Observer<T>) {

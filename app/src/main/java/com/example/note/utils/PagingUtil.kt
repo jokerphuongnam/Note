@@ -3,7 +3,7 @@ package com.example.note.utils
 object PagingUtil {
     const val UNKNOWN_PAGE: Int = -1
     const val PREPEND: Int = -2
-    const val INIT_LOAD_SIZE: Int = 15
+    const val INIT_LOAD_SIZE: Int = 20
     const val PAGE_SIZE:Int = 10
     const val PREFECT_DISTANCE:Int = 5
     const val OUT_DATE_TIME_STAMP:Long = 120000000

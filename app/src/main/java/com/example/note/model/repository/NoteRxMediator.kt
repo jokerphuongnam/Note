@@ -1,6 +1,5 @@
 package com.example.note.model.repository
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -59,6 +58,8 @@ class NoteRxMediator @Inject constructor(
             InitializeAction.LAUNCH_INITIAL_REFRESH
         }
 
+    private var page: Int = 0
+
     override fun loadSingle(
         loadType: LoadType,
         state: PagingState<Int, Note>
@@ -70,10 +71,11 @@ class NoteRxMediator @Inject constructor(
          * */
         when (loadType) {
             REFRESH -> {
+                page = 0
                 PagingUtil.UNKNOWN_PAGE
             }
             APPEND -> {
-                getRemoteKeyForLastItem(state)
+                page++
             }
             PREPEND -> {
                 PagingUtil.PREPEND
@@ -92,7 +94,6 @@ class NoteRxMediator @Inject constructor(
             firstNote == null ||
             System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP
         ) {
-            local.clearNotesByUserId(_uid)
             REFRESH
         } else {
             loadType
@@ -116,13 +117,13 @@ class NoteRxMediator @Inject constructor(
                 /**
                  * if end >= maxCount - 1: end page user will don't need fetch more notes
                  * */
-                MediatorResult.Success(end >= maxCount - 1)
+                MediatorResult.Success(endOfPaginationReached  = end >= maxCount)
             }.onErrorReturn {
-                it.printStackTrace()
                 MediatorResult.Error(it)
             }
         }
     }.onErrorReturn {
+        it.printStackTrace()
         MediatorResult.Error(it)
     }
 
@@ -144,6 +145,7 @@ class NoteRxMediator @Inject constructor(
         database.runInTransaction {
             when (loadType) {
                 REFRESH -> {
+                    local.clearNotesByUserId(_uid)
                     /**
                      * with first time fetch data from api will save current time to be the
                      * next times find data by room will check data outdated will update note for current user
@@ -166,7 +168,6 @@ class NoteRxMediator @Inject constructor(
                 local.insertTasks(*note.tasks.toTypedArray())
             }
         }
-        Log.e("ccccccccccccc", data.toString())
         return data
     }
 

@@ -15,15 +15,13 @@ abstract class BaseActivity<BD : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes override val layoutRes: Int
 ) : AppCompatActivity(), BaseUI<BD, VM> {
 
-    override val binding: BD by lazy {
-        DataBindingUtil.setContentView<BD>(this, layoutRes).apply {
-            lifecycleOwner = this@BaseActivity
-        }
-    }
+    override var _binding: BD? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding
+        _binding = DataBindingUtil.setContentView<BD>(this, layoutRes).apply {
+            lifecycleOwner = this@BaseActivity
+        }
         createUI()
     }
 
