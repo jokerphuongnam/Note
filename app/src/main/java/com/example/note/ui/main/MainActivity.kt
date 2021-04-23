@@ -27,6 +27,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.rbddevs.splashy.Splashy
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -38,6 +39,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     @Inject
     lateinit var reference: Reference
 
+    private val composite: CompositeDisposable by lazy {
+        CompositeDisposable()
+    }
+
     /**
      * set adapter for view pager 2
      * */
@@ -46,9 +51,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             addFragment(NotesFragment())
             addFragment(UserInfoFragment())
             addFragment(SettingFragment()) {
-                logoutSubscription().subscribe {
+                val logoutDisposable = logoutSubscription().subscribe {
                     logout()
                 }
+                composite.add(logoutDisposable)
             }
         }
     }
@@ -335,4 +341,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     override val viewModel: MainViewModel by viewModels()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        composite.dispose()
+    }
 }
