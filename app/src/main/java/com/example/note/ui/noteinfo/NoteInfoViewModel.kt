@@ -72,6 +72,7 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
                 }
             })
         } else {
+            isUpdate = true
             useCase.getNote(nid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(initNote)

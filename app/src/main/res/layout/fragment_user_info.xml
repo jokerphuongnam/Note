@@ -66,6 +66,8 @@
             android:layout_margin="16dp"
             android:layout_weight="1"
             android:enabled="false"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             app:image_from_url="@{user.avatar}"
             app:srcCompat="@drawable/color_cursor" />
 

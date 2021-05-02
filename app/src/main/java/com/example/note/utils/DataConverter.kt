@@ -19,7 +19,12 @@ class DataConverter {
 
     @TypeConverter
     fun toStrings(json: String): List<String> =
-        listOf(gson.fromJson(json, object : TypeToken<List<String>>() {}.type))
+        if (json == "[]") emptyList() else listOf(
+            gson.fromJson(
+                json,
+                object : TypeToken<List<String>>() {}.type
+            )
+        )
 
     @TypeConverter
     fun fromDates(dates: List<Long>): String =
@@ -27,5 +32,10 @@ class DataConverter {
 
     @TypeConverter
     fun toDates(json: String): List<Long> =
-        listOf(gson.fromJson(json, object : TypeToken<List<Long>>() {}.type))
+        if (json == "[]") emptyList() else listOf(
+            gson.fromJson(
+                json,
+                object : TypeToken<List<Long>>() {}.type
+            )
+        )
 }

@@ -71,8 +71,8 @@ class NoteRxMediator @Inject constructor(
          * */
         when (loadType) {
             REFRESH -> {
-                page = 0
-                PagingUtil.UNKNOWN_PAGE
+                page = PagingUtil.UNKNOWN_PAGE
+                page
             }
             APPEND -> {
                 page++
@@ -82,32 +82,33 @@ class NoteRxMediator @Inject constructor(
             }
         }
     }.flatMap { page ->
-        val firstNote = state.firstItemOrNull()
-        /**
-         * - page == null: user want to refresh notes
-         * - firstNote == null: note not cached yet
-         * - System.currentTimeMillis() - firstNote.modifiedAt: data outdated
-         * will delete all data of user in cache and set type = refresh to save extend time
-         * */
-        val type = if (
-            page == PagingUtil.UNKNOWN_PAGE ||
-            firstNote == null ||
-            System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP
-        ) {
-            REFRESH
-        } else {
-            loadType
-        }
         if (page == PagingUtil.PREPEND) {
             /**
              * can't need prepend
              * */
             Single.just<MediatorResult>(MediatorResult.Success(false))
         } else {
+            val firstNote = state.firstItemOrNull()
+
+            /**
+             * - page == null: user want to refresh notes
+             * - firstNote == null: note not cached yet
+             * - System.currentTimeMillis() - firstNote.modifiedAt: data outdated
+             * will delete all data of user in cache and set type = refresh to save extend time
+             * */
+            val type = if (
+                page == PagingUtil.UNKNOWN_PAGE ||
+                firstNote == null ||
+                System.currentTimeMillis() - firstNote.modifiedAt >= OUT_DATE_TIME_STAMP
+            ) {
+                REFRESH
+            } else {
+                loadType
+            }
             /**
              * convert page to index of first, and element page
              * */
-            val (start, end) = PagingUtil.pageToItem(page ?: 1)
+            val (start, end) = PagingUtil.pageToItem(if (page == PagingUtil.UNKNOWN_PAGE) 0 else page)
             network.fetchNotes(_uid, start, end).map { notes ->
                 /**
                  * fetch notes and insert to cache depend type and if can't fetch notes in api will create emptyList
@@ -117,7 +118,7 @@ class NoteRxMediator @Inject constructor(
                 /**
                  * if end >= maxCount - 1: end page user will don't need fetch more notes
                  * */
-                MediatorResult.Success(endOfPaginationReached  = end >= maxCount)
+                MediatorResult.Success(endOfPaginationReached = _maxCount <= end)
             }.onErrorReturn {
                 MediatorResult.Error(it)
             }
@@ -145,15 +146,15 @@ class NoteRxMediator @Inject constructor(
         database.runInTransaction {
             when (loadType) {
                 REFRESH -> {
-                    local.clearNotesByUserId(_uid)
                     /**
                      * with first time fetch data from api will save current time to be the
                      * next times find data by room will check data outdated will update note for current user
                      * */
+                    local.clearNotesByUserId(_uid)
                     local.insertNotesWithTime(data)
                 }
                 APPEND -> {
-                    local.insertNotes(data)
+                    local.insertNotesWithTime(data)
                 }
                 PREPEND -> {
                     /**
@@ -170,16 +171,4 @@ class NoteRxMediator @Inject constructor(
         }
         return data
     }
-
-    /**
-     * get last key
-     * */
-    private fun getRemoteKeyForLastItem(state: PagingState<Int, Note>): Int? =
-        state.pages.last().nextKey
-
-    /**
-     * get first key
-     * */
-    private fun getRemoteKeyForFirstItem(state: PagingState<Int, Note>): Int =
-        state.pages.first().prevKey ?: 1
 }

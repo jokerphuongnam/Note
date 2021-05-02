@@ -1,14 +1,12 @@
 package com.example.note.model.database.network.note
 
 import com.example.note.model.database.domain.Note
-import com.example.note.model.database.domain.Task
-import com.google.gson.*
+import com.google.gson.GsonBuilder
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 
@@ -75,9 +73,9 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
         @DELETE("delete/{uid}/{nid}")
         fun deleteNote(@Path("uid") uid: Long,@Path("nid") nid: Long): Single<Response<Note>>
 
-        @GET("notes")
+        @GET("notes/{uid}")
         fun fetchNotes(
-            @Query("uid") uid: Long,
+            @Path("uid") uid: Long,
             @Query("start") start: Long,
             @Query("amount") amount: Long
         ): Single<Response<MutableList<Note>>>

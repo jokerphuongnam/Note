@@ -1,5 +1,6 @@
 package com.example.note.model.usecase
 
+import android.util.Log
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.repository.NoteRepository
@@ -29,6 +30,17 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
         isUpdate: Boolean
     ): Single<Int> = userRepository.currentUser().flatMap { uid ->
         note.userId = uid
+        val emptyTasks: MutableList<Task> = mutableListOf()
+        note.tasks.forEach {task ->
+            if(task.detail.trim().isEmpty()){
+                Log.e("cccccccccccccccccc", task.toString())
+                emptyTasks.add(task)
+            }
+        }
+        emptyTasks.forEach { emptyTask->
+            note.tasks.remove(emptyTask)
+        }
+        Log.e("cccccccccccccccccc", note.toString())
         if (isUpdate) {
             noteRepository.updateNote(note)
         } else {

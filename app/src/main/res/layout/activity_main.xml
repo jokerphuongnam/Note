@@ -74,6 +74,8 @@
                             android:padding="8dp"
                             android:background="@drawable/circle_background"
                             android:tint="?attr/tintColor"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
                             app:image_from_url="@{user.avatar}"
                             app:is_circle="@{true}"/>
                     </LinearLayout>
