@@ -7,8 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class MainFragmentAdapter(
     internal val fragmentActivity: FragmentActivity,
     private val fragments: MutableList<Fragment> = mutableListOf()
-) :
-    FragmentStateAdapter(fragmentActivity) {
+) : FragmentStateAdapter(fragmentActivity) {
 
     /**
      * fragment add fragment and configure for this fragment by fragment will action 1 time
