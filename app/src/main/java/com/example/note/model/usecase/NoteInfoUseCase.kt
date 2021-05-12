@@ -1,5 +1,6 @@
 package com.example.note.model.usecase
 
+import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.repository.NoteRepository
@@ -22,8 +23,8 @@ interface NoteInfoUseCase {
 
     fun saveNote(
         note: Note,
-        images: List<MultipartBody.Part>? = null,
-        sounds: List<MultipartBody.Part>? = null,
+        images: List<Uri>,
+        sounds: List<Uri>,
         isUpdate: Boolean = false
     ): Single<Int>
 

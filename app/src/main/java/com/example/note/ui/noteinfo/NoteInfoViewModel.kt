@@ -1,5 +1,6 @@
 package com.example.note.ui.noteinfo
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
@@ -38,7 +39,6 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
             }
         }
     }
-
 
     private val initNote: SingleObserver<Note> by lazy {
         object : SingleObserver<Note> {
@@ -85,8 +85,11 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
     internal val newNote: MutableLiveData<Note>
         get() = _newNote
 
+    internal val images: MutableList<Uri> by lazy { mutableListOf() }
+    internal val sounds: MutableList<Uri> by lazy { mutableListOf() }
+
     internal fun saveNote() {
-        useCase.saveNote(_newNote.value!!, isUpdate = isUpdate)
+        useCase.saveNote(_newNote.value!!, images, sounds, isUpdate = isUpdate)
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(singleObserver)
     }

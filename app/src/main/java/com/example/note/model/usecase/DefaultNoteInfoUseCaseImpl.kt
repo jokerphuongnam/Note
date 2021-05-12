@@ -1,18 +1,23 @@
 package com.example.note.model.usecase
 
-import android.util.Log
+import android.content.Context
+import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.repository.NoteRepository
 import com.example.note.model.repository.UserRepository
+import com.example.note.ui.noteinfo.toMultipartBodies
+import com.example.note.utils.RetrofitUtils.IMAGES
+import com.example.note.utils.RetrofitUtils.SOUNDS
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class DefaultNoteInfoUseCaseImpl @Inject constructor(
     override val noteRepository: NoteRepository,
-    override val userRepository: UserRepository
+    override val userRepository: UserRepository,
+    @ApplicationContext private val context: Context
 ) : NoteInfoUseCase {
     override fun deleteTask(vararg tasks: Task): Single<Int> =
         noteRepository.deleteTask(*tasks).subscribeOn(Schedulers.io())
@@ -25,26 +30,32 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
 
     override fun saveNote(
         note: Note,
-        images: List<MultipartBody.Part>?,
-        sounds: List<MultipartBody.Part>?,
+        images: List<Uri>,
+        sounds: List<Uri>,
         isUpdate: Boolean
     ): Single<Int> = userRepository.currentUser().flatMap { uid ->
         note.userId = uid
         val emptyTasks: MutableList<Task> = mutableListOf()
         note.tasks.forEach {task ->
             if(task.detail.trim().isEmpty()){
-                Log.e("cccccccccccccccccc", task.toString())
                 emptyTasks.add(task)
             }
         }
         emptyTasks.forEach { emptyTask->
             note.tasks.remove(emptyTask)
         }
-        Log.e("cccccccccccccccccc", note.toString())
         if (isUpdate) {
-            noteRepository.updateNote(note)
+            noteRepository.updateNote(
+                note,
+                images.toMultipartBodies(IMAGES, context),
+                sounds.toMultipartBodies(SOUNDS, context)
+            )
         } else {
-            noteRepository.insertNote(note)
+            noteRepository.insertNote(
+                note,
+                images.toMultipartBodies(IMAGES, context),
+                sounds.toMultipartBodies(SOUNDS, context)
+            )
         }
     }.subscribeOn(Schedulers.io())
 

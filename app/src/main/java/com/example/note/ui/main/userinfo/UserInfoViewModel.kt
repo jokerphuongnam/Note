@@ -104,8 +104,14 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
         }
     }
 
+    private var isChangeImage = false
+
     internal fun editProfile() {
-        useCase.editProfile(currentUser.value!!).observeOn(AndroidSchedulers.mainThread())
+        if (isChangeImage) {
+            useCase.editProfile(currentUser.value!!)
+        } else {
+            useCase.editProfile(currentUser.value!!)
+        }.observeOn(AndroidSchedulers.mainThread())
             .subscribe(resultEditUserObservable)
     }
 

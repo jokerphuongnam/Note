@@ -16,4 +16,8 @@ object RetrofitUtils {
 
     fun getImageUrl(imageName: String) = "${BASE_URL}image/$imageName"
     fun getSoundUrl(soundName: String) = "${BASE_URL}sound/$soundName"
+
+    const val IMAGES: String = "images"
+    const val SOUNDS: String = "sounds"
+    const val AVATAR: String = "avatar"
 }

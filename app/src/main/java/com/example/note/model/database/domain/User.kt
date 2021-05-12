@@ -14,8 +14,6 @@ data class User(
     @ColumnInfo(name = "avatar") var avatar: String?,
     @ColumnInfo(name = "birth_day") var birthDay: Long
 ) {
-
-
     constructor() : this(0, "", "", null, 916678800000)
 
     @ColumnInfo(name = "username")
