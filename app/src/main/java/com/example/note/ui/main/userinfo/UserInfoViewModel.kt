@@ -1,5 +1,6 @@
 package com.example.note.ui.main.userinfo
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
 import com.example.note.model.usecase.UserInfoUseCase
@@ -104,14 +105,10 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
         }
     }
 
-    private var isChangeImage = false
+    private var avatar: Uri? = null
 
     internal fun editProfile() {
-        if (isChangeImage) {
-            useCase.editProfile(currentUser.value!!)
-        } else {
-            useCase.editProfile(currentUser.value!!)
-        }.observeOn(AndroidSchedulers.mainThread())
+        useCase.editProfile(currentUser.value!!, avatar).observeOn(AndroidSchedulers.mainThread())
             .subscribe(resultEditUserObservable)
     }
 

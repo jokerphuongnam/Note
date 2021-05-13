@@ -1,4 +1,4 @@
-package com.example.note.model.database.local.note
+package com.example.note.model.database.local
 
 import androidx.paging.PagingSource
 import com.example.note.model.database.domain.Note

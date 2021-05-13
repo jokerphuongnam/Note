@@ -1,5 +1,6 @@
 package com.example.note.model.usecase
 
+import android.net.Uri
 import com.example.note.model.database.domain.User
 import com.example.note.model.repository.UserRepository
 import io.reactivex.rxjava3.core.Single
@@ -11,6 +12,6 @@ interface RegisterUseCase {
     fun register(
         user: User,
         password: String,
-        avatar: MultipartBody.Part? = null
+        avatar: Uri? = null
     ): Single<User>
 }

@@ -1,13 +1,13 @@
 package com.example.note.model.repository
 
+import android.net.Uri
 import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
-import com.example.note.model.database.local.user.CurrentUser
-import com.example.note.model.database.local.user.UserLocal
-import com.example.note.model.database.network.user.UserNetwork
+import com.example.note.model.database.local.CurrentUser
+import com.example.note.model.database.local.impl.UserLocal
+import com.example.note.model.database.network.UserNetwork
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import okhttp3.MultipartBody
 import javax.inject.Singleton
 
 @Singleton
@@ -24,7 +24,7 @@ interface UserRepository {
 
     fun deleteUser(uid: Long): Single<Int>
 
-    fun editProfile(user: User, avatar: MultipartBody.Part? = null): Single<User>
+    fun editProfile(user: User, avatar: Uri?): Single<User>
 
     fun changePassword(
         user: User,
@@ -38,7 +38,7 @@ interface UserRepository {
         user: User,
         password: String,
         type: String,
-        avatar: MultipartBody.Part? = null
+        avatar: Uri?
     ): Single<User>
 
     fun getUser(): Flowable<User>

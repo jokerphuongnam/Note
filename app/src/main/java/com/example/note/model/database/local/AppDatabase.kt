@@ -7,8 +7,8 @@ import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.database.domain.User
 import com.example.note.utils.DataConverter
-import com.example.note.model.database.local.note.RoomNoteImpl
-import com.example.note.model.database.local.user.RoomUserImpl
+import com.example.note.model.database.local.impl.RoomNoteImpl
+import com.example.note.model.database.local.impl.RoomUserImpl
 import com.example.note.utils.RoomConstrain.DB_VER
 import javax.inject.Singleton
 

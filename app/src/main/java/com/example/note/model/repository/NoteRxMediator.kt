@@ -8,8 +8,8 @@ import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxRemoteMediator
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.local.AppDatabase
-import com.example.note.model.database.local.note.NoteLocal
-import com.example.note.model.database.network.note.NoteNetwork
+import com.example.note.model.database.local.NoteLocal
+import com.example.note.model.database.network.NoteNetwork
 import com.example.note.utils.PagingUtil
 import com.example.note.utils.PagingUtil.OUT_DATE_TIME_STAMP
 import io.reactivex.rxjava3.core.Single

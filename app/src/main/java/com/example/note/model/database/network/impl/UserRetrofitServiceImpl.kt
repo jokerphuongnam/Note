@@ -1,6 +1,12 @@
-package com.example.note.model.database.network.user
+package com.example.note.model.database.network.impl
 
+import android.content.Context
+import android.net.Uri
 import com.example.note.model.database.domain.User
+import com.example.note.model.database.network.UserNetwork
+import com.example.note.ui.noteinfo.toMultipartBody
+import com.example.note.utils.RetrofitUtils.AVATAR
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -8,7 +14,10 @@ import retrofit2.Response
 import retrofit2.http.*
 import javax.inject.Inject
 
-class UserRetrofitServiceImpl @Inject constructor(private val service: Service) : UserNetwork {
+class UserRetrofitServiceImpl @Inject constructor(
+    private val service: Service,
+    @ApplicationContext private val context: Context
+) : UserNetwork {
 
     override fun login(
         username: String,
@@ -20,7 +29,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         user: User,
         password: String,
         type: String,
-        avatar: MultipartBody.Part?
+        avatar: Uri?
     ): Single<Response<User>> = with(service) {
         if (user.avatar != null) {
             register(
@@ -35,13 +44,13 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         } else {
             if (avatar != null) {
                 register(
-                    RequestBody.create(MultipartBody.FORM,user.username),
-                    RequestBody.create(MultipartBody.FORM,password),
-                    RequestBody.create(MultipartBody.FORM,type),
-                    avatar,
-                    RequestBody.create(MultipartBody.FORM,user.fname),
-                    RequestBody.create(MultipartBody.FORM,user.lname),
-                    RequestBody.create(MultipartBody.FORM,user.birthDay.toString())
+                    RequestBody.create(MultipartBody.FORM, user.username),
+                    RequestBody.create(MultipartBody.FORM, password),
+                    RequestBody.create(MultipartBody.FORM, type),
+                    avatar.toMultipartBody(AVATAR, context),
+                    RequestBody.create(MultipartBody.FORM, user.fname),
+                    RequestBody.create(MultipartBody.FORM, user.lname),
+                    RequestBody.create(MultipartBody.FORM, user.birthDay.toString())
                 )
             } else {
                 register(
@@ -56,7 +65,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
         }
     }
 
-    override fun editProfile(user: User, avatar: MultipartBody.Part?): Single<Response<User>> =
+    override fun editProfile(user: User, avatar: Uri?): Single<Response<User>> =
         with(service) {
             if (user.avatar != null) {
                 editProfile(
@@ -70,7 +79,7 @@ class UserRetrofitServiceImpl @Inject constructor(private val service: Service) 
                 if (avatar != null) {
                     editProfile(
                         RequestBody.create(MultipartBody.FORM, user.uid.toString()),
-                        avatar,
+                        avatar.toMultipartBody(AVATAR, context),
                         RequestBody.create(MultipartBody.FORM, user.fname),
                         RequestBody.create(MultipartBody.FORM, user.lname),
                         RequestBody.create(MultipartBody.FORM, user.birthDay.toString())

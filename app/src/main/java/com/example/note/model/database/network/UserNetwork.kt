@@ -1,8 +1,8 @@
-package com.example.note.model.database.network.user
+package com.example.note.model.database.network
 
+import android.net.Uri
 import com.example.note.model.database.domain.User
 import io.reactivex.rxjava3.core.Single
-import okhttp3.MultipartBody
 import retrofit2.Response
 import javax.inject.Singleton
 
@@ -14,10 +14,10 @@ interface UserNetwork {
         user: User,
         password: String,
         type: String,
-        avatar: MultipartBody.Part? = null
+        avatar: Uri? = null
     ): Single<Response<User>>
 
-    fun editProfile(user: User, avatar: MultipartBody.Part? = null): Single<Response<User>>
+    fun editProfile(user: User, avatar: Uri? = null): Single<Response<User>>
 
     fun changePassword(
         username: String,

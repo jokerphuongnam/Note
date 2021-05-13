@@ -1,4 +1,4 @@
-package com.example.note.model.database.local.user
+package com.example.note.model.database.local
 
 import androidx.datastore.preferences.core.Preferences
 import io.reactivex.rxjava3.core.Completable

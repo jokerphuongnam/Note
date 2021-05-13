@@ -4,8 +4,8 @@ import androidx.annotation.WorkerThread
 import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxPagingSource
 import com.example.note.model.database.domain.Note
-import com.example.note.model.database.local.user.CurrentUser
-import com.example.note.model.database.network.note.NoteNetwork
+import com.example.note.model.database.local.CurrentUser
+import com.example.note.model.database.network.NoteNetwork
 import com.example.note.utils.PagingUtil
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject

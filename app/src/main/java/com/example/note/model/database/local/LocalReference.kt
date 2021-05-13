@@ -1,4 +1,4 @@
-package com.example.note.model.database.local.reference
+package com.example.note.model.database.local
 
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single

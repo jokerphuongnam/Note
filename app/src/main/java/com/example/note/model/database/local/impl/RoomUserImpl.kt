@@ -1,12 +1,11 @@
-package com.example.note.model.database.local.user
+package com.example.note.model.database.local.impl
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import com.example.note.model.database.domain.User
-import io.reactivex.rxjava3.core.Completable
+import com.example.note.model.database.local.impl.UserLocal
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
 
 @Dao
 interface RoomUserImpl : UserLocal {

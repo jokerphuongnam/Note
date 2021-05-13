@@ -1,5 +1,6 @@
-package com.example.note.model.database.network.note
+package com.example.note.model.database.network
 
+import android.net.Uri
 import com.example.note.model.database.domain.Note
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
@@ -11,14 +12,14 @@ import javax.inject.Singleton
 interface NoteNetwork {
     fun insertNote(
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<Uri>,
+        sounds: List<Uri>
     ): Single<Response<Note>>
 
     fun updateNote(
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<Uri>,
+        sounds: List<Uri>
     ): Single<Response<Note>>
 
     fun deleteNote(

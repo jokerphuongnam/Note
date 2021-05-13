@@ -7,11 +7,11 @@ import androidx.datastore.rxjava3.RxDataStore
 import androidx.room.Room
 import com.example.note.model.database.domain.Reference
 import com.example.note.model.database.local.AppDatabase
-import com.example.note.model.database.local.note.NoteLocal
-import com.example.note.model.database.local.user.UserLocal
+import com.example.note.model.database.local.NoteLocal
+import com.example.note.model.database.local.impl.UserLocal
 import com.example.note.model.database.network.NetworkConnectionInterceptor
-import com.example.note.model.database.network.note.NoteRetrofitServiceImpl
-import com.example.note.model.database.network.user.UserRetrofitServiceImpl
+import com.example.note.model.database.network.impl.NoteRetrofitServiceImpl
+import com.example.note.model.database.network.impl.UserRetrofitServiceImpl
 import com.example.note.utils.DataStoreConstrain.DATA_STORE_NAME
 import com.example.note.utils.RetrofitUtils.BASE_URL
 import com.example.note.utils.RoomConstrain.DB_NAME

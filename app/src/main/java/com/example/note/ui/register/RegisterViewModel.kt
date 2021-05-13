@@ -1,5 +1,6 @@
 package com.example.note.ui.register
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
 import com.example.note.model.usecase.RegisterUseCase
@@ -53,7 +54,9 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    internal fun register(password: String, avatar: MultipartBody.Part? = null) {
+    private var avatar: Uri? = null
+
+    internal fun register(password: String) {
         useCase.register(currentUser.value!!, password, avatar).observeOn(AndroidSchedulers.mainThread())
             .subscribe(registerObserver)
     }

@@ -1,10 +1,11 @@
-package com.example.note.model.database.local.note
+package com.example.note.model.database.local.impl
 
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.database.domain.supportquery.NoteWithTasks
+import com.example.note.model.database.local.NoteLocal
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 

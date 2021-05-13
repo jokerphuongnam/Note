@@ -1,23 +1,27 @@
-package com.example.note.model.repository
+package com.example.note.model.repository.impl
 
+import android.content.Context
+import android.net.Uri
 import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
-import com.example.note.model.database.local.user.CurrentUser
-import com.example.note.model.database.local.user.UserLocal
-import com.example.note.model.database.network.user.UserNetwork
+import com.example.note.model.database.local.CurrentUser
+import com.example.note.model.database.local.impl.UserLocal
+import com.example.note.model.database.network.UserNetwork
+import com.example.note.model.repository.UserRepository
 import com.example.note.throwable.NotFoundException
 import com.example.note.throwable.WrongException
 import com.example.note.utils.RetrofitUtils.CONFLICT
 import com.example.note.utils.RetrofitUtils.NOT_FOUND
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class DefaultUserRepositoryImpl @Inject constructor(
     override val local: UserLocal,
     override val network: UserNetwork,
-    override val currentUser: CurrentUser
+    override val currentUser: CurrentUser,
+    @ApplicationContext private val context: Context
 ) : UserRepository {
     /**
      * get current user single flowable first time or first time is complete will return error
@@ -54,7 +58,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
         local.findSingleUser(it!!)
     }
 
-    override fun editProfile(user: User, avatar: MultipartBody.Part?): Single<User> =
+    override fun editProfile(user: User, avatar: Uri?): Single<User> =
         network.editProfile(user, avatar).map {
             if (it.code().equals(CONFLICT)) {
                 throw WrongException()
@@ -89,7 +93,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
         user: User,
         password: String,
         type: String,
-        avatar: MultipartBody.Part?
+        avatar: Uri?
     ): Single<User> = network.register(user, password, type, avatar).map {
         if (it.code().equals(CONFLICT)) {
             throw WrongException()

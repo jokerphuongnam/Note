@@ -1,4 +1,4 @@
-package com.example.note.model.database.local.user
+package com.example.note.model.database.local.impl
 
 import com.example.note.model.database.domain.User
 import io.reactivex.rxjava3.core.Completable

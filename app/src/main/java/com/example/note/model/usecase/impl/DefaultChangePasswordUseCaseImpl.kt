@@ -1,7 +1,8 @@
-package com.example.note.model.usecase
+package com.example.note.model.usecase.impl
 
 import com.example.note.model.database.domain.User
 import com.example.note.model.repository.UserRepository
+import com.example.note.model.usecase.ChangePasswordUseCase
 import com.example.note.utils.RetrofitUtils
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers

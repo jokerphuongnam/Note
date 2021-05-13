@@ -1,7 +1,14 @@
-package com.example.note.model.database.network.note
+package com.example.note.model.database.network.impl
 
+import android.content.Context
+import android.net.Uri
 import com.example.note.model.database.domain.Note
+import com.example.note.model.database.network.NoteNetwork
+import com.example.note.ui.noteinfo.toMultipartBodies
+import com.example.note.utils.RetrofitUtils.IMAGES
+import com.example.note.utils.RetrofitUtils.SOUNDS
 import com.google.gson.GsonBuilder
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -10,12 +17,15 @@ import retrofit2.http.*
 import javax.inject.Inject
 
 
-class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) : NoteNetwork {
+class NoteRetrofitServiceImpl @Inject constructor(
+    private val service: Service,
+    @ApplicationContext private val context: Context
+) : NoteNetwork {
 
     override fun insertNote(
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<Uri>,
+        sounds: List<Uri>
     ): Single<Response<Note>> {
         val gson = GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
@@ -27,16 +37,16 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
             RequestBody.create(MultipartBody.FORM, note.detail),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tags)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tasks)),
-            images,
-            sounds,
+            images.toMultipartBodies(IMAGES, context),
+            sounds.toMultipartBodies(SOUNDS, context),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.noticeTimes))
         )
     }
 
     override fun updateNote(
         note: Note,
-        images: List<MultipartBody.Part>,
-        sounds: List<MultipartBody.Part>
+        images: List<Uri>,
+        sounds: List<Uri>
     ): Single<Response<Note>> {
         val gson = GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
@@ -49,9 +59,9 @@ class NoteRetrofitServiceImpl @Inject constructor(private val service: Service) 
             RequestBody.create(MultipartBody.FORM, note.detail),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tags)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tasks)),
-            images,
+            images.toMultipartBodies(IMAGES, context),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.images)),
-            sounds,
+            sounds.toMultipartBodies(SOUNDS, context),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.sounds)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.noticeTimes)),
         )

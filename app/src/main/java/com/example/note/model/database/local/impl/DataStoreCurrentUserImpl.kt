@@ -1,8 +1,9 @@
-package com.example.note.model.database.local.user
+package com.example.note.model.database.local.impl
 
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.rxjava3.RxDataStore
+import com.example.note.model.database.local.CurrentUser
 import com.example.note.utils.DataStoreConstrain
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single

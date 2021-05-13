@@ -1,5 +1,6 @@
-package com.example.note.model.repository
+package com.example.note.model.repository.impl
 
+import android.net.Uri
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -7,8 +8,10 @@ import androidx.paging.PagingData
 import androidx.paging.rxjava3.flowable
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
-import com.example.note.model.database.local.note.NoteLocal
-import com.example.note.model.database.network.note.NoteNetwork
+import com.example.note.model.database.local.NoteLocal
+import com.example.note.model.database.network.NoteNetwork
+import com.example.note.model.repository.NoteRepository
+import com.example.note.model.repository.NoteRxMediator
 import com.example.note.throwable.CannotSaveException
 import com.example.note.throwable.NotFoundException
 import com.example.note.utils.PagingUtil.INIT_LOAD_SIZE
@@ -20,7 +23,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -39,10 +41,10 @@ class DefaultNoteRepositoryImpl @Inject constructor(
      * */
     override fun insertNote(
         note: Note,
-        images: List<MultipartBody.Part>?,
-        sounds: List<MultipartBody.Part>?
+        images: List<Uri>,
+        sounds: List<Uri>
     ): Single<Int> =
-        network.insertNote(note, images ?: emptyList(), sounds ?: emptyList()).flatMap {
+        network.insertNote(note, images, sounds).flatMap {
             if (it.code() == INTERNAL_SERVER_ERROR) {
                 throw CannotSaveException()
             } else {
@@ -69,10 +71,10 @@ class DefaultNoteRepositoryImpl @Inject constructor(
      * */
     override fun updateNote(
         note: Note,
-        images: List<MultipartBody.Part>?,
-        sounds: List<MultipartBody.Part>?
+        images: List<Uri>,
+        sounds: List<Uri>
     ): Single<Int> =
-        network.updateNote(note, images ?: emptyList(), sounds ?: emptyList()).flatMap {
+        network.updateNote(note, images, sounds).flatMap {
             if (it.code() == INTERNAL_SERVER_ERROR) {
                 throw CannotSaveException()
             } else {
