@@ -1,5 +1,6 @@
 package com.example.note.model.repository
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
@@ -18,8 +19,8 @@ interface NoteRepository {
 
     fun insertNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>
+        images: List<Bitmap>,
+        sounds: List<Bitmap>
     ): Single<Int>
 
     fun insertTasks(
@@ -28,8 +29,8 @@ interface NoteRepository {
 
     fun updateNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>
+        images: List<Bitmap>,
+        sounds: List<Bitmap>
     ): Single<Int>
 
     fun updateTask(

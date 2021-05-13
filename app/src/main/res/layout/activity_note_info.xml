@@ -10,23 +10,24 @@
             type="com.example.note.model.database.domain.Note" />
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:context=".ui.noteinfo.NoteInfoActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/add_tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme" />
-        <ScrollView
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent" />
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.noteinfo.NoteInfoActivity"
-            android:background="?attr/whiteLightBlackNightColor">
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:background="?attr/whiteLightBlackNightColor"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -34,6 +35,7 @@
                 app:cardCornerRadius="16dp"
                 android:layout_margin="16dp"
                 android:backgroundTint="@color/primary_color">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -79,8 +81,7 @@
                         android:id="@+id/tasks"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
+                        android:padding="16dp"
                         android:overScrollMode="never" />
 
                     <FrameLayout
@@ -90,6 +91,7 @@
                         android:layout_marginStart="64dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="64dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@drawable/doter"
                         android:orientation="horizontal"
                         android:focusable="true"
@@ -121,8 +123,26 @@
                                 android:textSize="18sp" />
                         </LinearLayout>
                     </FrameLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/images"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        android:visibility="gone"
+                        android:padding="16dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-        </ScrollView>
-    </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/tab_wrap"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:background="?attr/whiteLightGreyNightColor"
+            app:buttonGravity="bottom|top"
+            app:fabAlignmentMode="end"
+            app:menu="@menu/note_control" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -1,5 +1,6 @@
 package com.example.note.model.database.network
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.example.note.model.database.domain.User
 import io.reactivex.rxjava3.core.Single
@@ -14,10 +15,10 @@ interface UserNetwork {
         user: User,
         password: String,
         type: String,
-        avatar: Uri? = null
+        avatar: Bitmap? = null
     ): Single<Response<User>>
 
-    fun editProfile(user: User, avatar: Uri? = null): Single<Response<User>>
+    fun editProfile(user: User, avatar: Bitmap? = null): Single<Response<User>>
 
     fun changePassword(
         username: String,

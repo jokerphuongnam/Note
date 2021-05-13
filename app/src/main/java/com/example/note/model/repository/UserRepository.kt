@@ -1,6 +1,6 @@
 package com.example.note.model.repository
 
-import android.net.Uri
+import android.graphics.Bitmap
 import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
 import com.example.note.model.database.local.CurrentUser
@@ -24,7 +24,7 @@ interface UserRepository {
 
     fun deleteUser(uid: Long): Single<Int>
 
-    fun editProfile(user: User, avatar: Uri?): Single<User>
+    fun editProfile(user: User, avatar: Bitmap?): Single<User>
 
     fun changePassword(
         user: User,
@@ -38,7 +38,7 @@ interface UserRepository {
         user: User,
         password: String,
         type: String,
-        avatar: Uri?
+        avatar: Bitmap?
     ): Single<User>
 
     fun getUser(): Flowable<User>

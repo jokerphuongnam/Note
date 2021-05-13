@@ -1,6 +1,6 @@
 package com.example.note.ui.register
 
-import android.net.Uri
+import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
 import com.example.note.model.usecase.RegisterUseCase
@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +53,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private var avatar: Uri? = null
+    private var avatar: Bitmap? = null
 
     internal fun register(password: String) {
         useCase.register(currentUser.value!!, password, avatar).observeOn(AndroidSchedulers.mainThread())

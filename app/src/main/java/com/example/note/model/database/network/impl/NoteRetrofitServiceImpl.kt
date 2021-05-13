@@ -1,10 +1,11 @@
 package com.example.note.model.database.network.impl
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.network.NoteNetwork
-import com.example.note.ui.noteinfo.toMultipartBodies
+import com.example.note.utils.toMultipartBodies
 import com.example.note.utils.RetrofitUtils.IMAGES
 import com.example.note.utils.RetrofitUtils.SOUNDS
 import com.google.gson.GsonBuilder
@@ -18,14 +19,13 @@ import javax.inject.Inject
 
 
 class NoteRetrofitServiceImpl @Inject constructor(
-    private val service: Service,
-    @ApplicationContext private val context: Context
+    private val service: Service
 ) : NoteNetwork {
 
     override fun insertNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>
+        images: List<Bitmap>,
+        sounds: List<Bitmap>
     ): Single<Response<Note>> {
         val gson = GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
@@ -37,16 +37,16 @@ class NoteRetrofitServiceImpl @Inject constructor(
             RequestBody.create(MultipartBody.FORM, note.detail),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tags)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tasks)),
-            images.toMultipartBodies(IMAGES, context),
-            sounds.toMultipartBodies(SOUNDS, context),
+            images.toMultipartBodies(IMAGES),
+            sounds.toMultipartBodies(SOUNDS),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.noticeTimes))
         )
     }
 
     override fun updateNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>
+        images: List<Bitmap>,
+        sounds: List<Bitmap>
     ): Single<Response<Note>> {
         val gson = GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
@@ -59,9 +59,9 @@ class NoteRetrofitServiceImpl @Inject constructor(
             RequestBody.create(MultipartBody.FORM, note.detail),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tags)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tasks)),
-            images.toMultipartBodies(IMAGES, context),
+            images.toMultipartBodies(IMAGES),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.images)),
-            sounds.toMultipartBodies(SOUNDS, context),
+            sounds.toMultipartBodies(SOUNDS),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.sounds)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.noticeTimes)),
         )

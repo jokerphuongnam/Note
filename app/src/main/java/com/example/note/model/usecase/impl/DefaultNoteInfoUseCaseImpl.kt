@@ -1,5 +1,6 @@
 package com.example.note.model.usecase.impl
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
@@ -25,8 +26,8 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
 
     override fun saveNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>,
+        images: List<Bitmap>,
+        sounds: List<Bitmap>,
         isUpdate: Boolean
     ): Single<Int> = userRepository.currentUser().flatMap { uid ->
         note.userId = uid

@@ -1,5 +1,6 @@
 package com.example.note.ui.noteinfo
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.Note
@@ -85,8 +86,8 @@ class NoteInfoViewModel @Inject constructor(private val useCase: NoteInfoUseCase
     internal val newNote: MutableLiveData<Note>
         get() = _newNote
 
-    internal val images: MutableList<Uri> by lazy { mutableListOf() }
-    internal val sounds: MutableList<Uri> by lazy { mutableListOf() }
+    internal val images: MutableList<Bitmap> by lazy { mutableListOf() }
+    internal val sounds: MutableList<Bitmap> by lazy { mutableListOf() }
 
     internal fun saveNote() {
         useCase.saveNote(_newNote.value!!, images, sounds, isUpdate = isUpdate)

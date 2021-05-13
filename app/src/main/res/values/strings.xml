@@ -44,4 +44,8 @@
     <string name="name_empty">Name be empty</string>
     <string name="name_length">Name cannot be empty</string>
     <string name="the_email_same">The email same</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="take_photo_by_camera">Take photo by camera</string>
+    <string name="choose_image">Choose image</string>
 </resources>

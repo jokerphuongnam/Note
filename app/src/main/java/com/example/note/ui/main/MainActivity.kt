@@ -311,14 +311,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     override fun createUI() {
+        viewModel.uidLiveData.observe { resource ->
+            initAction(resource)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
         if (!reference.isSplashy) {
             reference.isSplashy = true
             splashyScreen()
         } else {
             binding.viewSwitch.displayedChild = 1
-        }
-        viewModel.uidLiveData.observe { resource ->
-            initAction(resource)
         }
     }
 

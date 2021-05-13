@@ -1,5 +1,6 @@
 package com.example.note.model.repository.impl
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -41,8 +42,8 @@ class DefaultNoteRepositoryImpl @Inject constructor(
      * */
     override fun insertNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>
+        images: List<Bitmap>,
+        sounds: List<Bitmap>
     ): Single<Int> =
         network.insertNote(note, images, sounds).flatMap {
             if (it.code() == INTERNAL_SERVER_ERROR) {
@@ -71,8 +72,8 @@ class DefaultNoteRepositoryImpl @Inject constructor(
      * */
     override fun updateNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>
+        images: List<Bitmap>,
+        sounds: List<Bitmap>
     ): Single<Int> =
         network.updateNote(note, images, sounds).flatMap {
             if (it.code() == INTERNAL_SERVER_ERROR) {

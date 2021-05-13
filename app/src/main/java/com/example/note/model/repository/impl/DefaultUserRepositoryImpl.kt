@@ -1,7 +1,7 @@
 package com.example.note.model.repository.impl
 
 import android.content.Context
-import android.net.Uri
+import android.graphics.Bitmap
 import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
 import com.example.note.model.database.local.CurrentUser
@@ -58,7 +58,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
         local.findSingleUser(it!!)
     }
 
-    override fun editProfile(user: User, avatar: Uri?): Single<User> =
+    override fun editProfile(user: User, avatar: Bitmap?): Single<User> =
         network.editProfile(user, avatar).map {
             if (it.code().equals(CONFLICT)) {
                 throw WrongException()
@@ -93,7 +93,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
         user: User,
         password: String,
         type: String,
-        avatar: Uri?
+        avatar: Bitmap?
     ): Single<User> = network.register(user, password, type, avatar).map {
         if (it.code().equals(CONFLICT)) {
             throw WrongException()

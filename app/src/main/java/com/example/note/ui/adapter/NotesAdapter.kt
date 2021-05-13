@@ -39,6 +39,10 @@ class NotesAdapter(private val itemClick: (Note) -> Unit, private val longClick:
                         PopupMenu(context, it).apply {
                             setOnMenuItemClickListener {item ->
                                 when (item.itemId) {
+                                    R.id.edit -> {
+                                        itemClick(note)
+                                        true
+                                    }
                                     R.id.delete -> {
                                         longClick(note)
                                         true
@@ -46,7 +50,7 @@ class NotesAdapter(private val itemClick: (Note) -> Unit, private val longClick:
                                     else -> false
                                 }
                             }
-                            inflate(R.menu.note)
+                            inflate(R.menu.note_item_control)
                             show()
                         }
                         true

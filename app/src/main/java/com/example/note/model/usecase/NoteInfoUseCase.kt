@@ -1,5 +1,6 @@
 package com.example.note.model.usecase
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
@@ -23,8 +24,8 @@ interface NoteInfoUseCase {
 
     fun saveNote(
         note: Note,
-        images: List<Uri>,
-        sounds: List<Uri>,
+        images: List<Bitmap>,
+        sounds: List<Bitmap>,
         isUpdate: Boolean = false
     ): Single<Int>
 

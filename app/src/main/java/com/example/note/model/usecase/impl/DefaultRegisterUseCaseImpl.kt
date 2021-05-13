@@ -1,6 +1,6 @@
 package com.example.note.model.usecase.impl
 
-import android.net.Uri
+import android.graphics.Bitmap
 import com.example.note.model.database.domain.User
 import com.example.note.model.repository.UserRepository
 import com.example.note.model.usecase.RegisterUseCase
@@ -12,6 +12,6 @@ import javax.inject.Inject
 class DefaultRegisterUseCaseImpl @Inject constructor(
     override val userRepository: UserRepository
 ) : RegisterUseCase {
-    override fun register(user: User, password: String, avatar: Uri?): Single<User> =
+    override fun register(user: User, password: String, avatar: Bitmap?): Single<User> =
         userRepository.register(user, password, EMAIL_PASS, avatar).subscribeOn(Schedulers.io())
 }

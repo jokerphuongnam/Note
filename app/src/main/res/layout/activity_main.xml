@@ -148,7 +148,7 @@
                 android:gravity="center|start"
                 app:fabAlignmentMode="end"
                 app:fabAnimationMode="slide"
-                app:menu="@menu/main" />
+                app:menu="@menu/main_control" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </ViewSwitcher>
 </layout>

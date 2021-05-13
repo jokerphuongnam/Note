@@ -1,7 +1,7 @@
 package com.example.note.model.usecase.impl
 
 import android.content.Context
-import android.net.Uri
+import android.graphics.Bitmap
 import com.example.note.model.database.domain.User
 import com.example.note.model.repository.UserRepository
 import com.example.note.model.usecase.UserInfoUseCase
@@ -18,6 +18,6 @@ class DefaultUserInfoUseCaseImpl @Inject constructor(
 
     override fun getUser(): Flowable<User> = userRepository.getUser().subscribeOn(Schedulers.io())
 
-    override fun editProfile(user: User, avatar: Uri?): Single<User> =
+    override fun editProfile(user: User, avatar: Bitmap?): Single<User> =
         userRepository.editProfile(user, avatar).subscribeOn(Schedulers.io())
 }

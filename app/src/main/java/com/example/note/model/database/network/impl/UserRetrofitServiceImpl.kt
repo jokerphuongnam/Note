@@ -1,11 +1,11 @@
 package com.example.note.model.database.network.impl
 
 import android.content.Context
-import android.net.Uri
+import android.graphics.Bitmap
 import com.example.note.model.database.domain.User
 import com.example.note.model.database.network.UserNetwork
-import com.example.note.ui.noteinfo.toMultipartBody
 import com.example.note.utils.RetrofitUtils.AVATAR
+import com.example.note.utils.toMultipartBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
@@ -15,8 +15,7 @@ import retrofit2.http.*
 import javax.inject.Inject
 
 class UserRetrofitServiceImpl @Inject constructor(
-    private val service: Service,
-    @ApplicationContext private val context: Context
+    private val service: Service
 ) : UserNetwork {
 
     override fun login(
@@ -29,7 +28,7 @@ class UserRetrofitServiceImpl @Inject constructor(
         user: User,
         password: String,
         type: String,
-        avatar: Uri?
+        avatar: Bitmap?
     ): Single<Response<User>> = with(service) {
         if (user.avatar != null) {
             register(
@@ -47,7 +46,7 @@ class UserRetrofitServiceImpl @Inject constructor(
                     RequestBody.create(MultipartBody.FORM, user.username),
                     RequestBody.create(MultipartBody.FORM, password),
                     RequestBody.create(MultipartBody.FORM, type),
-                    avatar.toMultipartBody(AVATAR, context),
+                    avatar.toMultipartBody(AVATAR),
                     RequestBody.create(MultipartBody.FORM, user.fname),
                     RequestBody.create(MultipartBody.FORM, user.lname),
                     RequestBody.create(MultipartBody.FORM, user.birthDay.toString())
@@ -65,7 +64,7 @@ class UserRetrofitServiceImpl @Inject constructor(
         }
     }
 
-    override fun editProfile(user: User, avatar: Uri?): Single<Response<User>> =
+    override fun editProfile(user: User, avatar: Bitmap?): Single<Response<User>> =
         with(service) {
             if (user.avatar != null) {
                 editProfile(
@@ -79,7 +78,7 @@ class UserRetrofitServiceImpl @Inject constructor(
                 if (avatar != null) {
                     editProfile(
                         RequestBody.create(MultipartBody.FORM, user.uid.toString()),
-                        avatar.toMultipartBody(AVATAR, context),
+                        avatar.toMultipartBody(AVATAR),
                         RequestBody.create(MultipartBody.FORM, user.fname),
                         RequestBody.create(MultipartBody.FORM, user.lname),
                         RequestBody.create(MultipartBody.FORM, user.birthDay.toString())

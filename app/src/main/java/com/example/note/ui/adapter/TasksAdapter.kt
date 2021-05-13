@@ -21,18 +21,6 @@ class TasksAdapter(private val deleteCallBack: (Task) -> Unit) :
         holder.bind(getItem(position))
     }
 
-    companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<Task> by lazy {
-            object : DiffUtil.ItemCallback<Task>() {
-                override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean =
-                    oldItem.taskId == newItem.taskId
-
-                override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean =
-                    oldItem.detail.trim().equals(newItem.detail.trim(), ignoreCase = true)
-            }
-        }
-    }
-
     class TaskViewHolder private constructor(
         private val binding: ItemTaskBinding,
         private val deleteCallBack: (Task) -> Unit
@@ -60,6 +48,18 @@ class TasksAdapter(private val deleteCallBack: (Task) -> Unit) :
                 ),
                 deleteCallBack
             )
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<Task> by lazy {
+            object : DiffUtil.ItemCallback<Task>() {
+                override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean =
+                    oldItem.taskId == newItem.taskId
+
+                override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean =
+                    oldItem.detail.trim().equals(newItem.detail.trim(), ignoreCase = true)
+            }
         }
     }
 }

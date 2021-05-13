@@ -1,6 +1,6 @@
 package com.example.note.ui.main.userinfo
 
-import android.net.Uri
+import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.User
 import com.example.note.model.usecase.UserInfoUseCase
@@ -105,7 +105,7 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
         }
     }
 
-    private var avatar: Uri? = null
+    private var avatar: Bitmap? = null
 
     internal fun editProfile() {
         useCase.editProfile(currentUser.value!!, avatar).observeOn(AndroidSchedulers.mainThread())
