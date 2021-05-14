@@ -1,7 +1,6 @@
 package com.example.note.model.repository
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.paging.PagingData
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task

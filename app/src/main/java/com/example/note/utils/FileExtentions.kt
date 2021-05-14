@@ -1,9 +1,6 @@
 package com.example.note.utils
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
-import android.provider.MediaStore
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

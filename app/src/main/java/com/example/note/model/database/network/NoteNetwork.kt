@@ -1,12 +1,9 @@
 package com.example.note.model.database.network
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.example.note.model.database.domain.Note
 import io.reactivex.rxjava3.core.Single
-import okhttp3.MultipartBody
 import retrofit2.Response
-import java.util.*
 import javax.inject.Singleton
 
 @Singleton

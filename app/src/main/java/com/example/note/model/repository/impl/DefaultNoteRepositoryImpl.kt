@@ -1,7 +1,6 @@
 package com.example.note.model.repository.impl
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -133,17 +132,30 @@ class DefaultNoteRepositoryImpl @Inject constructor(
             val pagingSourceFactory = {
                 local.findNotesPaging(uid)
             }
-            Pager(
-                config = PagingConfig(
-                    pageSize = PAGE_SIZE,
-                    enablePlaceholders = true,
-                    maxSize = count.toInt(),
-                    prefetchDistance = PREFECT_DISTANCE,
-                    initialLoadSize = INIT_LOAD_SIZE
-                ),
-                remoteMediator = remoteMediator,
-                pagingSourceFactory = pagingSourceFactory
-            ).flowable
+            if (count < 2 * PREFECT_DISTANCE) {
+                Pager(
+                    config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = true,
+                        prefetchDistance = PREFECT_DISTANCE,
+                        initialLoadSize = INIT_LOAD_SIZE
+                    ),
+                    remoteMediator = remoteMediator,
+                    pagingSourceFactory = pagingSourceFactory
+                )
+            } else {
+                Pager(
+                    config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = true,
+                        maxSize = count.toInt(),
+                        prefetchDistance = PREFECT_DISTANCE,
+                        initialLoadSize = INIT_LOAD_SIZE
+                    ),
+                    remoteMediator = remoteMediator,
+                    pagingSourceFactory = pagingSourceFactory
+                )
+            }.flowable
         }
 
     override fun getSingleNote(uid: Long): Single<Note> = local.findSingleNote(uid)

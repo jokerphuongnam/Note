@@ -3,6 +3,7 @@ package com.example.note.ui.main.notes
 import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.note.R
@@ -15,6 +16,7 @@ import com.example.note.ui.noteinfo.NoteInfoActivity
 import com.example.note.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -63,7 +65,9 @@ class NotesFragment : BaseFragment<FragmentNotesBinding, NotesViewModel>(R.layou
 
                     }
                     is Resource.Success -> {
-                        notesAdapter.submitData(lifecycle, resource.data!!)
+                        lifecycleScope.launch {
+                            notesAdapter.submitData(resource.data!!)
+                        }
                         binding.notesRefresh.isRefreshing = false
                     }
                     is Resource.Error -> {

@@ -1,7 +1,6 @@
 package com.example.note.model.database.network
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.example.note.model.database.domain.User
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
