@@ -1,7 +1,6 @@
 package com.example.note.model.usecase.impl
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task
 import com.example.note.model.repository.NoteRepository
@@ -32,12 +31,12 @@ class DefaultNoteInfoUseCaseImpl @Inject constructor(
     ): Single<Int> = userRepository.currentUser().flatMap { uid ->
         note.userId = uid
         val emptyTasks: MutableList<Task> = mutableListOf()
-        note.tasks.forEach {task ->
-            if(task.detail.trim().isEmpty()){
+        note.tasks.forEach { task ->
+            if (task.detail.trim().isEmpty()) {
                 emptyTasks.add(task)
             }
         }
-        emptyTasks.forEach { emptyTask->
+        emptyTasks.forEach { emptyTask ->
             note.tasks.remove(emptyTask)
         }
         if (isUpdate) {

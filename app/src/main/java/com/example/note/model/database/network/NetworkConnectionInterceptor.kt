@@ -20,7 +20,7 @@ class NetworkConnectionInterceptor @Inject constructor(@ApplicationContext priva
             // Throwing our custom exception 'NoConnectivityException'
         }
         val builder: Request.Builder = chain.request().newBuilder()
-        return chain.proceed(builder.build())
+         return chain.proceed(builder.build())
     }
 
 

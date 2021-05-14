@@ -37,6 +37,172 @@
                     android:layout_margin="16dp"
                     android:text="@string/detail_register" />
 
+                <ViewSwitcher
+                    android:id="@+id/image_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                            android:id="@+id/open_camera"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="64dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="@drawable/ripple"
+                            android:layout_marginStart="64dp"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/doter">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center">
+
+                                <ImageButton
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:adjustViewBounds="true"
+                                    android:background="@android:color/transparent"
+                                    android:drawableLeft="@drawable/ic_add"
+                                    android:gravity="center"
+                                    android:padding="8dp"
+                                    android:scaleType="fitCenter"
+                                    android:tint="?attr/blackWhite"
+                                    app:elevation="0dp"
+                                    app:rippleColor="@android:color/transparent"
+                                    app:srcCompat="@drawable/ic_photo_camera" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:text="@string/open_camera"
+                                    android:textColor="?attr/blackWhite"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+                        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+                        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                            android:id="@+id/add_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="64dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="64dp"
+                            android:background="@drawable/doter"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="@drawable/ripple">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center">
+
+                                <ImageButton
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:adjustViewBounds="true"
+                                    android:background="@android:color/transparent"
+                                    android:drawableLeft="@drawable/ic_add"
+                                    android:gravity="center"
+                                    android:padding="8dp"
+                                    android:scaleType="fitCenter"
+                                    android:tint="?attr/blackWhite"
+                                    app:elevation="0dp"
+                                    app:rippleColor="@android:color/transparent"
+                                    app:srcCompat="@drawable/ic_add" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:text="@string/choose_image"
+                                    android:textColor="?attr/blackWhite"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+                        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:layout_margin="16dp"
+                            app:cardCornerRadius="16dp">
+
+                            <ImageView
+                                android:id="@+id/image"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitCenter" />
+                        </androidx.cardview.widget.CardView>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="64dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="64dp"
+                            android:background="@drawable/doter">
+
+                            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                                android:id="@+id/delete_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ripple"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center">
+
+                                    <ImageButton
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:background="@android:color/transparent"
+                                        android:drawableLeft="@drawable/ic_add"
+                                        android:gravity="center"
+                                        android:padding="8dp"
+                                        android:scaleType="fitCenter"
+                                        android:adjustViewBounds="true"
+                                        android:tint="?attr/blackWhite"
+                                        app:elevation="0dp"
+                                        app:rippleColor="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_trash" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:text="@string/delete_image"
+                                        android:textColor="?attr/blackWhite"
+                                        android:textSize="18sp" />
+                                </LinearLayout>
+                            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+                </ViewSwitcher>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/email"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"

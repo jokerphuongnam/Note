@@ -65,7 +65,7 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:enabled="false"
+            android:clickable="false"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             app:image_from_url="@{user.avatar}"

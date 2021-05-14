@@ -1,7 +1,6 @@
 package com.example.note.ui.noteinfo
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.domain.Task

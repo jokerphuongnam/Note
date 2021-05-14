@@ -1,6 +1,5 @@
 package com.example.note.model.repository.impl
 
-import android.content.Context
 import android.graphics.Bitmap
 import androidx.datastore.preferences.core.Preferences
 import com.example.note.model.database.domain.User
@@ -12,7 +11,6 @@ import com.example.note.throwable.NotFoundException
 import com.example.note.throwable.WrongException
 import com.example.note.utils.RetrofitUtils.CONFLICT
 import com.example.note.utils.RetrofitUtils.NOT_FOUND
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -20,8 +18,7 @@ import javax.inject.Inject
 class DefaultUserRepositoryImpl @Inject constructor(
     override val local: UserLocal,
     override val network: UserNetwork,
-    override val currentUser: CurrentUser,
-    @ApplicationContext private val context: Context
+    override val currentUser: CurrentUser
 ) : UserRepository {
     /**
      * get current user single flowable first time or first time is complete will return error
@@ -63,7 +60,7 @@ class DefaultUserRepositoryImpl @Inject constructor(
             if (it.code().equals(CONFLICT)) {
                 throw WrongException()
             } else {
-                local.updateUsers(user)
+                local.updateUsers(it.body()!!)
                 it.body()!!
             }
         }

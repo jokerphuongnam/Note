@@ -28,8 +28,9 @@ class NoteInfoActivity :
     private val imageChoose: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let {uri->
-                    imageAdapter.addUri(uri, this).let {bitmap ->
+                result.data?.data?.let { uri ->
+                    MediaStore.Images.Media.getBitmap(contentResolver, uri).let { bitmap ->
+                        imageAdapter.addBitmap(bitmap)
                         viewModel.images.add(bitmap)
                     }
                 }

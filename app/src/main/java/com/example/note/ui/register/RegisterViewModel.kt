@@ -53,7 +53,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private var avatar: Bitmap? = null
+    internal var avatar: Bitmap? = null
 
     internal fun register(password: String) {
         useCase.register(currentUser.value!!, password, avatar).observeOn(AndroidSchedulers.mainThread())

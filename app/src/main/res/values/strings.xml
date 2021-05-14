@@ -48,4 +48,7 @@
     <string name="edit">Edit</string>
     <string name="take_photo_by_camera">Take photo by camera</string>
     <string name="choose_image">Choose image</string>
+    <string name="open_camera">Open camera</string>
+    <string name="delete_image">Delete image</string>
+    <string name="default_image">Default image</string>
 </resources>

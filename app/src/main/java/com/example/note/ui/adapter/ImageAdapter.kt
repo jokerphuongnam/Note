@@ -51,14 +51,6 @@ class ImageAdapter(
         submitList(_images)
     }
 
-    fun addUri(uri: Uri, context: Context): Bitmap {
-        val imageView = ImageView(context)
-        imageView.setImageURI(uri)
-        return (imageView.drawable as BitmapDrawable).bitmap.also {
-            addBitmap(it)
-        }
-    }
-
     fun addBitmap(bitmap: List<Bitmap>?) {
         (bitmap ?: mutableListOf()).map { ImageType.ImageBitMap(it) }.forEach {
             _images.add(it)

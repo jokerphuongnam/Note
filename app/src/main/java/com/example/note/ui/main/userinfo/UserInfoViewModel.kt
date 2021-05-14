@@ -105,7 +105,7 @@ class UserInfoViewModel @Inject constructor(private val useCase: UserInfoUseCase
         }
     }
 
-    private var avatar: Bitmap? = null
+    internal var avatar: Bitmap? = null
 
     internal fun editProfile() {
         useCase.editProfile(currentUser.value!!, avatar).observeOn(AndroidSchedulers.mainThread())

@@ -1,12 +1,10 @@
 package com.example.note.model.database.network.impl
 
-import android.content.Context
 import android.graphics.Bitmap
 import com.example.note.model.database.domain.User
 import com.example.note.model.database.network.UserNetwork
 import com.example.note.utils.RetrofitUtils.AVATAR
 import com.example.note.utils.toMultipartBody
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -161,11 +159,11 @@ class UserRetrofitServiceImpl @Inject constructor(
         @Multipart
         @PUT("editprofile")
         fun editProfile(
-            @Field("uid") uid: RequestBody,
+            @Part("uid") uid: RequestBody,
             @Part avatar: MultipartBody.Part,
-            @Field("fname") firstName: RequestBody,
-            @Field("lname") lastName: RequestBody,
-            @Field("birthDay") birthDay: RequestBody
+            @Part("fname") firstName: RequestBody,
+            @Part("lname") lastName: RequestBody,
+            @Part("birthDay") birthDay: RequestBody
         ): Single<Response<User>>
 
         @FormUrlEncoded

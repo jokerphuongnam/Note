@@ -1,15 +1,13 @@
 package com.example.note.model.database.network.impl
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import com.example.note.model.database.domain.Note
 import com.example.note.model.database.network.NoteNetwork
-import com.example.note.utils.toMultipartBodies
 import com.example.note.utils.RetrofitUtils.IMAGES
 import com.example.note.utils.RetrofitUtils.SOUNDS
+import com.example.note.utils.toJson
+import com.example.note.utils.toMultipartBodies
 import com.google.gson.GsonBuilder
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -60,9 +58,9 @@ class NoteRetrofitServiceImpl @Inject constructor(
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tags)),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.tasks)),
             images.toMultipartBodies(IMAGES),
-            RequestBody.create(MultipartBody.FORM, gson.toJson(note.images)),
+            RequestBody.create(MultipartBody.FORM, note.images.toJson()),
             sounds.toMultipartBodies(SOUNDS),
-            RequestBody.create(MultipartBody.FORM, gson.toJson(note.sounds)),
+            RequestBody.create(MultipartBody.FORM, note.sounds.toJson()),
             RequestBody.create(MultipartBody.FORM, gson.toJson(note.noticeTimes)),
         )
     }

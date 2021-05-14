@@ -1,8 +1,14 @@
 package com.example.note.ui.main.userinfo
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.note.R
@@ -19,6 +25,33 @@ import java.util.*
 @AndroidEntryPoint
 class UserInfoFragment :
     BaseFragment<FragmentUserInfoBinding, UserInfoViewModel>(R.layout.fragment_user_info) {
+
+    private val imageChoose: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.currentUser.value!!.avatar = null
+                result.data?.data?.let { uri ->
+                    MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
+                        .let { bitmap ->
+                            viewModel.avatar = bitmap
+                            binding.avatar.setImageBitmap(bitmap)
+                        }
+                }
+            }
+            controlImageBottomSheet.dismiss()
+        }
+
+    private val takePhotoFromCamera: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.currentUser.value!!.avatar = null
+                (result.data?.extras?.get("data") as Bitmap).apply {
+                    viewModel.avatar = this
+                    binding.avatar.setImageBitmap(this)
+                }
+            }
+            controlImageBottomSheet.dismiss()
+        }
 
     /**
      * when finish edit user
@@ -111,8 +144,37 @@ class UserInfoFragment :
             calendarChoose.setOnClickListener {
                 datePicker.show()
             }
+            avatar.setOnClickListener {
+                controlImageBottomSheet.takeIf { isChange }?.show(
+                    parentFragmentManager,
+                    ControlImageBottomSheet::class.java.simpleName
+                )
+            }
         }
     }
+
+    private val controlImageBottomSheet: ControlImageBottomSheet by lazy {
+        ControlImageBottomSheet(object : ControlImageBottomSheet.ControlImageCallBack {
+            override fun chooseImage() {
+                imageChoose.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    type = "image/*"
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                })
+            }
+
+            override fun openCamera() {
+                takePhotoFromCamera.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+            }
+
+            override fun deleteImage() {
+                viewModel.currentUser.value!!.avatar = null
+                binding.user = viewModel.currentUser.value
+                controlImageBottomSheet.dismiss()
+            }
+        })
+    }
+
+    private var isChange: Boolean = false
 
     private fun enableView() {
         binding.apply {
@@ -123,6 +185,7 @@ class UserInfoFragment :
                 lastName,
                 ability = true
             )
+            isChange = true
         }
     }
 
@@ -135,6 +198,7 @@ class UserInfoFragment :
                 lastName,
                 ability = false
             )
+            isChange = false
         }
     }
 

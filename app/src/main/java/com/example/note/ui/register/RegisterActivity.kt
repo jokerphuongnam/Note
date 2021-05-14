@@ -1,8 +1,14 @@
 package com.example.note.ui.register
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import com.example.note.R
@@ -19,6 +25,31 @@ import java.util.*
 @AndroidEntryPoint
 class RegisterActivity :
     BaseActivity<ActivityRegisterBinding, RegisterViewModel>(R.layout.activity_register) {
+
+    private val imageChoose: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri->
+                    MediaStore.Images.Media.getBitmap(contentResolver, uri).let { bitmap ->
+                        viewModel.avatar = bitmap
+                        binding.image.setImageBitmap(bitmap)
+                        binding.imageLayout.displayedChild = 1
+                    }
+                }
+            }
+        }
+
+    private val takePhotoFromCamera: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                (result.data?.extras?.get("data") as Bitmap).apply {
+                    viewModel.avatar = this
+                    binding.image.setImageBitmap(this)
+                    binding.imageLayout.displayedChild = 1
+                }
+            }
+        }
+
     private lateinit var actionBar: ActionBar
 
     private fun setUpToolbar() {
@@ -123,6 +154,22 @@ class RegisterActivity :
                         email.error = getString(R.string.the_email_same)
                     }
                 }
+            }
+        }
+        binding.apply {
+            addImage.setOnClickListener {
+                imageChoose.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    type = "image/*"
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                })
+            }
+            openCamera.setOnClickListener {
+                takePhotoFromCamera.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+            }
+            deleteImage.setOnClickListener {
+                imageLayout.displayedChild = 0
+                image.setImageBitmap(null)
+                viewModel.avatar = null
             }
         }
     }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/choose_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/choose_image"
+            android:textAllCaps="false"
+            android:textColor="?attr/blackWhite"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/open_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/open_camera"
+            android:textAllCaps="false"
+            android:textColor="?attr/blackWhite"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/delete_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/delete_image"
+            android:textAllCaps="false"
+            android:textColor="?attr/blackWhite"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</layout>
